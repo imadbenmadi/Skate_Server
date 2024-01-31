@@ -25,8 +25,8 @@ async function connect_to_db() {
 connect_to_db().catch((err) => console.log(err));
 
 
-app.use("/Login", require("./api/Auth/Login"));
-app.use("/Register", require("./api/Auth/Register"));
+app.use("/Login", require("./Routes/Login"));
+app.use("/Register", require("./Routes/Register"));
 // app.use("/Logout", require("./api/Auth/Logout"));
 
 app.use(verifyJWT);
