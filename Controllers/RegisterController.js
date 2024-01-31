@@ -1,5 +1,5 @@
 const express = require("express");
-const { Users, UserActions } = require("../../models/Database");
+const { Users, UserActions } = require("../models/Database");
 
 const handleRegister =  async (req, res) => {
     try {
@@ -9,7 +9,7 @@ const handleRegister =  async (req, res) => {
         }
         const existingUser = await Users.findOne({ Email: Email });
         if (existingUser) {
-            res.sendStatus(400).json({ error: "Email already exists " });
+            res.sendStatus(401).json({ error: "Email already exists " });
         } else {
             const newUser = new Users({
                 FirstName: FirstName,

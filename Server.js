@@ -6,7 +6,8 @@ const cookieParser = require("cookie-parser");
 const credentials = require("./Middleware/credentials");
 const corsOptions = require("./config/corsOptions");
 const verifyToken = require("./Middleware/verifyJWT");
-
+const path = require("path");
+const verifyJWT = require("./Middleware/verifyJWT");
 app.use(credentials);
 app.use(cors(corsOptions));
 app.use(express.json());
