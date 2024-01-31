@@ -3,10 +3,12 @@ const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const credentials = require("./Middleware/credentials");
+const corsOptions = require("./config/corsOptions");
 const verifyToken = require("./Middleware/verifyJWT");
 app.use(credentials);
 
-app.use(cors( ));
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
