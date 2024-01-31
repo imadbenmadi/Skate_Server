@@ -4,8 +4,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const verifyToken = require("./Middleware/verifyJWT");
+app.use(credentials);
 
-app.use(cors({ credentials: true }));
+app.use(cors( ));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
