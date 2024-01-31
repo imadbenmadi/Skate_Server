@@ -22,9 +22,9 @@ async function connect_to_db() {
 connect_to_db().catch((err) => console.log(err));
 
 
-app.use("/LogIn", require("./api/Auth/Login"));
-app.use("/SignUp", require("./api/Auth/SignUp"));
-app.use("/LogOut", require("./api/Auth/LogOut"));
+app.use("/Login", require("./api/Auth/Login"));
+app.use("/Register", require("./api/Auth/Register"));
+app.use("/Logout", require("./api/Auth/Logout"));
 
 app.listen(3000);
 
