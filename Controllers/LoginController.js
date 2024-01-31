@@ -1,7 +1,7 @@
-const express = require("express");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { Users, Refresh_tokens } = require("../../models/Database");
+
 const handleLogin = async (req, res) => {
     try {
         const { email, Password } = req.body;
