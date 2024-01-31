@@ -13,6 +13,13 @@ const Users = mongoose.model(
         Courses: [{ type: mongoose.Types.ObjectId, ref: "Courses" }],
     })
 );
+const Refresh_tokens = mongoose.model(
+    "refresh_tokens",
+    new mongoose.Schema({
+        userId: { type: mongoose.Types.ObjectId, ref: "Users" },
+        token: { type: String },
+    })
+);
 // Dash Board
 const request_Etude = mongoose.model(
     "request_Etude",
@@ -84,6 +91,12 @@ const Events = mongoose.model(
 );
 module.exports = {
     Users,
-    Events,
+    Refresh_tokens,
+    Messages,
+    request_Course,
+    request_Etude,
+    Etudes,
     Courses,
+    Blogs,
+    Events,
 };
