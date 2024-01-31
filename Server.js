@@ -1,7 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const session = require("express-session");
 const cookieParser = require("cookie-parser");
 
 
@@ -24,8 +23,7 @@ connect_to_db().catch((err) => console.log(err));
 
 app.use("/Login", require("./api/Auth/Login"));
 app.use("/Register", require("./api/Auth/Register"));
-app.use("/Logout", require("./api/Auth/Logout"));
-
+// app.use("/Logout", require("./api/Auth/Logout"));
 app.listen(3000);
 
 module.exports = app;
