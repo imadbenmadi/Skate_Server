@@ -29,8 +29,6 @@ app.use("/Login", require("./api/Auth/Login"));
 app.use("/Register", require("./api/Auth/Register"));
 // app.use("/Logout", require("./api/Auth/Logout"));
 
-
-
 app.use(verifyJWT);
 
 app.listen(3000);
