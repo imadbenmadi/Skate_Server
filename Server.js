@@ -6,12 +6,13 @@ const cookieParser = require("cookie-parser");
 const credentials = require("./Middleware/credentials");
 const corsOptions = require("./config/corsOptions");
 const verifyToken = require("./Middleware/verifyJWT");
-app.use(credentials);
 
+app.use(credentials);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use("/", express.static(path.join(__dirname, "/Public")));
 
 mongoose.set("strictQuery", false);
 const mongoDB = "mongodb://127.0.0.1:27017/Skate";
