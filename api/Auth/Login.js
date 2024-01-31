@@ -13,12 +13,12 @@ router.post("/", async (req, res, next) => {
         const user = await Users.findOne({ email: email });
         if (user && user.Password === Password) {
             const accessToken = jwt.sign(
-                { Email: user.Email },
+                { userId: user._id },
                 process.env.ACCESS_TOKEN_SECRET,
                 { expiresIn: "1h" }
             );
             const refreshToken = jwt.sign(
-                { Email: user.Email },
+                { userId: user._id },
                 process.env.REFRESH_TOKEN_SECRET,
                 { expiresIn: "1d" }
             );
