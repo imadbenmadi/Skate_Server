@@ -4,12 +4,21 @@ const { Users, Refresh_tokens } = require("../models/Database");
 
 const handleLogin = async (req, res) => {
     try {
-        const { email, Password } = req.body;
-        if (!email || !Password) {
+        const { Email, Password } = req.body;
+        if (!Email || !Password) {
             return res.status(409).json({ error: "Missing Data" });
         }
-        const user = await Users.findOne({ email: email });
+        const user = await Users.findOne({ Email: Email });
         if (user && user.Password === Password) {
+            console.log(
+                "Access Token Secret:",
+                process.env.ACCESS_TOKEN_SECRET
+            );
+            console.log(
+                "Refresh Token Secret:",
+                process.env.REFRESH_TOKEN_SECRET
+            );
+
             const accessToken = jwt.sign(
                 { userId: user._id },
                 process.env.ACCESS_TOKEN_SECRET,
@@ -20,10 +29,16 @@ const handleLogin = async (req, res) => {
                 process.env.REFRESH_TOKEN_SECRET,
                 { expiresIn: "1d" }
             );
-            await Refresh_tokens.create({
-                userId: user._id,
-                token: refreshToken,
-            });
+            console.log(accessToken, refreshToken);
+            try {
+                await Refresh_tokens.create({
+                    userId: user._id,
+                    token: refreshToken,
+                });
+            } catch (err) {
+                console.log(err);
+                res.status(500).json({ error: "Internal Server Error" });
+            }
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 sameSite: "None",
@@ -41,6 +56,7 @@ const handleLogin = async (req, res) => {
             console.log("Username or Password isn't correct");
         }
     } catch (err) {
+        console.log(err.message);
         res.status(400).json({ error: err });
     }
 };
