@@ -22,7 +22,7 @@ const handleLogout = async (req, res) => {
             sameSite: "None",
             secure: true,
         });
-        return res.sendStatus(204);
+        return res.status(204).json({ message: "No cookie found" });
     }
 
     // Delete refreshToken in db

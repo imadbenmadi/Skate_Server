@@ -11,20 +11,20 @@ const handleRefreshToken = (req, res) => {
         }
         const refreshToken = cookies.jwt;
         const foundUser = Refresh_tokens.findOne({ token: refreshToken });
-        if (!foundUser) return res.sendStatus(403); //Forbidden
+        if (!foundUser) return res.status(403).json({ message: "Forbidden" }); //Forbidden
         // evaluate jwt
         jwt.verify(
             refreshToken,
             process.env.REFRESH_TOKEN_SECRET,
             (err, decoded) => {
                 if (err || foundUser.userId !== decoded.userId)
-                    return res.sendStatus(403);
+                    return res.status(403).json({ message: "Forbidden" });
                 const accessToken = jwt.sign(
                     { userId: decoded.userId },
                     process.env.ACCESS_TOKEN_SECRET,
                     { expiresIn: "1h" }
                 );
-                res.json({ accessToken });
+                res.status(200).json({ accessToken });
             }
         );
 

@@ -9,7 +9,7 @@ const handleRegister =  async (req, res) => {
         }
         const existingUser = await Users.findOne({ Email: Email });
         if (existingUser) {
-            res.sendStatus(401).json({ error: "Email already exists " });
+            res.status(401).json({ error: "Email already exists " });
         } else {
             const newUser = new Users({
                 FirstName: FirstName,
@@ -23,7 +23,7 @@ const handleRegister =  async (req, res) => {
             res.status(200).json({ message: "Account Created Successfully" });
         }
     } catch (err) {
-        res.status(400).json({ error: err });
+         res.status(400).json({ err });
     }
 };
 

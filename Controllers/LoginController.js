@@ -10,15 +10,6 @@ const handleLogin = async (req, res) => {
         }
         const user = await Users.findOne({ Email: Email });
         if (user && user.Password === Password) {
-            console.log(
-                "Access Token Secret:",
-                process.env.ACCESS_TOKEN_SECRET
-            );
-            console.log(
-                "Refresh Token Secret:",
-                process.env.REFRESH_TOKEN_SECRET
-            );
-
             const accessToken = jwt.sign(
                 { userId: user._id },
                 process.env.ACCESS_TOKEN_SECRET,
@@ -37,7 +28,7 @@ const handleLogin = async (req, res) => {
                 });
             } catch (err) {
                 console.log(err);
-                res.status(500).json({ error: "Internal Server Error" });
+                res.status(500).json({ error: "Internal Server Error " + err.message });
             }
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,

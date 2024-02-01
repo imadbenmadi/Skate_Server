@@ -8,7 +8,7 @@ const Users = mongoose.model(
         Email: { type: String, required: true },
         Password: { type: String, required: true },
         Age: { type: Number },
-        Gender: { type: String, enum: ["Man", "Woman"] },
+        Gender: { type: String, enum: ["male", "female"] },
         ProfilePic: { type: String },
         Courses: [{ type: mongoose.Types.ObjectId, ref: "Courses" }],
     })
