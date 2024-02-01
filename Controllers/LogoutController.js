@@ -1,12 +1,17 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const { Users, Refresh_tokens } = require("../../models/Database");
+const { Users, Refresh_tokens } = require("../models/Database");
+
 const mongoose = require("mongoose");
 const handleLogout = async (req, res) => {
     // On client, also delete the accessToken
 
     const cookies = req.cookies;
-    if (!cookies?.jwt) return res.sendStatus(204); //No content
+    console.log(cookies);
+    if (!cookies?.jwt) {
+        console.log("No cookie found");
+        return res.status(204).json({ lmessage: "No cookie found" }); //No content
+    } 
     const refreshToken = cookies.jwt;
 
     // Is refreshToken in db?

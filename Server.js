@@ -28,7 +28,7 @@ connect_to_db().catch((err) => console.log(err));
 
 app.use("/Login", require("./Routes/Login"));
 app.use("/Register", require("./Routes/Register"));
-// app.use("/Logout", require("./api/Auth/Logout"));
+app.use("/Logout", require("./Routes/Logout"));
 
 app.use(verifyJWT);
 
