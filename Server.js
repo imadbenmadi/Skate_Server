@@ -1,13 +1,20 @@
 const express = require("express");
+const rateLimit = require("express-rate-limit");
 const app = express();   
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const credentials = require("./Middleware/credentials");
 const corsOptions = require("./config/corsOptions");
-const verifyToken = require("./Middleware/verifyJWT");
 const path = require("path");
 const verifyJWT = require("./Middleware/verifyJWT");
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: "Too many requests from this IP, please try again later.",
+});
+app.use(limiter);
+
 app.use(credentials);
 app.use(cors(corsOptions));
 app.use(express.json());
