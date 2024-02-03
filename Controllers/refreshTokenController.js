@@ -6,10 +6,10 @@ const handleRefreshToken = (req, res) => {
     try {
 
         const cookies = req.cookies;
-        if (!cookies?.jwt) {
+        if (!cookies?.refreshToken) {
             return res.status(401).json({ error: "Missing cookies" });
         }
-        const refreshToken = cookies.jwt;
+        const refreshToken = cookies.refreshToken;
         const foundUser = Refresh_tokens.findOne({ token: refreshToken });
         if (!foundUser) return res.status(403).json({ message: "Forbidden" }); //Forbidden
         // evaluate jwt
@@ -24,6 +24,12 @@ const handleRefreshToken = (req, res) => {
                     process.env.ACCESS_TOKEN_SECRET,
                     { expiresIn: "1h" }
                 );
+                res.cookie("accessToken", accessToken, {
+                    httpOnly: true,
+                    sameSite: "None",
+                    secure: true,
+                    maxAge: 60 * 60 * 1000,
+                });
                 res.status(200).json({ accessToken });
             }
         );

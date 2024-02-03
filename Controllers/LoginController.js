@@ -38,6 +38,12 @@ const handleLogin = async (req, res) => {
                 console.log(err);
                 res.status(500).json({ error: "Internal Server Error " + err.message });
             }
+             res.cookie("accessToken", accessToken, {
+                 httpOnly: true,
+                 sameSite: "None",
+                 secure: true,
+                 maxAge:  60 * 60 * 1000,
+             });
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 sameSite: "None",

@@ -37,6 +37,7 @@ app.use("/Login", require("./Routes/Login"));
 app.use("/Register", require("./Routes/Register"));
 app.use("/Logout", require("./Routes/Logout"));
 app.use("/Refresh", require("./Routes/Refresh"));
+app.use("/check_Auth", require("./Routes/check_Auth"));
 app.use(verifyJWT);
 
 app.listen(3000);
