@@ -28,10 +28,10 @@ const handleLogin = async (req, res) => {
                 process.env.REFRESH_TOKEN_SECRET,
                 { expiresIn: "1d" }
             );
-            console.log("Login Controler");
-            console.log("acessToken", accessToken);
-            console.log("refreshToken", refreshToken);
-            console.log("--------------------");
+            // console.log("Login Controler");
+            // console.log("acessToken", accessToken);
+            // console.log("refreshToken", refreshToken);
+            // console.log("--------------------");
             try {
                 await Refresh_tokens.create({
                     userId: user._id,
