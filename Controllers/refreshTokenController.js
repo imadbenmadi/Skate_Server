@@ -17,7 +17,7 @@ const handleRefreshToken = async(req, res) => {
         jwt.verify(
             refreshToken,
             process.env.REFRESH_TOKEN_SECRET,
-            (err, decoded) => {
+            async (err, decoded) => {
                 console.log(found_in_DB.userId !== decoded.userId);
                 if (err || found_in_DB.userId != decoded.userId)
                     return res.status(403).json({ message: " fail to virify Jwt , refresh token does not match " });
@@ -32,7 +32,21 @@ const handleRefreshToken = async(req, res) => {
                     secure: true,
                     maxAge: 60 * 60 * 1000,
                 });
-                res.status(200).json({ accessToken });
+                const user = await Users.findOne({ _id: decoded.userId });
+                // console.log("user data from refreshToken:", user);
+                 const UserData_To_Send = {
+                     Age: user.Age,
+                     Courses: user.Courses,
+                     Email: user.Email,
+                     FirstName: user.FirstName,
+                     Gender: user.Gender,
+                     LastName: user.LastName,
+                     _id: user._id,
+                 };
+                res.status(200).json({
+                    message: "Access token refreshed Successully",
+                    userData: UserData_To_Send,
+                });
             }
         );
 
