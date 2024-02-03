@@ -58,7 +58,7 @@ router.get("/", verifyToken, async (req, res) => {
                 }
             } catch (refreshErr) {
                 console.error(refreshErr);
-                return res.status(401).json({
+                return res.status(403).json({
                     message:
                         "Unable to refresh the access token, both tokens are not valid",
                     error: refreshErr.message,
