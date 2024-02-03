@@ -14,12 +14,12 @@ const limiter = rateLimit({
     message: "Too many requests from this IP, please try again later.",
 });
 app.use(limiter);
-
+app.use(cookieParser());
 app.use(credentials);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+
 app.use("/", express.static(path.join(__dirname, "/Public")));
 
 mongoose.set("strictQuery", false);
@@ -38,7 +38,7 @@ app.use("/Register", require("./Routes/Register"));
 app.use("/Logout", require("./Routes/Logout"));
 app.use("/Refresh", require("./Routes/Refresh"));
 app.use("/check_Auth", require("./Routes/check_Auth"));
-app.use(verifyJWT);
+// app.use(verifyJWT);
 
 app.listen(3000);
 

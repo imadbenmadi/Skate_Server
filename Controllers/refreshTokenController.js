@@ -2,27 +2,29 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { Users, Refresh_tokens } = require("../models/Database");
 
-const handleRefreshToken = (req, res) => {
+const handleRefreshToken = async(req, res) => {
     try {
 
-        const cookies = req.cookies;
-        if (!cookies?.refreshToken) {
+        const refreshToken = req.cookies.refreshToken;
+        
+        if (!refreshToken) {
             return res.status(401).json({ error: "Missing cookies" });
         }
-        const refreshToken = cookies.refreshToken;
-        const foundUser = Refresh_tokens.findOne({ token: refreshToken });
-        if (!foundUser) return res.status(403).json({ message: "Forbidden" }); //Forbidden
+        const found_in_DB =await Refresh_tokens.findOne({ token: refreshToken }).exec();
+        
+        if (!found_in_DB) return res.status(403).json({ message: "Refresh Token not found in the database" }); //Forbidden
         // evaluate jwt
         jwt.verify(
             refreshToken,
             process.env.REFRESH_TOKEN_SECRET,
             (err, decoded) => {
-                if (err || foundUser.userId !== decoded.userId)
-                    return res.status(403).json({ message: "Forbidden" });
+                console.log(found_in_DB.userId !== decoded.userId);
+                if (err || found_in_DB.userId != decoded.userId)
+                    return res.status(403).json({ message: " fail to virify Jwt , refresh token does not match " });
                 const accessToken = jwt.sign(
                     { userId: decoded.userId },
                     process.env.ACCESS_TOKEN_SECRET,
-                    { expiresIn: "1h" }
+                    { expiresIn: "10s" }
                 );
                 res.cookie("accessToken", accessToken, {
                     httpOnly: true,
