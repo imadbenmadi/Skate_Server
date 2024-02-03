@@ -6,6 +6,7 @@ const verifyToken = require("../Middleware/verifyJWT");
 require("dotenv").config();
 
 router.get("/", verifyToken, async (req, res) => {
+    console.log(" start checking");
     try {
         // If the middleware executed successfully, the access token is valid
         return res.status(200).json({ message: "Access token is valid" });
