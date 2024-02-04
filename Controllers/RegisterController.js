@@ -4,6 +4,7 @@ const { Users, UserActions } = require("../models/Database");
 const handleRegister = async (req, res) => {
     try {
         const { FirstName, LastName, Email, Password, Age, Gender } = req.body;
+        console.log(req.body.Gender);
         if (!FirstName || !LastName || !Email || !Password || !Gender) {
             return res.status(409).json({ message: "Missing Data" });
         } else if (Password.length < 8) {
@@ -12,12 +13,10 @@ const handleRegister = async (req, res) => {
             });
         } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(Email)) {
             return res.status(409).json({ error: "Invalid Email" });
-        } else if (Gender !== "male" || Gender !== "female") {
-            return res
-                .status(409)
-                .json({
-                    error: "Invalid Gender , accepted values : male or female",
-                });
+        } else if (Gender != "male" && Gender != "female") {
+            return res.status(409).json({
+                error: "Invalid Gender , accepted values : male or female",
+            });
         }
         const existingUser = await Users.findOne({ Email: Email });
         if (existingUser) {
