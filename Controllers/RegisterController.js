@@ -1,10 +1,8 @@
-const express = require("express");
-const { Users, UserActions } = require("../models/Database");
+const { Users } = require("../models/Database");
 
 const handleRegister = async (req, res) => {
     try {
         const { FirstName, LastName, Email, Password, Age, Gender } = req.body;
-        console.log(req.body.Gender);
         if (!FirstName || !LastName || !Email || !Password || !Gender) {
             return res.status(409).json({ message: "Missing Data" });
         } else if (Password.length < 8) {

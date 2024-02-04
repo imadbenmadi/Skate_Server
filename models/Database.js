@@ -33,12 +33,14 @@ const request_Etude = mongoose.model(
 const Messages = mongoose.model(
     "Messages",
     new mongoose.Schema({
+        Title: { type: String },
         Message: { type: String },
         Date: { type: Date },
-        Sender: { type: mongoose.Types.ObjectId, ref: "Users" },
+        Sender_id: { type: mongoose.Types.ObjectId, ref: "Users" },
+        Sender_email: { type: String },
     })
 );
-const request_Course = mongoose.model( 
+const request_Course = mongoose.model(
     "request_Course",
     new mongoose.Schema({
         requests: [
