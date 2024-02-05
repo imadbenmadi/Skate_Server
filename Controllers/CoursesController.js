@@ -75,6 +75,16 @@ const handle_request_Course = async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: "User not found." });
         }
+        const existingRequest = await request_Course.findOne({
+            UserId: userId,
+            CourseId: courseId,
+        });
+
+        if (existingRequest) {
+            return res
+                .status(409)
+                .json({ error: "Course already requested by the user." });
+        }
         const course = await Courses.findById(courseId);
         if (!course) {
             return res.status(404).json({ error: "Course not found." });

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { Courses } = require("../../models/Database");
+const { Courses, request_Course,Users } = require("../../models/Database");
 const jwt = require("jsonwebtoken");
 
 const Verify_Admin = (admin_accessToken) => {
