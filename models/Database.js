@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const Users = mongoose.model(
     "Users",
@@ -21,6 +22,13 @@ const Refresh_tokens = mongoose.model(
     })
 );
 // Dash Board
+const Admin_data = mongoose.model(
+    "Admin_data",
+    new mongoose.Schema({
+        Admin_User_Name: { type: String },
+        Admin_Pwd: { type: String }
+    })
+);
 const request_Etude = mongoose.model(
     "request_Etude",
     new mongoose.Schema({
@@ -101,4 +109,5 @@ module.exports = {
     Courses,
     Blogs,
     Events,
+    Admin_data,
 };

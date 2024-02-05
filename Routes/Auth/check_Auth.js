@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
-const verifyToken = require("../Middleware/verifyJWT");
+const verifyToken = require("../../Middleware/verifyJWT");
 require("dotenv").config();
-const { Users, Refresh_tokens } = require("../models/Database");
+const { Users, Refresh_tokens } = require("../../models/Database");
 
 router.get("/", async (req, res) => {
     try {
@@ -72,21 +72,19 @@ router.get("/", async (req, res) => {
                 }
                 const user = await Users.findOne({ _id: decoded.userId });
                 // console.log("user from check Auth:", user);
-                 const UserData_To_Send = {
-                     Age: user.Age,
-                     Courses: user.Courses,
-                     Email: user.Email,
-                     FirstName: user.FirstName,
-                     Gender: user.Gender,
-                     LastName: user.LastName,
-                     _id: user._id,
-                 };
-                return res
-                    .status(200)
-                    .json({
-                        message: "Access token is valid",
-                        userData : UserData_To_Send,
-                    });
+                const UserData_To_Send = {
+                    Age: user.Age,
+                    Courses: user.Courses,
+                    Email: user.Email,
+                    FirstName: user.FirstName,
+                    Gender: user.Gender,
+                    LastName: user.LastName,
+                    _id: user._id,
+                };
+                return res.status(200).json({
+                    message: "Access token is valid",
+                    userData: UserData_To_Send,
+                });
             }
         );
     } catch (err) {

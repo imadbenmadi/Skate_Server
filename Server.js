@@ -1,6 +1,6 @@
 const express = require("express");
 const rateLimit = require("express-rate-limit");
-const app = express();   
+const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -32,13 +32,13 @@ async function connect_to_db() {
 }
 connect_to_db().catch((err) => console.log(err));
 
-
-app.use("/Login", require("./Routes/Login"));
-app.use("/Register", require("./Routes/Register"));
-app.use("/Logout", require("./Routes/Logout"));
-app.use("/Refresh", require("./Routes/Refresh"));
-app.use("/check_Auth", require("./Routes/check_Auth"));
+app.use("/Login", require("./Routes/Auth/Login"));
+app.use("/Register", require("./Routes/Auth/Register"));
+app.use("/Logout", require("./Routes/Auth/Logout"));
+app.use("/Refresh", require("./Routes/Auth/Refresh"));
+app.use("/check_Auth", require("./Routes/Auth/check_Auth"));
 app.use("/Contact", require("./Routes/Contact"));
+// app.use("/Dashboard", require("./Routes/Dashboard/Dashboard"));
 // app.use(verifyJWT);
 
 app.listen(3000);
