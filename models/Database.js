@@ -26,7 +26,7 @@ const Admin_data = mongoose.model(
     "Admin_data",
     new mongoose.Schema({
         Admin_User_Name: { type: String },
-        Admin_Pwd: { type: String }
+        Admin_Pwd: { type: String },
     })
 );
 const request_Etude = mongoose.model(
@@ -51,12 +51,11 @@ const Messages = mongoose.model(
 const request_Course = mongoose.model(
     "request_Course",
     new mongoose.Schema({
-        requests: [
-            { UserId: { type: mongoose.Types.ObjectId, ref: "Users" } },
-            { CourseId: { type: mongoose.Types.ObjectId, ref: "Courses" } },
-        ],
+        UserId: { type: mongoose.Types.ObjectId, ref: "Users" },
+        CourseId: { type: mongoose.Types.ObjectId, ref: "Courses" },
     })
 );
+
 // Etudes Courses Blogs Events
 const Etudes = mongoose.model(
     "Etudes",
