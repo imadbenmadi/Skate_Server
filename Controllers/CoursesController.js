@@ -31,12 +31,24 @@ const get_course_ById = async (req, res) => {
         res.status(500).json({ error: "Internal server error." });
     }
 };
+const Verify_user = (accessToken) => {
+    const secretKey = process.env.ACCESS_TOKEN_SECRET;
+    if (!accessToken) return false;
+
+    try {
+        const decoded = jwt.verify(accessToken, secretKey);
+        return true;
+    } catch (err) {
+        console.error("Error during token verification:", err);
+        return false;
+    }
+};
 const get_courses_By_user_Id = async (req, res) => {
     console.log(req.body);
     const userId = req.params.id;
-    console.log(userId);
+    const accessToken = req.cookies.accessToken;
     if(!userId) return res.status(400).json({ error: "User Id is required." });
-    if (!Verify_user)
+    if (!Verify_user(accessToken))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
     try {
         const user_in_db = await Users.findById(userId).populate("Courses");
@@ -51,18 +63,7 @@ const get_courses_By_user_Id = async (req, res) => {
         res.status(500).json({ error: "Internal server error." });
     }
 };
-const Verify_user = (accessToken) => {
-    const secretKey = process.env.ACCESS_TOKEN_SECRET;
-    if (!accessToken) return false;
 
-    try {
-        const decoded = jwt.verify(accessToken, secretKey);
-        return true;
-    } catch (err) {
-        console.error("Error during token verification:", err);
-        return false;
-    }
-};
 module.exports = {
     getAllCourses,
     get_courses_By_user_Id,
