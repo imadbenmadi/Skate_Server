@@ -12,6 +12,13 @@ const Users = mongoose.model(
         Gender: { type: String, enum: ["male", "female"] },
         ProfilePic: { type: String },
         Courses: [{ type: mongoose.Types.ObjectId, ref: "Courses" }],
+        Services: [
+            {
+                type: mongoose.Types.ObjectId,
+                ref: "Services",
+                service_state: { type: String },
+            },
+        ],
     })
 );
 const Refresh_tokens = mongoose.model(
@@ -29,12 +36,12 @@ const Admin_data = mongoose.model(
         Admin_Pwd: { type: String },
     })
 );
-const request_Etude = mongoose.model(
-    "request_Etude",
+const request_Service = mongoose.model(
+    "request_Service",
     new mongoose.Schema({
         requests: [
             { UserId: { type: mongoose.Types.ObjectId, ref: "Users" } },
-            { EtudeId: { type: mongoose.Types.ObjectId, ref: "Etudes" } },
+            { EtudeId: { type: mongoose.Types.ObjectId, ref: "Services" } },
         ],
     })
 );
@@ -56,16 +63,14 @@ const request_Course = mongoose.model(
     })
 );
 
-// Etudes Courses Blogs Events
-const Etudes = mongoose.model(
-    "Etudes",
+// Services Courses Blogs Events
+const Services = mongoose.model(
+    "Services",
     new mongoose.Schema({
         Title: { type: String },
         Description: { type: String },
         Image: { type: String },
-        Price: { type: Number },
         Category: { type: String },
-        Date: { type: Date },
     })
 );
 
@@ -103,8 +108,8 @@ module.exports = {
     Refresh_tokens,
     Messages,
     request_Course,
-    request_Etude,
-    Etudes,
+    request_Service,
+    Services,
     Courses,
     Blogs,
     Events,
