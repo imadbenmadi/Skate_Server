@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Courses, Users } = require("../models/Database");
 require("dotenv").config();
-
+const jwt = require("jsonwebtoken");
 const getAllCourses = async (req, res) => {
     try {
         const courses = await Courses.find();
