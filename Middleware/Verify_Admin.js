@@ -11,7 +11,7 @@ const Verify_Admin = (req, res, next) => {
     jwt.verify(token, process.env.ADMIN_ACCESS_TOKEN_SECRET, (err, decoded) => {
         if (err) {
             return res
-                .status(403)
+                .status(401)
                 .json({ error: "Unauthorized: Invalid token" });
         }
         next();
