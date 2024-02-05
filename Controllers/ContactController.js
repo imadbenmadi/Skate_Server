@@ -35,7 +35,7 @@ const handleContact = async (req, res) => {
                 res.status(200).json({
                     message: "Message Sent Successfully via id",
                 });
-            } else if(!Email && !id){
+            } else if (!Email && !id) {
                 res.status(400).json({ message: "Missing Email or id" });
             }
         } catch (err) {

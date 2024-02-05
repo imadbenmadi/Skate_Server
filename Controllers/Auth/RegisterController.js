@@ -1,4 +1,4 @@
-const { Users } = require("../models/Database");
+const { Users } = require("../../models/Database");
 
 const handleRegister = async (req, res) => {
     try {

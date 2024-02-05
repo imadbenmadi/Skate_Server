@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const { Users, Refresh_tokens } = require("../models/Database");
+const { Users, Refresh_tokens } = require("../../models/Database");
 
 const mongoose = require("mongoose");
 
