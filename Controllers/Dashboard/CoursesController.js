@@ -70,7 +70,7 @@ const handle_Accept_course_request = async (req, res) => {
         }
 
         // Remove the request from the database
-        await request_Course.findOneAndDelete({ UserId, CourseId });
+        await request_Course.deleteMany({ UserId, CourseId });
 
         // Add the course to the user's list of courses
         await Users.findByIdAndUpdate(UserId, { $push: { Courses: CourseId } });
