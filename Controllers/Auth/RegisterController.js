@@ -2,8 +2,19 @@ const { Users } = require("../../models/Database");
 
 const handleRegister = async (req, res) => {
     try {
-        const { FirstName, LastName, Email, Password, Age, Gender } = req.body;
-        if (!FirstName || !LastName || !Email || !Password || !Gender) {
+        const { FirstName, LastName, Email, Password, Age, Gender, Telephone } =
+            req.body;
+        
+        const isValidTelephone = /^(0)(5|6|7)[0-9]{8}$/.test(Telephone);
+
+        if (
+            !FirstName ||
+            !LastName ||
+            !Email ||
+            !Password ||
+            !Gender ||
+            !Telephone
+        ) {
             return res.status(409).json({ message: "Missing Data" });
         } else if (Password.length < 8) {
             return res.status(409).json({
@@ -15,6 +26,16 @@ const handleRegister = async (req, res) => {
             return res.status(409).json({
                 error: "Invalid Gender , accepted values : male or female",
             });
+        } else if (Telephone.length < 9) {
+            return res.status(409).json({
+                error: "Telephone must be at least 9 characters",
+            });
+        } else if (!isValidTelephone) {
+            return res.status(409).json({
+                error: "Telephone must be a number",
+            });
+        } else if (Age && isNaN(Age)) {
+            return res.status(409).json({ error: "Age must be a number" });
         }
         const existingUser = await Users.findOne({ Email: Email });
         if (existingUser) {
@@ -24,6 +45,7 @@ const handleRegister = async (req, res) => {
                 FirstName: FirstName,
                 LastName: LastName,
                 Email: Email,
+                Telephone: Telephone,
                 Password: Password,
                 Age: Age,
                 Gender: Gender,
