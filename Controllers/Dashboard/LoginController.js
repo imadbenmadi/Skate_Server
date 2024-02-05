@@ -62,6 +62,12 @@ const handleLogin = async (req, res) => {
                 secure: true,
                 maxAge: 24 * 60 * 60 * 1000,
             });
+            if (req.cookies.accessToken) {
+                res.clearCookie("accessToken");
+            }
+            if (req.cookies.refreshToken) {
+                res.clearCookie("refreshToken");
+            }
             res.status(200).json({
                 message: "Admin Logged In Successfully",
                 jwt: accessToken,
