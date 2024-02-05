@@ -21,6 +21,16 @@ const Users = mongoose.model(
                 service_state: { type: String },
             },
         ],
+        IsEmailVerified: { type: Boolean, default: false },
+        EmailVerificationToken: { type: String },
+        Notifications: [
+            {
+                Title: { type: String },
+                Message: { type: String },
+                Date: { type: Date },
+                Readed: { type: Boolean, default: false },
+            },
+        ],
     })
 );
 const Refresh_tokens = mongoose.model(
