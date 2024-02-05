@@ -4,11 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const Verify_Admin = (admin_accessToken) => {
     const secretKey = process.env.ADMIN_ACCESS_TOKEN_SECRET;
-    console.log("Admin Token:", admin_accessToken);
-    console.log("Secret Key:", secretKey);
-
     if (!admin_accessToken) return false;
-
     try {
         const decoded = jwt.verify(admin_accessToken, secretKey);
         return true;
@@ -57,5 +53,32 @@ const handle_add_Courses = async (req, res) => {
         res.status(500).json({ error: "Internal server error." });
     }
 };
+const handle_Accept_course_request = async (req, res) => {
+    const token = req.cookies.admin_accessToken;
 
-module.exports = { handle_add_Courses };
+    if (!token)
+        return res.status(401).json({ error: "Unauthorized: Token missing" });
+
+    if (!Verify_Admin(token))
+        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+
+    try {
+        const { UserId, CourseId } = req.body;
+
+        if (!UserId || !CourseId) {
+            return res.status(400).json({ error: "All fields are required." });
+        }
+
+        // Remove the request from the database
+        await request_Course.findOneAndDelete({ UserId, CourseId });
+
+        // Add the course to the user's list of courses
+        await Users.findByIdAndUpdate(UserId, { $push: { Courses: CourseId } });
+
+        res.status(200).json({ message: "Course request accepted." });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal server error." });
+    }
+}
+module.exports = { handle_add_Courses, handle_Accept_course_request };
