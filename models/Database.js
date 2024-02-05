@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const uuid = require("uuid");
 
 const Users = mongoose.model(
     "Users",

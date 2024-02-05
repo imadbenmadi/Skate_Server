@@ -1,5 +1,37 @@
 const { Users } = require("../../models/Database");
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 
+const generateVerificationCode = () => {
+    const code = crypto.randomInt(10000000, 99999999);
+    return code.toString();
+};
+const sendVerificationEmail = (Email, verificationToken) => {
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASSWORD,
+        },
+    });
+    // Replace 'http://your-api-base-url' with your actual API base URL
+    const verificationLink = `http://http://localhost:3000/verify/${verificationToken}`;
+
+    const mailOptions = {
+        from: process.env.EMAIL,
+        to: Email,
+        subject: "Skate | Email Verification",
+        text: `Click the following link to verify your email: ${verificationLink}`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error(error);
+        } else {
+            console.log(`Email sent: ${info.response}`);
+        }
+    });
+}
 const handleRegister = async (req, res) => {
     try {
         const { FirstName, LastName, Email, Password, Age, Gender, Telephone } =
@@ -41,6 +73,7 @@ const handleRegister = async (req, res) => {
         if (existingUser) {
             res.status(401).json({ error: "Email already exists " });
         } else {
+            const verificationToken = generateVerificationCode();
             const newUser = new Users({
                 FirstName: FirstName,
                 LastName: LastName,
@@ -49,8 +82,10 @@ const handleRegister = async (req, res) => {
                 Password: Password,
                 Age: Age,
                 Gender: Gender,
+                EmailVerificationToken: verificationToken,
             });
             await newUser.save();
+            sendVerificationEmail(Email, verificationToken);
             res.status(200).json({ message: "Account Created Successfully" });
         }
     } catch (err) {
