@@ -4,11 +4,12 @@ const { Courses } = require("../../models/Database");
 const handle_add_Courses = async (req, res) => {
     try {
         const { Title, Description, Image, Price, Category } = req.body;
-
-        if (!Title || !Description || !Image || !Price || !Category) {
+        console.log(req.body);
+        if (!Title || !Description || !Image || !Category) {
             return res.status(400).json({ error: "All fields are required." });
         }
-        const Date = new Date();
+        const creationDate = new Date();
+        
         // Create a new course
         const newCourse = new Courses({
             Title,
@@ -16,7 +17,7 @@ const handle_add_Courses = async (req, res) => {
             Image,
             Price,
             Category,
-            Date,
+            Date: creationDate,
         });
 
         // Save the course to the database
