@@ -43,12 +43,11 @@ const get_course_ById = async (req, res) => {
         res.status(500).json({ error: "Internal server error." });
     }
 };
-
 const get_courses_By_user_Id = async (req, res) => {
-    
-    const userId = req.body.id;
+    console.log(req.body);
+    const userId = req.body.userId;
     const accessToken = req.cookies.accessToken;
-    if(!userId) return res.status(400).json({ error: "User Id is required." });
+    if (!userId) return res.status(400).json({ error: "User Id is required." });
     if (!Verify_user(accessToken))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
     try {
