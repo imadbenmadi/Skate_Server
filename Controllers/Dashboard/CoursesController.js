@@ -1,39 +1,31 @@
-const { Courses } = require("../models/Database");
+const mongoose = require("mongoose");
+const { Courses } = require("../../models/Database");
 
 const handle_add_Courses = async (req, res) => {
     try {
-        const { FirstName, LastName, Email, Password, Age, Gender } = req.body;
-        if (!FirstName || !LastName || !Email || !Password || !Gender) {
-            return res.status(409).json({ message: "Missing Data" });
-        } else if (Password.length < 8) {
-            return res.status(409).json({
-                error: "Password must be at least 8 characters",
-            });
-        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(Email)) {
-            return res.status(409).json({ error: "Invalid Email" });
-        } else if (Gender != "male" && Gender != "female") {
-            return res.status(409).json({
-                error: "Invalid Gender , accepted values : male or female",
-            });
+        const { Title, Description, Image, Price, Category } = req.body;
+
+        if (!Title || !Description || !Image || !Price || !Category) {
+            return res.status(400).json({ error: "All fields are required." });
         }
-        const existingUser = await Users.findOne({ Email: Email });
-        if (existingUser) {
-            res.status(401).json({ error: "Email already exists " });
-        } else {
-            const newUser = new Users({
-                FirstName: FirstName,
-                LastName: LastName,
-                Email: Email,
-                Password: Password,
-                Age: Age,
-                Gender: Gender,
-            });
-            await newUser.save();
-            res.status(200).json({ message: "Account Created Successfully" });
-        }
-    } catch (err) {
-        res.status(400).json({ err });
+        const Date = new Date();
+        // Create a new course
+        const newCourse = new Courses({
+            Title,
+            Description,
+            Image,
+            Price,
+            Category,
+            Date,
+        });
+
+        // Save the course to the database
+        await newCourse.save();
+
+        res.status(201).json({ message: "Course added successfully." });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal server error." });
     }
 };
-
-module.exports = { handleRegister };
+module.exports = { handle_add_Courses };

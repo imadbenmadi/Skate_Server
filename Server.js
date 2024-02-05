@@ -38,6 +38,7 @@ app.use("/Logout", require("./Routes/Auth/Logout"));
 app.use("/Refresh", require("./Routes/Auth/Refresh"));
 app.use("/check_Auth", require("./Routes/Auth/check_Auth"));
 app.use("/Contact", require("./Routes/Contact"));
+app.use("/Dashboard/Courses", require("./Routes/Dashboard/Courses"));
 // app.use("/Dashboard", require("./Routes/Dashboard/Dashboard"));
 // app.use(verifyJWT);
 
