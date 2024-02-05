@@ -7,5 +7,9 @@ router.post(
     "/Accept_course_request",
     CoursesController.handle_Accept_course_request
 );
+router.post(
+    "/Reject_course_request",
+    CoursesController.handle_Reject_course_request
+);
 
 module.exports = router;
