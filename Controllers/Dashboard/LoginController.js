@@ -6,6 +6,7 @@ const { Admin_data, Refresh_tokens } = require("../../models/Database");
 const comparePasswords = async (inputPassword, hashedPassword) => {
     return await bcrypt.compare(inputPassword, hashedPassword);
 };
+
 const handleLogin = async (req, res) => {
     try {
         const { Name, Password } = req.body;
@@ -27,7 +28,7 @@ const handleLogin = async (req, res) => {
             const accessToken = jwt.sign(
                 { adminId: Admin_in_Db._id },
                 process.env.ADMIN_ACCESS_TOKEN_SECRET,
-                { expiresIn: "10s" }
+                { expiresIn: "10m" }
             );
             const refreshToken = jwt.sign(
                 { adminId: Admin_in_Db._id },
