@@ -1,4 +1,4 @@
-const { Users } = require("../../models/Database");
+const { Users, email_verification_tokens } = require("../../models/Database");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 
@@ -82,8 +82,12 @@ const handleRegister = async (req, res) => {
                 Password: Password,
                 Age: Age,
                 Gender: Gender,
-                EmailVerificationToken: verificationToken,
             });
+            const newVerificationToken = new email_verification_tokens({
+                userId: newUser._id,
+                token: verificationToken,
+            });
+            await newVerificationToken.save();
             await newUser.save();
             sendVerificationEmail(Email, verificationToken);
             res.status(200).json({ message: "Account Created Successfully" });

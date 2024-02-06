@@ -23,7 +23,6 @@ const Users = mongoose.model(
             },
         ],
         IsEmailVerified: { type: Boolean, default: false },
-        EmailVerificationToken: { type: String },
         Notifications: [
             {
                 Title: { type: String },
@@ -32,6 +31,14 @@ const Users = mongoose.model(
                 Readed: { type: Boolean, default: false },
             },
         ],
+    })
+);
+
+const email_verification_tokens = mongoose.model(
+    "email_verification_tokens",
+    new mongoose.Schema({
+        userId: { type: mongoose.Types.ObjectId, ref: "Users" },
+        token: { type: String },
     })
 );
 const Refresh_tokens = mongoose.model(
@@ -127,4 +134,5 @@ module.exports = {
     Blogs,
     Events,
     Admin_data,
+    email_verification_tokens,
 };
