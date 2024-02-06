@@ -4,21 +4,26 @@ const { Users, email_verification_tokens } = require("../../models/Database");
 
 const handleVerifyAccount = async (req, res) => {
     try {
-        const { Code } = req.body;
-        if (!Code) {
+        const { Code, userId } = req.body;
+
+        console.log("Code: ", Code);
+        console.log("userId: ", userId);
+        if (!Code || !userId) {
             return res.status(409).json({ error: "Missing Data" });
         }
 
         const verificationToken = await email_verification_tokens.findOne({
-            token: Code,
+            userId: userId,
         });
-
-        if (!verificationToken) {
+        if (!verificationToken.token) {
             return res
                 .status(404)
                 .json({ error: "Verification token not found" });
         }
 
+        if (verificationToken.token !== Code) {
+            return res.status(409).json({ error: "Invalid verification code" });
+        }
         if (verificationToken.expire < new Date()) {
             return res
                 .status(409)

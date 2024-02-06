@@ -7,7 +7,6 @@ const cookieParser = require("cookie-parser");
 const credentials = require("./Middleware/credentials");
 const corsOptions = require("./config/corsOptions");
 const path = require("path");
-const verifyJWT = require("./Middleware/verifyJWT");
 // const limiter = rateLimit({
 //     windowMs: 15 * 60 * 1000, // 15 minutes
 //     max: 100, // limit each IP to 100 requests per windowMs
@@ -31,14 +30,15 @@ async function connect_to_db() {
     });
 }
 connect_to_db().catch((err) => console.log(err));
-
+app.use("/check_Auth", require("./Routes/Auth/check_Auth"));
+app.use("/VerifyAccount", require("./Routes/Auth/verifyAccount"));
 app.use("/Login", require("./Routes/Auth/Login"));
 app.use("/Register", require("./Routes/Auth/Register"));
 app.use("/Logout", require("./Routes/Auth/Logout"));
 app.use("/Refresh", require("./Routes/Auth/Refresh"));
-app.use("/check_Auth", require("./Routes/Auth/check_Auth"));
 app.use("/Contact", require("./Routes/Contact"));
 app.use("/Courses", require("./Routes/Courses"));
+app.use("/Services", require("./Routes/Services"));
 app.use("/Dashboard/Courses", require("./Routes/Dashboard/Courses"));
 app.use("/Dashboard/Login", require("./Routes/Dashboard/Admin_Login"));
 // app.use("/Dashboard/AddAdmin", require("./Routes/Dashboard/Add_Admin"));
