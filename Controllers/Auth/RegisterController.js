@@ -7,36 +7,36 @@ const generateVerificationCode = () => {
     return code.toString();
 };
 const sendVerificationEmail = (Email, verificationToken) => {
-    const transporter = nodemailer.createTransport({
+    let transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-            user: process.env.EMAIL,
-            pass: process.env.EMAIL_PASSWORD,
+            user: process.env.EMAIL, // Your Gmail email address
+            pass: process.env.PASSWORD, // Your Gmail password
         },
     });
-    // Replace 'http://your-api-base-url' with your actual API base URL
-    const verificationLink = `http://http://localhost:3000/verify/${verificationToken}`;
 
-    const mailOptions = {
-        from: process.env.EMAIL,
-        to: Email,
-        subject: "Skate | Email Verification",
-        text: `Click the following link to verify your email: ${verificationLink}`,
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error(error);
-        } else {
-            console.log(`Email sent: ${info.response}`);
+    // Use the transporter object to send emails
+    transporter.sendMail(
+        {
+            from: process.env.EMAIL, // Your Gmail email address
+            to: Email, // Recipient email address
+            subject: "Test Email",
+            text: "this is your verification code: " + verificationToken,
+        },
+        (err, info) => {
+            if (err) {
+                console.error("Failed to send email:", err);
+                return;
+            }
+            console.log("Email sent:", info.messageId);
         }
-    });
-}
+    );
+};
 const handleRegister = async (req, res) => {
     try {
         const { FirstName, LastName, Email, Password, Age, Gender, Telephone } =
             req.body;
-        
+
         const isValidTelephone = /^(0)(5|6|7)[0-9]{8}$/.test(Telephone);
 
         if (
