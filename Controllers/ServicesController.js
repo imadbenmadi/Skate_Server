@@ -1,19 +1,7 @@
 const mongoose = require("mongoose");
 const { Services, Users, request_Service } = require("../models/Database");
 require("dotenv").config();
-const jwt = require("jsonwebtoken");
-const Verify_user = (accessToken) => {
-    const secretKey = process.env.ACCESS_TOKEN_SECRET;
-    if (!accessToken) return false;
-
-    try {
-        const decoded = jwt.verify(accessToken, secretKey);
-        return true;
-    } catch (err) {
-        console.error("Error during token verification:", err);
-        return false;
-    }
-};
+const Verify_user = require("../Middleware/verify_user");
 const getAllServices = async (req, res) => {
     try {
         const Services = await Services.find();
