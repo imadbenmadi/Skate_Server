@@ -1,11 +1,12 @@
-const { Users, email_verification_tokens } = require("../../models/Database");
+const { Users } = require("../../models/Database");
 const nodemailer = require("nodemailer");
+const dns = require("dns");
 const crypto = require("crypto");
-
 const generateVerificationCode = () => {
     const code = crypto.randomInt(10000000, 99999999);
     return code.toString();
 };
+
 const sendVerificationEmail = (Email, verificationToken) => {
     let transporter = nodemailer.createTransport({
         service: "gmail",
@@ -14,14 +15,55 @@ const sendVerificationEmail = (Email, verificationToken) => {
             pass: process.env.PASSWORD, // Your Gmail password
         },
     });
-
-    // Use the transporter object to send emails
+    const htmlTemplate = `
+        <html>
+            <head>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #f5f5f5;
+                        padding: 20px;
+                    }
+                    .container {
+                        max-width: 600px;
+                        margin: 0 auto;
+                        background-color: #ffffff;
+                        border-radius: 10px;
+                        padding: 20px;
+                        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+                    }
+                    h1 {
+                        color: #333333;
+                        text-align: center;
+                    }
+                    p {
+                        color: #666666;
+                    }
+                    .verification-code {
+                        background-color: #f2f2f2;
+                        padding: 10px;
+                        border-radius: 5px;
+                        text-align: center;
+                        font-size: 20px;
+                        margin-top: 20px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Verification Email</h1>
+                    <p>Thank you for registering. Please use the following verification code to complete your registration:</p>
+                    <div class="verification-code">${verificationToken}</div>
+                </div>
+            </body>
+        </html>
+    `;
     transporter.sendMail(
         {
-            from: process.env.EMAIL, // Your Gmail email address
-            to: Email, // Recipient email address
-            subject: "Test Email",
-            text: "this is your verification code: " + verificationToken,
+            from: process.env.EMAIL,
+            to: Email,
+            subject: "Skate Email verification",
+            html: htmlTemplate,
         },
         (err, info) => {
             if (err) {
@@ -32,6 +74,28 @@ const sendVerificationEmail = (Email, verificationToken) => {
         }
     );
 };
+
+const isEmailValid = (Email) => {
+    return new Promise((resolve, reject) => {
+        const domain = Email.split("@")[1];
+        console.log(domain);
+        dns.resolve(domain, "MX", (err, addresses) => {
+            if (err || !addresses || addresses.length === 0) {
+                resolve(false); // No MX records found, domain is invalid
+            } else {
+                // Additional check for A or AAAA records to further validate domain existence
+                dns.resolve(domain, (err, addresses) => {
+                    if (err || !addresses || addresses.length === 0) {
+                        resolve(false); // No A or AAAA records found, domain is invalid
+                    } else {
+                        resolve(true); // Domain is valid
+                    }
+                });
+            }
+        });
+    });
+};
+
 const handleRegister = async (req, res) => {
     try {
         const { FirstName, LastName, Email, Password, Age, Gender, Telephone } =
@@ -49,49 +113,51 @@ const handleRegister = async (req, res) => {
         ) {
             return res.status(409).json({ message: "Missing Data" });
         } else if (Password.length < 8) {
-            return res.status(409).json({
-                error: "Password must be at least 8 characters",
-            });
+            return res
+                .status(409)
+                .json({ error: "Password must be at least 8 characters" });
         } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(Email)) {
             return res.status(409).json({ error: "Invalid Email" });
-        } else if (Gender != "male" && Gender != "female") {
+        } else if (Gender !== "male" && Gender !== "female") {
             return res.status(409).json({
-                error: "Invalid Gender , accepted values : male or female",
+                error: "Invalid Gender, accepted values: male or female",
             });
         } else if (Telephone.length < 9) {
-            return res.status(409).json({
-                error: "Telephone must be at least 9 characters",
-            });
+            return res
+                .status(409)
+                .json({ error: "Telephone must be at least 9 characters" });
         } else if (!isValidTelephone) {
-            return res.status(409).json({
-                error: "Telephone must be a number",
-            });
+            return res
+                .status(409)
+                .json({ error: "Telephone must be a number" });
         } else if (Age && isNaN(Age)) {
             return res.status(409).json({ error: "Age must be a number" });
         }
+
+        if (!(await isEmailValid(Email))) {
+            return res.status(409).json({ error: "Invalid email domain" });
+        }
+
         const existingUser = await Users.findOne({ Email: Email });
         if (existingUser) {
-            res.status(401).json({ error: "Email already exists " });
-        } else {
-            const verificationToken = generateVerificationCode();
-            const newUser = new Users({
-                FirstName: FirstName,
-                LastName: LastName,
-                Email: Email,
-                Telephone: Telephone,
-                Password: Password,
-                Age: Age,
-                Gender: Gender,
-            });
-            const newVerificationToken = new email_verification_tokens({
-                userId: newUser._id,
-                token: verificationToken,
-            });
-            await newVerificationToken.save();
-            await newUser.save();
-            sendVerificationEmail(Email, verificationToken);
-            res.status(200).json({ message: "Account Created Successfully" });
+            return res.status(401).json({ error: "Email already exists" });
         }
+
+        const verificationToken = generateVerificationCode();
+        const newUser = new Users({
+            FirstName: FirstName,
+            LastName: LastName,
+            Email: Email,
+            Telephone: Telephone,
+            Password: Password,
+            Age: Age,
+            Gender: Gender,
+            EmailVerificationToken: verificationToken,
+        });
+
+        await newUser.save();
+        sendVerificationEmail(Email, verificationToken);
+        res.status(200).json({ message: "Account Created Successfully" });
     } catch (err) {
         res.status(400).json({ err });
     }
