@@ -6,8 +6,7 @@ const handleVerifyAccount = async (req, res) => {
     try {
         const { Code, userId } = req.body;
 
-        console.log("Code: ", Code);
-        console.log("userId: ", userId);
+        
         if (!Code || !userId) {
             return res.status(409).json({ error: "Missing Data" });
         }
@@ -47,7 +46,6 @@ const handleVerifyAccount = async (req, res) => {
 
         res.status(200).json({ message: "Account Verified Successfully" });
     } catch (err) {
-        console.error("Error verifying account:", err);
         res.status(400).json({
             error: "An error occurred while verifying the account",
         });

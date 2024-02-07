@@ -11,7 +11,6 @@ const handleLogout = async (req, res) => {
     const accessToken = req.cookies.accessToken;
 
     if (!refreshToken) {
-        console.log("No Refresh Cookie found");
         if (accessToken) {
             res.clearCookie("accessToken", {
                 httpOnly: true,
@@ -76,7 +75,6 @@ const handleLogout = async (req, res) => {
 
         res.status(204).json({ message: "Logged Out Successfully" });
     } catch (err) {
-        console.error(err);
         res.status(500).json({ message: "Internal Server Error", err });
     }
 };

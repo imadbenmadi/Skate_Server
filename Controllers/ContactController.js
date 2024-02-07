@@ -3,7 +3,6 @@ const { Messages } = require("../models/Database");
 const handleContact = async (req, res) => {
     try {
         const { Email, title, message, id } = req.body;
-        console.log(req.body);
         if (!title || !message) {
             return res
                 .status(409)

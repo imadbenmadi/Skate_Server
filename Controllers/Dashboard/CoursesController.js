@@ -9,7 +9,6 @@ const Verify_Admin = (admin_accessToken) => {
         const decoded = jwt.verify(admin_accessToken, secretKey);
         return true;
     } catch (err) {
-        console.error("Error during token verification:", err);
         return false;
     }
 };
@@ -26,7 +25,6 @@ const handle_add_Courses = async (req, res) => {
     try {
         const { Title, Description, Image, Price, Category } = req.body;
 
-        console.log(req.body);
 
         if (!Title || !Description || !Image || !Category) {
             return res.status(400).json({ error: "All fields are required." });
@@ -49,7 +47,6 @@ const handle_add_Courses = async (req, res) => {
 
         res.status(201).json({ message: "Course added successfully." });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -77,7 +74,6 @@ const handle_Accept_course_request = async (req, res) => {
 
         res.status(200).json({ message: "Course request accepted." });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Internal server error." });
     }
 }
@@ -102,7 +98,6 @@ const handle_Reject_course_request = async (req, res) => {
 
         res.status(200).json({ message: "Course request rejected." });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Internal server error." });
     }
 }

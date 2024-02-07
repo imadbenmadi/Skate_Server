@@ -35,17 +35,13 @@ const handleLogin = async (req, res) => {
                 process.env.ADMIN_REFRESH_TOKEN_SECRET,
                 { expiresIn: "1d" }
             );
-            // console.log("Login Controler");
-            // console.log("acessToken", accessToken);
-            // console.log("refreshToken", refreshToken);
-            // console.log("--------------------");
+            
             try {
                 await Refresh_tokens.create({
                     userId: Admin_in_Db._id,
                     token: refreshToken,
                 });
             } catch (err) {
-                console.log(err);
                 res.status(500).json({
                     error: "Internal Server Error " + err.message,
                 });
@@ -76,10 +72,8 @@ const handleLogin = async (req, res) => {
             res.status(401).json({
                 error: "Name or Password isn't correct",
             });
-            console.log("Name or Password isn't correct");
         }
     } catch (err) {
-        console.log(err.message);
         res.status(400).json({ error: err });
     }
 };

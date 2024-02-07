@@ -24,7 +24,6 @@ const handleRefreshToken = async (req, res) => {
             refreshToken,
             process.env.REFRESH_TOKEN_SECRET,
             async (err, decoded) => {
-                console.log(found_in_DB.userId !== decoded.userId);
                 if (err || found_in_DB.userId != decoded.userId)
                     return res
                         .status(403)
@@ -44,7 +43,6 @@ const handleRefreshToken = async (req, res) => {
                     maxAge: 60 * 60 * 1000,
                 });
                 const user = await Users.findOne({ _id: decoded.userId });
-                // console.log("user data from refreshToken:", user);
                 const UserData_To_Send = {
                     Age: user.Age,
                     Courses: user.Courses,

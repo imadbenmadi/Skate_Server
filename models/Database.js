@@ -40,6 +40,7 @@ const email_verification_tokens = mongoose.model(
         userId: { type: mongoose.Types.ObjectId, ref: "Users" },
         token: { type: String },
         expire: { type: Date, default: Date.now() + 24 * 60 * 60 * 1000 },
+        Date: { type: Date, default: Date.now() },
     })
 );
 const Refresh_tokens = mongoose.model(

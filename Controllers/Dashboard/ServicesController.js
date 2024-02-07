@@ -9,7 +9,6 @@ const Verify_Admin = (admin_accessToken) => {
         const decoded = jwt.verify(admin_accessToken, secretKey);
         return true;
     } catch (err) {
-        console.error("Error during token verification:", err);
         return false;
     }
 };
@@ -45,7 +44,6 @@ const handle_add_Service = async (req, res) => {
 
         res.status(201).json({ message: "Service added successfully." });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -79,7 +77,6 @@ const handle_Accept_Service_request = async (req, res) => {
         );
         res.status(200).json({ message: "Service request accepted." });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -104,7 +101,6 @@ const handle_Reject_Service_request = async (req, res) => {
 
         res.status(200).json({ message: "Service request rejected." });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Internal server error." });
     }
 };

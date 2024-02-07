@@ -9,7 +9,6 @@ const Verify_user = (accessToken) => {
         const decoded = jwt.verify(accessToken, secretKey);
         return true;
     } catch (err) {
-        console.error("Error during token verification:", err);
         return false;
     }
 };

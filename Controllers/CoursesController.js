@@ -7,7 +7,6 @@ const getAllCourses = async (req, res) => {
         const courses = await Courses.find();
         res.status(200).json(courses);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -27,12 +26,10 @@ const get_course_ById = async (req, res) => {
 
         res.status(200).json(course);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Internal server error." });
     }
 };
 const get_courses_By_user_Id = async (req, res) => {
-    console.log(req.body);
     const userId = req.body.userId;
     const accessToken = req.cookies.accessToken;
     if (!userId) return res.status(400).json({ error: "User Id is required." });
@@ -46,7 +43,6 @@ const get_courses_By_user_Id = async (req, res) => {
 
         res.status(200).json(user_in_db.Courses);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -84,7 +80,6 @@ const handle_request_Course = async (req, res) => {
         await new_request_Course.save();
         res.status(200).json({ message: "Course requested successfully." });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Internal server error." });
     }
 }

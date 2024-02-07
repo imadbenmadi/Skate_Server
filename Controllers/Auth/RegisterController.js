@@ -3,7 +3,7 @@ const nodemailer = require("nodemailer");
 const dns = require("dns");
 const crypto = require("crypto");
 const generateVerificationCode = () => {
-    const code = crypto.randomInt(10000000, 99999999);
+    const code = crypto.randomInt(100000, 999999);
     return code.toString();
 };
 
@@ -67,10 +67,8 @@ const sendVerificationEmail = (Email, verificationToken) => {
         },
         (err, info) => {
             if (err) {
-                console.error("Failed to send email:", err);
                 return;
             }
-            console.log("Email sent:", info.messageId);
         }
     );
 };
@@ -78,7 +76,6 @@ const sendVerificationEmail = (Email, verificationToken) => {
 const isEmailValid = (Email) => {
     return new Promise((resolve, reject) => {
         const domain = Email.split("@")[1];
-        console.log(domain);
         dns.resolve(domain, "MX", (err, addresses) => {
             if (err || !addresses || addresses.length === 0) {
                 resolve(false); // No MX records found, domain is invalid
@@ -160,7 +157,11 @@ const handleRegister = async (req, res) => {
         });
         await newVerificationToken.save();
         sendVerificationEmail(Email, verificationToken);
-        res.status(200).json({ message: "Account Created Successfully" });
+        res.status(200).json({
+            message: "Account Created Successfully",
+            _id: newUser._id,
+            Date: new Date(),
+        });
     } catch (err) {
         res.status(400).json({ err });
     }

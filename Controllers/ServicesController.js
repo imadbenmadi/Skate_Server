@@ -7,7 +7,6 @@ const getAllServices = async (req, res) => {
         const Services = await Services.find();
         res.status(200).json(Services);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -27,12 +26,10 @@ const get_Service_ById = async (req, res) => {
 
         res.status(200).json(Service);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Internal server error." });
     }
 };
 const get_Services_By_user_Id = async (req, res) => {
-    console.log(req.body);
     const userId = req.body.userId;
     const accessToken = req.cookies.accessToken;
     if (!userId) return res.status(400).json({ error: "User Id is required." });
@@ -46,7 +43,6 @@ const get_Services_By_user_Id = async (req, res) => {
 
         res.status(200).json(user_in_db.Services);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -84,7 +80,6 @@ const handle_request_Service = async (req, res) => {
         await new_request_Service.save();
         res.status(200).json({ message: "Service requested successfully." });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Internal server error." });
     }
 };
