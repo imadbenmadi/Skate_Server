@@ -7,12 +7,12 @@ const cookieParser = require("cookie-parser");
 const credentials = require("./Middleware/credentials");
 const corsOptions = require("./config/corsOptions");
 const path = require("path");
-// const limiter = rateLimit({
-//     windowMs: 60 * 1000, // 15 minutes
-//     max: 200, // limit each IP to 100 requests per windowMs
-//     message: "Too many requests ,try again later.",
-// });
-// app.use(limiter);
+const limiter = rateLimit({
+    windowMs: 60 * 1000, // 15 minutes
+    max: 200, // limit each IP to 100 requests per windowMs
+    message: "Too many requests ,try again later.",
+});
+app.use(limiter);
 app.use(cookieParser());
 app.use(credentials);
 app.use(cors(corsOptions));

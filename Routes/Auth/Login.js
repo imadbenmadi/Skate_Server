@@ -40,21 +40,24 @@ router.post("/", (req, res) => {
 
     // Check if the IP address is already blocked
     if (loginAttempts[ipAddress]) {
-        // Increment login attempts
-        loginAttempts[ipAddress].attempts++;
-
         // Check if login attempts threshold is exceeded
-        if (loginAttempts[ipAddress].attempts > 5) {
-            blockIP(ipAddress, 60000); // Block IP address for 1 minute (60000 milliseconds)
+        if (loginAttempts[ipAddress].attempts >= 5) {
             return res
                 .status(429)
                 .json({ error: "Too many login attempts. Try again later." });
         }
-    } else {
-        // If IP address is not blocked, set initial login attempt
-        loginAttempts[ipAddress] = {
-            attempts: 1,
-        };
+    }
+
+    // Increment login attempts or set initial attempt if not present
+    loginAttempts[ipAddress] = loginAttempts[ipAddress] || { attempts: 0 };
+    loginAttempts[ipAddress].attempts++;
+
+    // Check if login attempts threshold is exceeded after incrementing
+    if (loginAttempts[ipAddress].attempts >= 5) {
+        blockIP(ipAddress, 60000); // Block IP address for 1 minute (60000 milliseconds)
+        return res
+            .status(429)
+            .json({ error: "Too many login attempts. Try again later." });
     }
 
     // Handle login
