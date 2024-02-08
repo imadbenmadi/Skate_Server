@@ -32,6 +32,7 @@ async function connect_to_db() {
 connect_to_db().catch((err) => console.log(err));
 app.use("/check_Auth", require("./Routes/Auth/check_Auth"));
 app.use("/VerifyAccount", require("./Routes/Auth/verifyAccount"));
+app.use("/is_email_verified", require("./Routes/Auth/is_email_verified"));
 app.use("/Login", require("./Routes/Auth/Login"));
 app.use("/Register", require("./Routes/Auth/Register"));
 app.use("/Logout", require("./Routes/Auth/Logout"));
@@ -39,6 +40,10 @@ app.use("/Refresh", require("./Routes/Auth/Refresh"));
 app.use("/Contact", require("./Routes/Contact"));
 app.use("/Courses", require("./Routes/Courses"));
 app.use("/Services", require("./Routes/Services"));
+
+
+
+
 app.use("/Dashboard/Courses", require("./Routes/Dashboard/Courses"));
 app.use("/Dashboard/Login", require("./Routes/Dashboard/Admin_Login"));
 // app.use("/Dashboard/AddAdmin", require("./Routes/Dashboard/Add_Admin"));
