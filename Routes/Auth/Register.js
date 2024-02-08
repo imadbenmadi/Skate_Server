@@ -2,6 +2,30 @@ const express = require("express");
 const router = express.Router();
 const RegisterController = require("../../Controllers/Auth/RegisterController");
 // Registration route handler
+// Object to track registration attempts and block expiration time for each IP address
+const registrationAttempts = {};
+
+// Function to block an IP address for a specified duration (in milliseconds)
+const blockIP = (ipAddress, duration) => {
+    registrationAttempts[ipAddress] = {
+        attempts: 1,
+        expirationTime: Date.now() + duration,
+    };
+};
+
+// Middleware to cleanup expired IP address blocks
+const cleanupExpiredBlocks = () => {
+    const currentTime = Date.now();
+    Object.keys(registrationAttempts).forEach((ipAddress) => {
+        if (registrationAttempts[ipAddress].expirationTime < currentTime) {
+            delete registrationAttempts[ipAddress];
+        }
+    });
+};
+
+// Cleanup expired IP address blocks every minute
+setInterval(cleanupExpiredBlocks, 60000); // Run every minute
+
 router.post("/", async (req, res) => {
     const ipAddress = req.ip;
 
@@ -18,7 +42,6 @@ router.post("/", async (req, res) => {
         const registrationResult = await RegisterController.handleRegister(req, res);
 
         // If registration is successful, increment registration attempts and check threshold
-        if (registrationResult.success) {
             if (registrationAttempts[ipAddress]) {
                 // Increment registration attempts
                 registrationAttempts[ipAddress].attempts++;
@@ -36,10 +59,9 @@ router.post("/", async (req, res) => {
                     attempts: 1,
                 };
             }
-        }
+        
 
         // Return the result of the registration attempt
-        return res.status(registrationResult.statusCode).json(registrationResult.data);
     } catch (error) {
         // Handle any errors that occur during registration
         console.error("Error during registration:", error);

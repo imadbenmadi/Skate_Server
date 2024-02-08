@@ -44,13 +44,14 @@ const handleRefreshToken = async (req, res) => {
                 });
                 const user = await Users.findOne({ _id: decoded.userId });
                 const UserData_To_Send = {
-                    Age: user.Age,
-                    Courses: user.Courses,
+                    _id: user._id,
                     Email: user.Email,
                     FirstName: user.FirstName,
-                    Gender: user.Gender,
                     LastName: user.LastName,
-                    _id: user._id,
+                    Notifications: user.Notifications,
+                    Courses: user.Courses,
+                    Gender: user.Gender,
+                    IsEmailVerified: user.IsEmailVerified,
                 };
                 res.status(200).json({
                     message: "Access token refreshed Successully",
