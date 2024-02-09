@@ -52,6 +52,7 @@ app.use("/Dashboard/Login", require("./Routes/Dashboard/Admin_Login"));
 app.use("/Dashboard/Courses", require("./Routes/Dashboard/Courses"));
 app.use("/Dashboard/Services", require("./Routes/Dashboard/Servicecs"));
 app.use("/Dashboard/Blogs", require("./Routes/Dashboard/Blogs"));
+app.use("/Dashboard/Events", require("./Routes/Dashboard/Events"));
 // app.use("/Dashboard/AddAdmin", require("./Routes/Dashboard/Add_Admin"));
 
 // app.use("/Dashboard", require("./Routes/Dashboard/Dashboard"));

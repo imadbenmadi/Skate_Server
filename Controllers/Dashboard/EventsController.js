@@ -1,4 +1,4 @@
-const { Events } = require("../../models/Database");
+const { Events,Users } = require("../../models/Database");
 
 const Verify_Admin = require("../../Middleware/Verify_Admin");
 const handle_add_Event = async (req, res) => {
@@ -21,7 +21,21 @@ const handle_add_Event = async (req, res) => {
             Description,
         });
         await NewBlog.save();
+        // Push notification to all users
+        const notificationToSend = {
+            Type: "event",
+            Title: "New Event Added",
+            Text: `A new event "${Title}" has been added.`,
+            Date: new Date(),
+        };
 
+        const users = await Users.find({}, { _id: 1 }).exec();
+        const userIds = users.map((user) => user._id);
+
+        await Users.updateMany(
+            { _id: { $in: userIds } },
+            { $push: { Notifications: notificationToSend } }
+        );
         res.status(200).json({ message: "Event Created Successfully." });
     } catch (error) {
         res.status(500).json({ error: "Internal server error." });
