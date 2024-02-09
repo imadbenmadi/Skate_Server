@@ -66,6 +66,16 @@ const handle_Accept_Service_request = async (req, res) => {
                 },
             }
         );
+        // Push a notification to the user
+        const notificationToSend = {
+            Type: "service",
+            Title: "Service request accepted",
+            Text: "Your request for the service has been accepted",
+            Date: new Date(),
+        };
+        await Users.findByIdAndUpdate(UserId, {
+            $push: { Notifications: notificationToSend },
+        }).exec();
         res.status(200).json({ message: "Service request accepted." });
     } catch (error) {
         res.status(500).json({ error: "Internal server error." });
@@ -89,7 +99,16 @@ const handle_Reject_Service_request = async (req, res) => {
 
         // Remove the request from the database
         await request_Service.deleteMany({ UserId, ServiceId });
-
+        // Push a notification to the user
+        const notificationToSend = {
+            Type: "service",
+            Title: "Service request Rejected",
+            Text: "Your request for the service has been Rejected",
+            Date: new Date(),
+        };
+        await Users.findByIdAndUpdate(UserId, {
+            $push: { Notifications: notificationToSend },
+        }).exec();
         res.status(200).json({ message: "Service request rejected." });
     } catch (error) {
         res.status(500).json({ error: "Internal server error." });
