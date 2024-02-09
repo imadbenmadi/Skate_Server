@@ -55,14 +55,31 @@ const handleLogin = async (req, res) => {
             if (req.cookies.admin_refreshToken) {
                 res.clearCookie("admin_refreshToken");
             }
+            const today = new Date();
+            const lastMonth = new Date(
+                today.getFullYear(),
+                today.getMonth() - 1,
+                today.getDate()
+            );
+            // Filter notifications that are unread or from the last month
+            const notificationsToSend = user.Notifications.filter(
+                (notification) => {
+                    // Include notification if it's unread or from the last month
+                    return (
+                        !notification.Readed || notification.Date >= lastMonth
+                    );
+                }
+            );
             const UserData_To_Send = {
-                Age: user.Age,
-                Courses: user.Courses,
+                _id: user._id,
                 Email: user.Email,
                 FirstName: user.FirstName,
-                Gender: user.Gender,
                 LastName: user.LastName,
-                _id: user._id,
+                Notifications: notificationsToSend,
+                Courses: user.Courses,
+                Services: user.Services,
+                Gender: user.Gender,
+                IsEmailVerified: user.IsEmailVerified,
             };
             res.status(200).json({
                 message: "Logged In Successfully",
