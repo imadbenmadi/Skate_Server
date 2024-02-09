@@ -14,13 +14,14 @@ const handleVerifyAccount = async (req, res) => {
         const verificationToken = await email_verification_tokens.findOne({
             userId: userId,
         });
+        console.log(" verification token in database : ", verificationToken);
         if (!verificationToken.token) {
             return res
                 .status(404)
                 .json({ error: "Verification token not found" });
         }
 
-        if (verificationToken.token !== Code) {
+        if (verificationToken.token != Code) {
             return res.status(409).json({ error: "Invalid verification code" });
         }
         if (verificationToken.expire < new Date()) {

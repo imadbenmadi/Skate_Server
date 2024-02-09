@@ -1,7 +1,7 @@
 const { Users, email_verification_tokens } = require("../../models/Database");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-const Verify_user = require("../Middleware/verify_user");
+const Verify_user = require("../../Middleware/verify_user");
 
 const generateVerificationCode = () => {
     const code = crypto.randomInt(100000, 999999);
@@ -77,8 +77,8 @@ const sendVerificationEmail = (Email, verificationToken) => {
 const handle_send_Email = async (req, res) => {
     try {
         const { userId } = req.body;
-        const accessToken = req.cookie.accessToken;
-
+       const accessToken = req.cookies.accessToken;
+        console.log('acess token',accessToken);
         if (!userId) {
             return res.status(409).json({ message: "Missing Data" });
         } else if (!Verify_user(accessToken)) {
@@ -91,23 +91,29 @@ const handle_send_Email = async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: "User not found" });
         }else if(user.IsEmailVerified){
-            return res.status(409).json({error:"Email Already Verified"})
+            return res.status(401).json({error:"Email Already Verified"})
+        }
+        try {
+            await email_verification_tokens.deleteMany({ userId: userId });   
+        }catch(err){
+             res.status(400).json({ err });
         }
 
         const verificationToken = generateVerificationCode();
         const newVerificationToken = new email_verification_tokens({
-            userId: newUser._id,
+            userId: userId,
             token: verificationToken,
         });
         await newVerificationToken.save();
         sendVerificationEmail(user.Email, verificationToken);
         res.status(200).json({
             message: "Email Sended Successfully",
-            _id: newUser._id,
+            
             Date: new Date(),
         });
     } catch (err) {
         res.status(400).json({ err });
+        console.log(" Error in Send_Verification_EmailController: ", err);
     }
 };
 

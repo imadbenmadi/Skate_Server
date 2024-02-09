@@ -38,7 +38,7 @@ router.post("/", async (req, res) => {
     }
     // If is successful, increment attempts and check threshold
     if (Attempts[ipAddress]) {
-        if (Attempts[ipAddress].attempts >= 3) {
+        if (Attempts[ipAddress].attempts >= 5) {
             return res
                 .status(429)
                 .json({ error: "Too many login attempts. Try again later." });
@@ -51,7 +51,7 @@ router.post("/", async (req, res) => {
     Attempts[ipAddress].attempts++;
 
     // Check if attempts threshold is exceeded
-    if (Attempts[ipAddress].attempts > 3) {
+    if (Attempts[ipAddress].attempts >= 5) {
         blockIP(ipAddress, 300000); // Block IP address for 5 minutes (300,000 milliseconds)
         return res.status(429).json({
             error: "Too many attempts. Try again later.",
