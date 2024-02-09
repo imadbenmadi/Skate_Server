@@ -51,7 +51,7 @@ router.post("/", async (req, res) => {
     registrationAttempts[ipAddress].attempts++;
 
     // Check if registration attempts threshold is exceeded
-    if (registrationAttempts[ipAddress].attempts > 10) {
+    if (registrationAttempts[ipAddress].attempts > 5) {
         blockIP(ipAddress, 300000); // Block IP address for 5 minutes (300,000 milliseconds)
         return res.status(429).json({
             error: "Too many registration attempts. Try again later.",
