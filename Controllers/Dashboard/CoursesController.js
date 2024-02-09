@@ -2,36 +2,21 @@ const mongoose = require("mongoose");
 const { Courses, request_Course,Users } = require("../../models/Database");
 const jwt = require("jsonwebtoken");
 
-const Verify_Admin = (admin_accessToken) => {
-    const secretKey = process.env.ADMIN_ACCESS_TOKEN_SECRET;
-    if (!admin_accessToken) return false;
-    try {
-        const decoded = jwt.verify(admin_accessToken, secretKey);
-        return true;
-    } catch (err) {
-        return false;
-    }
-};
+const Verify_Admin = require("../../Middleware/Verify_Admin")
 
 const handle_add_Courses = async (req, res) => {
     const token = req.cookies.admin_accessToken;
 
     if (!token)
         return res.status(401).json({ error: "Unauthorized: Token missing" });
-
     if (!Verify_Admin(token))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
-
     try {
         const { Title, Description, Image, Price, Category } = req.body;
-
-
         if (!Title || !Description || !Image || !Category) {
             return res.status(400).json({ error: "All fields are required." });
         }
-
         const creationDate = new Date();
-
         // Create a new course
         const newCourse = new Courses({
             Title,
@@ -41,10 +26,8 @@ const handle_add_Courses = async (req, res) => {
             Category,
             Date: creationDate,
         });
-
         // Save the course to the database
         await newCourse.save();
-
         res.status(201).json({ message: "Course added successfully." });
     } catch (error) {
         res.status(500).json({ error: "Internal server error." });
@@ -68,9 +51,23 @@ const handle_Accept_course_request = async (req, res) => {
 
         // Remove the request from the database
         await request_Course.deleteMany({ UserId, CourseId });
-
-        // Add the course to the user's list of courses
-        await Users.findByIdAndUpdate(UserId, { $push: { Courses: CourseId } });
+        
+        const Notificatio_ToSend = {
+            Type: "course",
+            Title: "Course request accepted",
+            Text: "Your request for the course has been accepted",
+            Date: new Date(),
+        };
+        // Add the course to the user's list of courses , adn Notify him
+       const updateOperations = [
+           Users.findByIdAndUpdate(UserId, {
+               $push: { Courses: CourseId },
+           }).exec(),
+           Users.findByIdAndUpdate(UserId, {
+               $push: { Notifications: Notificatio_ToSend },
+           }).exec(),
+       ];
+       await Promise.all(updateOperations);
 
         res.status(200).json({ message: "Course request accepted." });
     } catch (error) {

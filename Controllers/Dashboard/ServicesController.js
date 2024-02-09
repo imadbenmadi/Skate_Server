@@ -2,16 +2,7 @@ const mongoose = require("mongoose");
 const { Services, request_Service, Users } = require("../../models/Database");
 const jwt = require("jsonwebtoken");
 
-const Verify_Admin = (admin_accessToken) => {
-    const secretKey = process.env.ADMIN_ACCESS_TOKEN_SECRET;
-    if (!admin_accessToken) return false;
-    try {
-        const decoded = jwt.verify(admin_accessToken, secretKey);
-        return true;
-    } catch (err) {
-        return false;
-    }
-};
+const Verify_Admin = require("../../Middleware/Verify_Admin");
 
 const handle_add_Service = async (req, res) => {
     const token = req.cookies.admin_accessToken;
