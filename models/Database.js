@@ -114,7 +114,7 @@ const Blogs = mongoose.model(
         Title: { type: String },
         Description: { type: String },
         Image: { type: String },
-        Date: { type: Date },
+        Date: { type: Date , default: Date.now()},
     })
 );
 const Events = mongoose.model(
