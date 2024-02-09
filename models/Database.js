@@ -122,7 +122,7 @@ const Events = mongoose.model(
     new mongoose.Schema({
         Title: { type: String },
         Description: { type: String },
-        Date: { type: Date },
+        Date: { type: Date ,default: Date.now()},
         Image: { type: String },
     })
 );
