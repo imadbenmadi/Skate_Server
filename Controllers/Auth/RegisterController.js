@@ -109,6 +109,22 @@ const handleRegister = async (req, res) => {
             !Telephone
         ) {
             return res.status(409).json({ message: "Missing Data" });
+        } else if (FirstName.length < 3) {
+            return res
+                .status(409)
+                .json({ message: "First Name must be more that 3 chars" });
+        } else if (LastName.length < 3) {
+            return res
+                .status(409)
+                .json({ message: "Last Name must be more that 3 chars" });
+        } else if (FirstName.length > 14) {
+            res.status(409).json({
+                message: "First Name must be less than 14 chars",
+            });
+        } else if (LastName.length > 14) {
+            res.status(409).json({
+                message: "LastName must be less than 14 chars",
+            });
         } else if (Password.length < 8) {
             return res
                 .status(409)
