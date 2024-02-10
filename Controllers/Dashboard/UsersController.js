@@ -1,4 +1,7 @@
 const { Users } = require("../../models/Database");
+const ObjectId = require("mongoose").Types.ObjectId; // Import ObjectId from mongoose
+const { Types } = require("mongoose");
+const mongoose = require("mongoose");
 
 const Verify_Admin = require("../../Middleware/Verify_Admin");
 
@@ -166,10 +169,25 @@ const handle_modify_User = async (req, res) => {
             );
             userToUpdate.Courses.push(...coursesToAddUnique);
         }
+        // console.log("courses to remove : ", CoursesToRemove);
+        // console.log("serveses to remove : ", ServicesToRemove);
         if (CoursesToRemove && CoursesToRemove.length > 0) {
-            userToUpdate.Courses = userToUpdate.Courses.filter(
-                (course) => !CoursesToRemove.includes(course)
-            );
+            try {
+                for (const courseId of CoursesToRemove) {
+                    // Find the index of the courseId in userToUpdate.Courses
+                    const indexToRemove = userToUpdate.Courses.findIndex(
+                        (course) => String(course) === courseId
+                    );
+
+                    // Remove the courseId if found
+                    if (indexToRemove !== -1) {
+                        userToUpdate.Courses.splice(indexToRemove, 1);
+                    } else {}
+                }
+            } catch (error) {
+                console.error("Error removing courses:", error);
+                return res.status(500).json({ error: "Internal server error" });
+            }
         }
 
         // Update Services
@@ -180,10 +198,24 @@ const handle_modify_User = async (req, res) => {
             userToUpdate.Services.push(...servicesToAddUnique);
         }
         if (ServicesToRemove && ServicesToRemove.length > 0) {
-            userToUpdate.Services = userToUpdate.Services.filter(
-                (service) => !ServicesToRemove.includes(service)
-            );
+            try {
+                for (const serviceId of ServicesToRemove) {
+                    // Find the index of the serviceId in userToUpdate.Services
+                    const indexToRemove = userToUpdate.Services.findIndex(
+                        (service) => String(service) === serviceId
+                    );
+
+                    // Remove the serviceId if found
+                    if (indexToRemove !== -1) {
+                        userToUpdate.Services.splice(indexToRemove, 1);
+                    } else {}
+                }
+            } catch (error) {
+                console.error("Error removing services:", error);
+                return res.status(500).json({ error: "Internal server error" });
+            }
         }
+
 
         // Update Notifications
         if (NotificationsToAdd && NotificationsToAdd.length > 0) {
@@ -195,10 +227,9 @@ const handle_modify_User = async (req, res) => {
 
         res.status(200).json({ message: "User updated successfully" });
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+        res.status(500).json({ error: error });
     }
 };
-
 
 const getAllUsers = async (req, res) => {
     const token = req.cookies.admin_accessToken;
