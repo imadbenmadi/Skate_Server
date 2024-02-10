@@ -31,6 +31,67 @@ const handle_add_Courses = async (req, res) => {
         res.status(500).json({ error: "Internal server error." });
     }
 };
+const handle_delete_Courses = async (req, res)=>{
+    const token = req.cookies.admin_accessToken;
+    if (!token)
+        return res.status(401).json({ error: "Unauthorized: Token missing" });
+    if (!Verify_Admin(token))
+        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    try {
+        const { courseId } = req.body;
+        if (!courseId ) {
+            return res.status(400).json({ error: "All fields are required." });
+        }
+        await Courses.findByIdAndDelete(courseId);
+        res.status(200).json({ message: "Course added successfully." });
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+}
+const handle_update_Courses = async (req, res) => {
+    const token = req.cookies.admin_accessToken;
+    if (!token)
+        return res.status(401).json({ error: "Unauthorized: Token missing" });
+    if (!Verify_Admin(token))
+        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    try {
+        const { courseId, title, description, image, price, category, date } =
+            req.body;
+        if (!courseId) {
+            return res.status(400).json({ error: "Course ID is required." });
+        }
+        const course = await Courses.findById(courseId);
+        if (!course) {
+            return res.status(404).json({ error: "Course not found." });
+        }
+        // Update each field if provided in the request body
+        if (title) {
+            course.Title = title;
+        }
+        if (description) {
+            course.Description = description;
+        }
+        if (image) {
+            course.Image = image;
+        }
+        if (price) {
+            course.Price = price;
+        }
+        if (category) {
+            course.Category = category;
+        }
+        if (date) {
+            course.Date = date;
+        }
+        // Save the updated course
+        await course.save();
+        res.status(200).json({ message: "Course updated successfully." });
+    } catch (error) {
+        res.status(500).json({ error: "Internal server error." });
+    }
+};
+
+
 const handle_Accept_course_request = async (req, res) => {
     const token = req.cookies.admin_accessToken;
 
@@ -108,4 +169,6 @@ module.exports = {
     handle_add_Courses,
     handle_Accept_course_request,
     handle_Reject_course_request,
+    handle_delete_Courses,
+    handle_update_Courses,
 };
