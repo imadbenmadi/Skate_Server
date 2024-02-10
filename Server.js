@@ -49,6 +49,7 @@ app.use("/Services", require("./Routes/Services"));
 
 
 app.use("/Dashboard/Login", require("./Routes/Dashboard/Admin_Login"));
+app.use("/Dashboard/User",require("./Routes/Dashboard/Users"));
 app.use("/Dashboard/Courses", require("./Routes/Dashboard/Courses"));
 app.use("/Dashboard/Services", require("./Routes/Dashboard/Servicecs"));
 app.use("/Dashboard/Blogs", require("./Routes/Dashboard/Blogs"));

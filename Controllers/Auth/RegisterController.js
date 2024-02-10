@@ -2,11 +2,11 @@ const { Users, email_verification_tokens } = require("../../models/Database");
 const nodemailer = require("nodemailer");
 const dns = require("dns");
 const crypto = require("crypto");
+
 const generateVerificationCode = () => {
     const code = crypto.randomInt(100000, 999999);
     return code.toString();
 };
-
 const sendVerificationEmail = (Email, verificationToken) => {
     let transporter = nodemailer.createTransport({
         service: "gmail",
