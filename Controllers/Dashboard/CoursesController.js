@@ -40,10 +40,10 @@ const handle_delete_Courses = async (req, res)=>{
     try {
         const { courseId } = req.body;
         if (!courseId ) {
-            return res.status(400).json({ error: "All fields are required." });
+            return res.status(400).json({ error: "CourseId fields is required." });
         }
         await Courses.findByIdAndDelete(courseId);
-        res.status(200).json({ message: "Course added successfully." });
+        res.status(200).json({ message: "Course Deleted successfully." });
     } catch (error) {
         res.status(500).json({ error });
     }

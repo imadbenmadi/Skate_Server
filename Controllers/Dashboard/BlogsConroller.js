@@ -27,4 +27,64 @@ const handle_add_Blog = async (req, res) => {
         res.status(500).json({ error: "Internal server error." });
     }
 };
-module.exports = { handle_add_Blog };
+const handle_delete_Blog = async (req, res) => {
+    const token = req.cookies.admin_accessToken;
+    if (!token)
+        return res.status(401).json({ error: "Unauthorized: Token missing" });
+    if (!Verify_Admin(token))
+        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    try {
+        const { blogId } = req.body;
+        if (!blogId) {
+            return res.status(400).json({ error: "Blogid fields is required." });
+        }
+        await Blogs.findByIdAndDelete(blogId);
+        res.status(200).json({ message: "Blog Deleted successfully." });
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+};
+const handle_update_Blog = async (req, res) => {
+    const token = req.cookies.admin_accessToken;
+    if (!token)
+        return res.status(401).json({ error: "Unauthorized: Token missing" });
+    if (!Verify_Admin(token))
+        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    try {
+        const { blogId, title, description, image, price, category, date } =
+            req.body;
+        if (!blogId) {
+            return res.status(400).json({ error: "blog ID is required." });
+        }
+        const blog = await Blogs.findById(blogId);
+        if (!blog) {
+            return res.status(404).json({ error: "blog not found." });
+        }
+        // Update each field if provided in the request body
+        if (title) {
+            blog.Title = title;
+        }
+        if (description) {
+            blog.Description = description;
+        }
+        if (image) {
+            blog.Image = image;
+        }
+        if (price) {
+            blog.Price = price;
+        }
+        if (category) {
+            blog.Category = category;
+        }
+        if (date) {
+            blog.Date = date;
+        }
+        // Save the updated blog
+        await blog.save();
+        res.status(200).json({ message: "blog updated successfully." });
+    } catch (error) {
+        res.status(500).json({ error: "Internal server error." });
+    }
+};
+
+module.exports = { handle_add_Blog, handle_delete_Blog, handle_update_Blog };
