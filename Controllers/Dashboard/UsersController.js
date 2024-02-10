@@ -94,4 +94,43 @@ const handle_delete_User = async (req, res) => {
         res.status(500).json({ error: "Internal server error." });
     }
 }
-module.exports = { handle_add_User, handle_delete_User };
+const getAllUsers = async (req, res) => {
+    const token = req.cookies.admin_accessToken;
+
+    if (!token)
+        return res.status(401).json({ error: "Unauthorized: Token missing" });
+
+    if (!Verify_Admin(token))
+        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+
+    try {
+        const users = await Users.find();
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ error: "Internal server error." });
+    }
+}
+const get_user = async (req, res) => {
+    const token = req.cookies.admin_accessToken;
+
+    if (!token)
+        return res.status(401).json({ error: "Unauthorized: Token missing" });
+
+    if (!Verify_Admin(token))
+        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).json({ error: "User ID is required." });
+        }
+        const user = await Users.findById(id);
+        if (!user) {
+            return res.status(404).json({ error: "User not found." });
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ error: "Internal server error." });
+    }
+}
+module.exports = { handle_add_User, handle_delete_User, getAllUsers };
