@@ -33,6 +33,7 @@ connect_to_db().catch((err) => console.log(err));
 app.use("/check_Auth", require("./Routes/Auth/check_Auth"));
 app.use("/VerifyAccount", require("./Routes/Auth/verifyAccount"));
 app.use("/Send_Verification_Email", require("./Routes/Auth/Send_Verification_Email"));
+app.use("/ReSend_Verification_Email" ,require("./Routes/emails/Resend_verification"));
 app.use("/is_email_verified", require("./Routes/Auth/is_email_verified"));
 
 
