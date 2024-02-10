@@ -161,7 +161,10 @@ const handle_modify_User = async (req, res) => {
 
         // Update Courses
         if (CoursesToAdd && CoursesToAdd.length > 0) {
-            userToUpdate.Courses.push(...CoursesToAdd);
+            const coursesToAddUnique = CoursesToAdd.filter(
+                (course) => !userToUpdate.Courses.includes(course)
+            );
+            userToUpdate.Courses.push(...coursesToAddUnique);
         }
         if (CoursesToRemove && CoursesToRemove.length > 0) {
             userToUpdate.Courses = userToUpdate.Courses.filter(
@@ -171,7 +174,10 @@ const handle_modify_User = async (req, res) => {
 
         // Update Services
         if (ServicesToAdd && ServicesToAdd.length > 0) {
-            userToUpdate.Services.push(...ServicesToAdd);
+            const servicesToAddUnique = ServicesToAdd.filter(
+                (service) => !userToUpdate.Services.includes(service)
+            );
+            userToUpdate.Services.push(...servicesToAddUnique);
         }
         if (ServicesToRemove && ServicesToRemove.length > 0) {
             userToUpdate.Services = userToUpdate.Services.filter(
