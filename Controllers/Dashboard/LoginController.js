@@ -13,7 +13,9 @@ const handleLogin = async (req, res) => {
         if (!Name || !Password) {
             return res.status(409).json({ error: "Missing Data" });
         }
-        const Admin_in_Db = await Admin_data.findOne({ Admin_User_Name: Name });
+        const Admin_in_Db = await Admin_data.findOne({ Admin_User_Name: Name }).exec();
+        if (!Admin_in_Db)
+            return res.status(401).json({error : "not authorized"})
         const passwordsMatch = await comparePasswords(
             Password,
             Admin_in_Db.Admin_Pwd
@@ -28,7 +30,7 @@ const handleLogin = async (req, res) => {
             const accessToken = jwt.sign(
                 { adminId: Admin_in_Db._id },
                 process.env.ADMIN_ACCESS_TOKEN_SECRET,
-                { expiresIn: "1h" }
+                { expiresIn: "3s" }
             );
             const refreshToken = jwt.sign(
                 { adminId: Admin_in_Db._id },

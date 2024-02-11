@@ -6,7 +6,6 @@ const Verify_user = async (req, res) => {
     const secretKey = process.env.ACCESS_TOKEN_SECRET;
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
-    if (!accessToken) return false;
     try {
         const decoded = jwt.verify(accessToken, secretKey);
         return true;

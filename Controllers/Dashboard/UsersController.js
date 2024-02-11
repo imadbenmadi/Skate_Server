@@ -11,7 +11,7 @@ const handle_add_User = async (req, res) => {
     if (!token)
         return res.status(401).json({ error: "Unauthorized: Token missing" });
 
-    if (!Verify_Admin(token))
+    if (!Verify_Admin(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
 
     try {
@@ -95,7 +95,7 @@ const handle_delete_User = async (req, res) => {
     if (!token)
         return res.status(401).json({ error: "Unauthorized: Token missing" });
 
-    if (!Verify_Admin(token))
+    if (!Verify_Admin(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
 
     try {
@@ -119,7 +119,7 @@ const handle_modify_User = async (req, res) => {
     if (!token)
         return res.status(401).json({ error: "Unauthorized: Token missing" });
 
-    if (!Verify_Admin(token))
+    if (!Verify_Admin(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
 
     try {
@@ -253,7 +253,7 @@ const getAllUsers = async (req, res) => {
     if (!token)
         return res.status(401).json({ error: "Unauthorized: Token missing" });
 
-    if (!Verify_Admin(token))
+    if (!Verify_Admin(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
 
     try {
@@ -270,7 +270,7 @@ const get_user = async (req, res) => {
     if (!token)
         return res.status(401).json({ error: "Unauthorized: Token missing" });
 
-    if (!Verify_Admin(token))
+    if (!Verify_Admin(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
 
     try {

@@ -7,7 +7,7 @@ const handle_add_Courses = async (req, res) => {
 
     if (!token)
         return res.status(401).json({ error: "Unauthorized: Token missing" });
-    if (!Verify_Admin(token))
+    if (!Verify_Admin(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
     try {
         const { Title, Description, Image, Price, Category } = req.body;
@@ -35,7 +35,7 @@ const handle_delete_Courses = async (req, res)=>{
     const token = req.cookies.admin_accessToken;
     if (!token)
         return res.status(401).json({ error: "Unauthorized: Token missing" });
-    if (!Verify_Admin(token))
+    if (!Verify_Admin(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
     try {
         const { courseId } = req.body;
@@ -52,7 +52,7 @@ const handle_update_Courses = async (req, res) => {
     const token = req.cookies.admin_accessToken;
     if (!token)
         return res.status(401).json({ error: "Unauthorized: Token missing" });
-    if (!Verify_Admin(token))
+    if (!Verify_Admin(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
     try {
         const { courseId, title, description, image, price, category, date } =
@@ -98,7 +98,7 @@ const handle_Accept_course_request = async (req, res) => {
     if (!token)
         return res.status(401).json({ error: "Unauthorized: Token missing" });
 
-    if (!Verify_Admin(token))
+    if (!Verify_Admin(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
 
     try {
@@ -136,7 +136,7 @@ const handle_Reject_course_request = async (req, res) => {
     if (!token)
         return res.status(401).json({ error: "Unauthorized: Token missing" });
 
-    if (!Verify_Admin(token))
+    if (!Verify_Admin(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
 
     try {
