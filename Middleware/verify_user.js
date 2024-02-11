@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const { Users, Refresh_tokens } = require("../models/Database");
+const { Refresh_tokens } = require("../models/Database");
 
 const Verify_user = async (req, res) => {
     const secretKey = process.env.ACCESS_TOKEN_SECRET;
