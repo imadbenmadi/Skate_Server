@@ -91,9 +91,11 @@ const Services = mongoose.model(
     "Services",
     new mongoose.Schema({
         Title: { type: String },
+        Text: { type: String },
         Description: { type: String },
         Image: { type: String },
         Category: { type: String },
+        Price: { type: Number },
     })
 );
 
@@ -101,11 +103,11 @@ const Courses = mongoose.model(
     "Courses",
     new mongoose.Schema({
         Title: { type: String },
+        Text: { type: String },
         Description: { type: String },
         Image: { type: String },
         Price: { type: Number },
         Category: { type: String },
-        Date: { type: Date },
     })
 );
 const Blogs = mongoose.model(
