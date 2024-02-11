@@ -5,11 +5,6 @@ const jwt = require("jsonwebtoken");
 const Verify_Admin = require("../../Middleware/Verify_Admin");
 
 const handle_add_Service = async (req, res) => {
-    const token = req.cookies.admin_accessToken;
-
-    if (!token)
-        return res.status(401).json({ error: "Unauthorized: Token missing" });
-
     if (!Verify_Admin(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
 
@@ -39,9 +34,6 @@ const handle_add_Service = async (req, res) => {
     }
 };
 const handle_delete_Service = async (req, res) => {
-    const token = req.cookies.admin_accessToken;
-    if (!token)
-        return res.status(401).json({ error: "Unauthorized: Token missing" });
     if (!Verify_Admin(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
     try {
@@ -58,9 +50,6 @@ const handle_delete_Service = async (req, res) => {
     }
 };
 const handle_update_Service = async (req, res) => {
-    const token = req.cookies.admin_accessToken;
-    if (!token)
-        return res.status(401).json({ error: "Unauthorized: Token missing" });
     if (!Verify_Admin(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
     try {
@@ -100,11 +89,6 @@ const handle_update_Service = async (req, res) => {
     }
 };
 const handle_Accept_Service_request = async (req, res) => {
-    const token = req.cookies.admin_accessToken;
-
-    if (!token)
-        return res.status(401).json({ error: "Unauthorized: Token missing" });
-
     if (!Verify_Admin(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
 
@@ -143,11 +127,6 @@ const handle_Accept_Service_request = async (req, res) => {
     }
 };
 const handle_Reject_Service_request = async (req, res) => {
-    const token = req.cookies.admin_accessToken;
-
-    if (!token)
-        return res.status(401).json({ error: "Unauthorized: Token missing" });
-
     if (!Verify_Admin(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
 

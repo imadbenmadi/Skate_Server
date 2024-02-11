@@ -2,11 +2,6 @@ const { Blogs } = require("../../models/Database");
 
 const Verify_Admin = require("../../Middleware/Verify_Admin");
 const handle_add_Blog = async (req, res) => {
-    const token = req.cookies.admin_accessToken;
-
-    if (!token)
-        return res.status(401).json({ error: "Unauthorized: Token missing" });
-
     if (!Verify_Admin(req, res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
 
@@ -28,9 +23,6 @@ const handle_add_Blog = async (req, res) => {
     }
 };
 const handle_delete_Blog = async (req, res) => {
-    const token = req.cookies.admin_accessToken;
-    if (!token)
-        return res.status(401).json({ error: "Unauthorized: Token missing" });
     if (!Verify_Admin(req, res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
     try {
@@ -47,9 +39,6 @@ const handle_delete_Blog = async (req, res) => {
     }
 };
 const handle_update_Blog = async (req, res) => {
-    const token = req.cookies.admin_accessToken;
-    if (!token)
-        return res.status(401).json({ error: "Unauthorized: Token missing" });
     if (!Verify_Admin(req, res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
     try {

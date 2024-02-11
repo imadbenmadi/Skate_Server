@@ -2,10 +2,6 @@ const {  Users } = require("../models/Database");
 require("dotenv").config();
 const Verify_user = require("../Middleware/verify_user");
 const EditProfile = async (req, res) => {
-    const token = req.cookies.accessToken;
-    if (!token)
-        return res.status(401).json({ error: "Unauthorized: Token missing" });
-
     if (!Verify_user(req, res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
 

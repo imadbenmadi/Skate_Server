@@ -6,11 +6,6 @@ const mongoose = require("mongoose");
 const Verify_Admin = require("../../Middleware/Verify_Admin");
 
 const handle_add_User = async (req, res) => {
-    const token = req.cookies.admin_accessToken;
-
-    if (!token)
-        return res.status(401).json({ error: "Unauthorized: Token missing" });
-
     if (!Verify_Admin(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
 
@@ -90,11 +85,6 @@ const handle_add_User = async (req, res) => {
     }
 };
 const handle_delete_User = async (req, res) => {
-    const token = req.cookies.admin_accessToken;
-
-    if (!token)
-        return res.status(401).json({ error: "Unauthorized: Token missing" });
-
     if (!Verify_Admin(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
 
@@ -114,11 +104,6 @@ const handle_delete_User = async (req, res) => {
     }
 };
 const handle_modify_User = async (req, res) => {
-    const token = req.cookies.admin_accessToken;
-
-    if (!token)
-        return res.status(401).json({ error: "Unauthorized: Token missing" });
-
     if (!Verify_Admin(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
 
@@ -265,11 +250,6 @@ const getAllUsers = async (req, res) => {
 };
 
 const get_user = async (req, res) => {
-    const token = req.cookies.admin_accessToken;
-
-    if (!token)
-        return res.status(401).json({ error: "Unauthorized: Token missing" });
-
     if (!Verify_Admin(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
 
