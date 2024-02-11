@@ -81,7 +81,8 @@ const handle_send_Email = async (req, res) => {
         console.log("acess token", accessToken);
         if (!userId) {
             return res.status(409).json({ message: "Missing Data" });
-        } else if (!Verify_user(accessToken)) {
+        } else if (!Verify_user(req,res)) {
+            console.log("accessToken not valid ");
             return res
                 .status(401)
                 .json({ error: "Unauthorized: Invalid token" });
@@ -89,8 +90,10 @@ const handle_send_Email = async (req, res) => {
 
         const user = await Users.findById(userId);
         if (!user) {
-            return res.status(404).json({ error: "User not found" });
+            console.log("User not found");
+            return res.status(401).json({ error: "User not found" });
         } else if (user.IsEmailVerified) {
+            console.log("Email Already Verified");
             return res.status(401).json({ error: "Email Already Verified" });
         }
         try {

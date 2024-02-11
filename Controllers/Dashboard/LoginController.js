@@ -28,7 +28,7 @@ const handleLogin = async (req, res) => {
             const accessToken = jwt.sign(
                 { adminId: Admin_in_Db._id },
                 process.env.ADMIN_ACCESS_TOKEN_SECRET,
-                { expiresIn: "10m" }
+                { expiresIn: "1h" }
             );
             const refreshToken = jwt.sign(
                 { adminId: Admin_in_Db._id },

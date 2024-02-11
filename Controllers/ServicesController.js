@@ -33,7 +33,7 @@ const get_Services_By_user_Id = async (req, res) => {
     const userId = req.body.userId;
     const accessToken = req.cookies.accessToken;
     if (!userId) return res.status(400).json({ error: "User Id is required." });
-    if (!Verify_user(accessToken))
+    if (!Verify_user(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
     try {
         const user_in_db = await Users.findById(userId).populate("Services");
@@ -52,7 +52,7 @@ const handle_request_Service = async (req, res) => {
     if (!ServiceId || !userId) {
         return res.status(400).json({ error: "Messing Data." });
     }
-    if (!Verify_user(accessToken))
+    if (!Verify_user(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
     try {
         const user = await Users.findById(userId);

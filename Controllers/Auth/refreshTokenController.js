@@ -3,9 +3,11 @@ require("dotenv").config();
 const { Users, Refresh_tokens } = require("../../models/Database");
 
 const handleRefreshToken = async (req, res) => {
-    try {
-        const refreshToken = req.cookies.refreshToken;
 
+    try {
+ 
+        
+        const refreshToken = req.cookies.refreshToken;
         if (!refreshToken) {
             return res
                 .status(401)
@@ -14,23 +16,21 @@ const handleRefreshToken = async (req, res) => {
         const found_in_DB = await Refresh_tokens.findOne({
             token: refreshToken,
         }).exec();
-
         if (!found_in_DB)
             return res
                 .status(403)
                 .json({ message: "Refresh Token not found in the database" }); //Forbidden
         // evaluate jwt
+       
         jwt.verify(
             refreshToken,
             process.env.REFRESH_TOKEN_SECRET,
             async (err, decoded) => {
                 if (err || found_in_DB.userId != decoded.userId)
-                    return res
-                        .status(403)
-                        .json({
-                            message:
-                                " fail to virify Jwt , refresh token does not match ",
-                        });
+                    return res.status(403).json({
+                        message:
+                            " fail to virify Jwt , refresh token does not match ",
+                    });
                 const accessToken = jwt.sign(
                     { userId: decoded.userId },
                     process.env.ACCESS_TOKEN_SECRET,
