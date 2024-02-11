@@ -44,7 +44,7 @@ const Verify_Admin = async(req, res) => {
                         const newAccessToken = jwt.sign(
                             { userId: decoded.userId },
                             process.env.ADMIN_ACCESS_TOKEN_SECRET,
-                            { expiresIn: "3s" }
+                            { expiresIn: "5m" }
                         );
                         res.cookie("admin_accessToken", newAccessToken, {
                             httpOnly: true,
