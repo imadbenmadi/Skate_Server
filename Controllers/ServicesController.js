@@ -4,10 +4,11 @@ require("dotenv").config();
 const Verify_user = require("../Middleware/verify_user");
 const getAllServices = async (req, res) => {
     try {
-        const Services = await Services.find();
-        res.status(200).json(Services);
+        const services = await Services.find();
+        res.status(200).json(services);
     } catch (error) {
         res.status(500).json({ error: "Internal server error." });
+        console.log(error);
     }
 };
 const get_Service_ById = async (req, res) => {
