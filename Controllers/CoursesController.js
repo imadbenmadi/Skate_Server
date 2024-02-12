@@ -11,9 +11,9 @@ const getAllCourses = async (req, res) => {
     }
 };
 const get_course_ById = async (req, res) => {
-    const courseId = req.params.id;
+    const courseId = req.body.id;
 
-    if (!mongoose.Types.ObjectId.isValid(courseId)) {
+    if (!courseId) {
         return res.status(400).json({ error: "Invalid course ID." });
     }
 
@@ -30,8 +30,8 @@ const get_course_ById = async (req, res) => {
     }
 };
 const get_courses_By_user_Id = async (req, res) => {
-    const userId = req.body.userId;
-    
+    const userId = req.params._id;
+    console.log(userId);
     if (!userId) return res.status(400).json({ error: "User Id is required." });
     if (!Verify_user(req,res))
         return res.status(401).json({ error: "Unauthorized: Invalid token" });

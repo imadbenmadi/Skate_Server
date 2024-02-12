@@ -46,7 +46,8 @@ app.use("/Profile", require("./Routes/Profile"));
 app.use("/Contact", require("./Routes/Contact"));
 app.use("/Courses", require("./Routes/Courses"));
 app.use("/Services", require("./Routes/Services"));
-
+app.use("/Blogs", require("./Routes/Blogs"));
+app.use("/Events", require("./Routes/Events"));
 
 
 app.use("/Dashboard/Login", require("./Routes/Dashboard/Admin_Login"));
