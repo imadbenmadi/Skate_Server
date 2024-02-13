@@ -11,7 +11,7 @@ const getAllCourses = async (req, res) => {
     }
 };
 const get_course_ById = async (req, res) => {
-    const courseId = req.body.id;
+    const courseId = req.params.id;
 
     if (!courseId) {
         return res.status(400).json({ error: "Invalid course ID." });
