@@ -11,8 +11,6 @@ router.get("/", async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
 
     try {
-        
-
         // Verify the access token
         jwt.verify(accessToken, secretKey, async (err, decoded) => {
             if (err) {
@@ -21,11 +19,9 @@ router.get("/", async (req, res) => {
                     try {
                         if (!refreshToken) {
                             console.error("Refresh token is missing.");
-                            return res
-                                .status(401)
-                                .json({
-                                    error: "Unauthorized: Refresh token is missing",
-                                });
+                            return res.status(401).json({
+                                error: "Unauthorized: Refresh token is missing",
+                            });
                         }
 
                         const found_in_DB = await Refresh_tokens.findOne({
@@ -36,11 +32,9 @@ router.get("/", async (req, res) => {
                             console.error(
                                 "Refresh token not found in the database."
                             );
-                            return res
-                                .status(401)
-                                .json({
-                                    error: "Unauthorized: Refresh token not found in the database",
-                                });
+                            return res.status(401).json({
+                                error: "Unauthorized: Refresh token not found in the database",
+                            });
                         }
 
                         jwt.verify(
@@ -52,22 +46,18 @@ router.get("/", async (req, res) => {
                                         "Failed to verify JWT. Refresh token does not match.",
                                         err
                                     );
-                                    return res
-                                        .status(401)
-                                        .json({
-                                            error: "Unauthorized: Failed to verify JWT. Refresh token does not match",
-                                        });
+                                    return res.status(401).json({
+                                        error: "Unauthorized: Failed to verify JWT. Refresh token does not match",
+                                    });
                                 } else if (
                                     found_in_DB.userId != decoded.userId
                                 ) {
                                     console.error(
                                         "found_in_DB.userId != decoded.userId"
                                     );
-                                    return res
-                                        .status(401)
-                                        .json({
-                                            error: "Unauthorized: User ID mismatch",
-                                        });
+                                    return res.status(401).json({
+                                        error: "Unauthorized: User ID mismatch",
+                                    });
                                 }
 
                                 // Generate new access token
@@ -113,12 +103,10 @@ router.get("/", async (req, res) => {
                     }
                 } else {
                     // Other verification error, return unauthorized
-                    console.error("Error verifying token:", err);
-                    return res
-                        .status(401)
-                        .json({
-                            error: "Unauthorized: Access token is invalid",
-                        });
+                    
+                    return res.status(401).json({
+                        error: "Unauthorized: Access token is invalid",
+                    });
                 }
             } else {
                 // Access token is valid, continue with the response
@@ -141,7 +129,6 @@ router.get("/", async (req, res) => {
             }
         });
     } catch (err) {
-        console.error("Error:", err);
         return res.status(500).json({ error: "Internal Server Error" });
     }
 });

@@ -9,7 +9,7 @@ const getAllEvents = async (req, res) => {
     }
 };
 const get_Event_ById = async (req, res) => {
-    const EventId = req.body.id;
+    const EventId = req.params.id;
 
     if (!EventId) {
         return res.status(400).json({ error: "Invalid Event ID." });

@@ -48,7 +48,6 @@ const get_courses_By_user_Id = async (req, res) => {
 };
 const handle_request_Course = async (req, res) => {
     const { courseId, userId } = req.body;
-    const accessToken = req.cookies.accessToken;
     if (!courseId || !userId) {
         return res.status(400).json({ error: "Messing Data." });
     }

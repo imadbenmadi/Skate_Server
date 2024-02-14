@@ -9,7 +9,7 @@ const getAllBlogs = async (req, res) => {
     }
 };
 const get_Blog_ById = async (req, res) => {
-    const blogId = req.body.id;
+    const blogId = req.params.id;
 
     if (!blogId) {
         return res.status(400).json({ error: "Invalid blog ID." });
