@@ -1,9 +1,5 @@
-const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const { Users, Refresh_tokens } = require("../../models/Database");
-
-const mongoose = require("mongoose");
-
+const { Refresh_tokens } = require("../../models/Database");
 const handleLogout = async (req, res) => {
     // On the client, also delete the accessToken
 

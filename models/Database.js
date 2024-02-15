@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const uuid = require("uuid");
 
 const Users = mongoose.model(
     "Users",
@@ -25,7 +23,10 @@ const Users = mongoose.model(
         IsEmailVerified: { type: Boolean, default: false },
         Notifications: [
             {
-                Type: { type: String, enum: ["verify", "contact", "event", "course","service"] },
+                Type: {
+                    type: String,
+                    enum: ["verify", "contact", "event", "course", "service"],
+                },
                 Title: { type: String },
                 Text: { type: String },
                 Date: { type: Date },
@@ -116,7 +117,7 @@ const Blogs = mongoose.model(
         Title: { type: String },
         Description: { type: String },
         Image: { type: String },
-        Date: { type: Date , default: Date.now()},
+        Date: { type: Date, default: Date.now() },
     })
 );
 const Events = mongoose.model(
@@ -124,7 +125,7 @@ const Events = mongoose.model(
     new mongoose.Schema({
         Title: { type: String },
         Description: { type: String },
-        Date: { type: Date ,default: Date.now()},
+        Date: { type: Date, default: Date.now() },
         Image: { type: String },
     })
 );

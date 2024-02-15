@@ -40,7 +40,6 @@ app.use("/is_email_verified", require("./Routes/Auth/is_email_verified"));
 app.use("/Login", require("./Routes/Auth/Login"));
 app.use("/Register", require("./Routes/Auth/Register"));
 app.use("/Logout", require("./Routes/Auth/Logout"));
-app.use("/Refresh", require("./Routes/Auth/Refresh"));
 
 app.use("/Profile", require("./Routes/Profile"));
 app.use("/Contact", require("./Routes/Contact"));

@@ -1,4 +1,3 @@
-const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { Users, email_verification_tokens } = require("../../models/Database");
 
