@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const credentials = require("./Middleware/credentials");
 const corsOptions = require("./config/corsOptions");
 const path = require("path");
+require("dotenv").config();
 const limiter = rateLimit({
     windowMs: 60 * 1000, // 15 minutes
     max: 200, // limit each IP to 100 requests per windowMs
@@ -22,13 +23,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/", express.static(path.join(__dirname, "/Public")));
 
 mongoose.set("strictQuery", false);
-const mongoDB = "mongodb://127.0.0.1:27017/Skate";
+const mongoDB = process.env.MONGO_URI;
 async function connect_to_db() {
     await mongoose.connect(mongoDB, {
         // useNewUrlParser: true,
         // useUnifiedTopology: true,
     });
+    console.log("Connected to Database");
 }
+
 connect_to_db().catch((err) => console.log(err));
 app.use("/check_Auth", require("./Routes/Auth/check_Auth"));
 app.use("/VerifyAccount", require("./Routes/Auth/verifyAccount"));
