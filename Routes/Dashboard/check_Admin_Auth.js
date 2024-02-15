@@ -49,16 +49,7 @@ router.get("/", async (req, res) => {
                                     return res.status(401).json({
                                         error: "Unauthorized: Failed to verify JWT. Refresh token does not match",
                                     });
-                                } else if (
-                                    found_in_DB.userId != decoded.userId
-                                ) {
-                                    console.error(
-                                        "found_in_DB.userId != decoded.userId"
-                                    );
-                                    return res.status(401).json({
-                                        error: "Unauthorized: User ID mismatch",
-                                    });
-                                }
+                                } 
 
                                 // Generate new access token
                                 const newAccessToken = jwt.sign(
