@@ -53,6 +53,7 @@ app.use("/Events", require("./Routes/Events"));
 
 
 app.use("/Dashboard/Login", require("./Routes/Dashboard/Admin_Login"));
+app.use("/Dashboard/check_Auth", require("./Routes/Dashboard/check_Admin_Auth"));
 app.use("/Dashboard/User",require("./Routes/Dashboard/Users"));
 app.use("/Dashboard/Courses", require("./Routes/Dashboard/Courses"));
 app.use("/Dashboard/Services", require("./Routes/Dashboard/Servicecs"));
