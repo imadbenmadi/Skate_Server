@@ -72,7 +72,7 @@ const handle_add_User = async (req, res) => {
         }
         const existingUser = await Users.findOne({ Email: Email });
         if (existingUser) {
-            return res.status(401).json({ error: "Email already exists" });
+            return res.status(404).json({ error: "Email already exists" });
         }
         const newUser = new Users({
             FirstName: FirstName,
@@ -107,7 +107,7 @@ const handle_delete_User = async (req, res) => {
         });
     }
     try {
-        const { id } = req.body;
+        const id = req.params.id;
         if (!id) {
             return res.status(400).json({ error: "User ID is required." });
         }
@@ -122,18 +122,18 @@ const handle_delete_User = async (req, res) => {
     }
 };
 const handle_modify_User = async (req, res) => {
-   const isAuth = await Verify_Admin(req, res);
+    const isAuth = await Verify_Admin(req, res);
 
-   if (isAuth.status == false)
-       return res.status(401).json({ error: "Unauthorized: Invalid token" });
-   if (isAuth.status == true && isAuth.Refresh == true) {
-       res.cookie("admin_accessToken", isAuth.newAccessToken, {
-           httpOnly: true,
-           sameSite: "None",
-           secure: true,
-           maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
-       });
-   }
+    if (isAuth.status == false)
+        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("admin_accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+    }
     try {
         const {
             id,
@@ -210,7 +210,8 @@ const handle_modify_User = async (req, res) => {
                     // Remove the courseId if found
                     if (indexToRemove !== -1) {
                         userToUpdate.Courses.splice(indexToRemove, 1);
-                    } else {}
+                    } else {
+                    }
                 }
             } catch (error) {
                 console.error("Error removing courses:", error);
@@ -236,14 +237,14 @@ const handle_modify_User = async (req, res) => {
                     // Remove the serviceId if found
                     if (indexToRemove !== -1) {
                         userToUpdate.Services.splice(indexToRemove, 1);
-                    } else {}
+                    } else {
+                    }
                 }
             } catch (error) {
                 console.error("Error removing services:", error);
                 return res.status(500).json({ error: "Internal server error" });
             }
         }
-
 
         // Update Notifications
         if (NotificationsToAdd && NotificationsToAdd.length > 0) {
@@ -295,7 +296,8 @@ const get_user = async (req, res) => {
         });
     }
     try {
-        const { id } = req.params;
+        const id = req.params.id;
+        console.log(id);
         if (!id) {
             return res.status(400).json({ error: "User ID is required." });
         }
@@ -308,11 +310,57 @@ const get_user = async (req, res) => {
         res.status(500).json({ error: "Internal server error." });
     }
 };
+const handle_notify_User = async (req, res) => {
+    const isAuth = await Verify_Admin(req, res);
 
+    if (isAuth.status == false) {
+        return res.status(401).json({
+            error: "Unauthorized: Invalidtoken",
+        });
+    }
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("admin_accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000,
+        });
+    }
+    try {
+        const id = req.params.id;
+
+        const { Title, Text, Description } = req.body;
+
+        if (!id) {
+            return res.status(409).json({ error: "User ID is required." });
+        }
+        if (!Title || !Text || !Description) {
+            return res.status(409).json({
+                error: "Title and Text and Description are required.",
+            });
+        }
+        // const user = await Users.findOne({_id : id});
+        // if (!user) {
+        //     return res.status(404).json({ error: "User not found." });
+        // }
+        // user.Notifications.push({
+        //     Title: Title,
+        //     Text: Text,
+        //     Description: Description,
+        //     Date: new Date(),
+        // });
+        // await user.save();
+        // res.status(200).json({ message: "User notified successfully." });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Internal server error." });
+    }
+};
 module.exports = {
     handle_add_User,
     handle_delete_User,
     handle_modify_User,
     getAllUsers,
     get_user,
+    handle_notify_User,
 };

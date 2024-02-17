@@ -25,10 +25,18 @@ const Users = mongoose.model(
             {
                 Type: {
                     type: String,
-                    enum: ["verify", "contact", "event", "course", "service"],
+                    enum: [
+                        "verify",
+                        "contact",
+                        "event",
+                        "course",
+                        "service",
+                        "other",
+                    ],
                 },
                 Title: { type: String },
                 Text: { type: String },
+                Description: { type: String },
                 Date: { type: Date },
                 Readed: { type: Boolean, default: false },
             },
