@@ -53,7 +53,7 @@ router.get("/", async (req, res) => {
 
                                 // Generate new access token
                                 const newAccessToken = jwt.sign(
-                                    { userId: decoded.userId },
+                                    { userId: decoded._id },
                                     process.env.ACCESS_TOKEN_SECRET,
                                     { expiresIn: "1h" }
                                 );

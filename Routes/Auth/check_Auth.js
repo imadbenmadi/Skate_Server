@@ -111,6 +111,7 @@ router.get("/", async (req, res) => {
             } else {
                 // Access token is valid, continue with the response
                 const user = await Users.findOne({ _id: decoded.userId });
+                console.log("user data to sendd in check auth",user);
                 const UserData_To_Send = {
                     _id: user._id,
                     Email: user.Email,
