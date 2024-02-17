@@ -5,9 +5,18 @@ const jwt = require("jsonwebtoken");
 const Verify_Admin = require("../../Middleware/Verify_Admin");
 
 const handle_add_Service = async (req, res) => {
-    if (!Verify_Admin(req,res))
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    const isAuth = await Verify_Admin(req, res);
 
+    if (isAuth.status == false)
+        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("admin_accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+    }
     try {
         const { Title, Description, Image, Category } = req.body;
 
@@ -34,8 +43,18 @@ const handle_add_Service = async (req, res) => {
     }
 };
 const handle_delete_Service = async (req, res) => {
-    if (!Verify_Admin(req,res))
+    const isAuth = await Verify_Admin(req, res);
+
+    if (isAuth.status == false)
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("admin_accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+    }
     try {
         const { serviceId } = req.body;
         if (!serviceId) {
@@ -50,8 +69,18 @@ const handle_delete_Service = async (req, res) => {
     }
 };
 const handle_update_Service = async (req, res) => {
-    if (!Verify_Admin(req,res))
+    const isAuth = await Verify_Admin(req, res);
+
+    if (isAuth.status == false)
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("admin_accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+    }
     try {
         const { serviceId, title, description, image, price, category, date } =
             req.body;
@@ -89,9 +118,18 @@ const handle_update_Service = async (req, res) => {
     }
 };
 const handle_Accept_Service_request = async (req, res) => {
-    if (!Verify_Admin(req,res))
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    const isAuth = await Verify_Admin(req, res);
 
+    if (isAuth.status == false)
+        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("admin_accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+    }
     try {
         const { UserId, ServiceId } = req.body;
         if (!UserId || !ServiceId) {
@@ -127,9 +165,18 @@ const handle_Accept_Service_request = async (req, res) => {
     }
 };
 const handle_Reject_Service_request = async (req, res) => {
-    if (!Verify_Admin(req,res))
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+   const isAuth = await Verify_Admin(req, res);
 
+   if (isAuth.status == false)
+       return res.status(401).json({ error: "Unauthorized: Invalid token" });
+   if (isAuth.status == true && isAuth.Refresh == true) {
+       res.cookie("admin_accessToken", isAuth.newAccessToken, {
+           httpOnly: true,
+           sameSite: "None",
+           secure: true,
+           maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+       });
+   }
     try {
         const { UserId, ServiceId } = req.body;
 

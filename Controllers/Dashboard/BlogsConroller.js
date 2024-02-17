@@ -2,9 +2,19 @@ const { Blogs } = require("../../models/Database");
 
 const Verify_Admin = require("../../Middleware/Verify_Admin");
 const handle_add_Blog = async (req, res) => {
-    if (!Verify_Admin(req, res))
+    const isAuth = await Verify_Admin(req, res);
+    
+    if (isAuth.status == false)
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
-
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("admin_accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+        
+    }
     try {
         const { Title, Description } = req.body;
 
@@ -23,8 +33,17 @@ const handle_add_Blog = async (req, res) => {
     }
 };
 const handle_delete_Blog = async (req, res) => {
-    if (!Verify_Admin(req, res))
+    const isAuth = await Verify_Admin(req, res);
+    if (isAuth.status == false)
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("admin_accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        }); 
+    }
     try {
         const { blogId } = req.body;
         if (!blogId) {
@@ -39,8 +58,18 @@ const handle_delete_Blog = async (req, res) => {
     }
 };
 const handle_update_Blog = async (req, res) => {
-    if (!Verify_Admin(req, res))
+    const isAuth = await Verify_Admin(req, res);
+
+    if (isAuth.status == false)
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("admin_accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+    }
     try {
         const { blogId, title, description, image, price, category, date } =
             req.body;

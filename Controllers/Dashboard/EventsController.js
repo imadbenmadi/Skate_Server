@@ -2,9 +2,18 @@ const { Events,Users } = require("../../models/Database");
 
 const Verify_Admin = require("../../Middleware/Verify_Admin");
 const handle_add_Event = async (req, res) => {
-    if (!Verify_Admin(req,res))
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    const isAuth = await Verify_Admin(req, res);
 
+    if (isAuth.status == false)
+        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("admin_accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+    }
     try {
         const { Title, Description } = req.body;
 
@@ -37,8 +46,18 @@ const handle_add_Event = async (req, res) => {
     }
 };
 const handle_delete_Event = async (req, res) => {
-    if (!Verify_Admin(req,res))
+    const isAuth = await Verify_Admin(req, res);
+
+    if (isAuth.status == false)
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("admin_accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+    }
     try {
         const { eventeId } = req.body;
         if (!eventeId) {
@@ -53,8 +72,18 @@ const handle_delete_Event = async (req, res) => {
     }
 };
 const handle_update_Event = async (req, res) => {
-    if (!Verify_Admin(token))
+    const isAuth = await Verify_Admin(req, res);
+
+    if (isAuth.status == false)
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("admin_accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+    }
     try {
         const { eventeId, title, description, image, price, category, date } =
             req.body;
