@@ -23,7 +23,6 @@ const get_course_ById = async (req, res) => {
         if (!course) {
             return res.status(404).json({ error: "Course not found." });
         }
-
         res.status(200).json(course);
     } catch (error) {
         res.status(500).json({ error: "Internal server error." });
@@ -31,10 +30,18 @@ const get_course_ById = async (req, res) => {
 };
 const get_courses_By_user_Id = async (req, res) => {
     const userId = req.params._id;
-    console.log(userId);
     if (!userId) return res.status(400).json({ error: "User Id is required." });
-    if (!Verify_user(req,res))
+    const isAuth = await Verify_user(req, res);
+    if (isAuth.status == false)
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+    }
     try {
         const user_in_db = await Users.findById(userId).populate("Courses");
         if (!user_in_db) {
@@ -51,8 +58,17 @@ const handle_request_Course = async (req, res) => {
     if (!courseId || !userId) {
         return res.status(400).json({ error: "Messing Data." });
     }
-    if (!Verify_user(req,res))
+    const isAuth = await Verify_user(req, res);
+    if (isAuth.status == false)
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+    }
     try {
         const user = await Users.findById(userId);
         if (!user) {

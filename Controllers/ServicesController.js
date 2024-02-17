@@ -33,8 +33,17 @@ const get_Service_ById = async (req, res) => {
 const get_Services_By_user_Id = async (req, res) => {
     const userId = req.params._idd;
     if (!userId) return res.status(400).json({ error: "User Id is required." });
-    if (!Verify_user(req,res))
+    const isAuth = await Verify_user(req, res);
+    if (isAuth.status == false)
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+    }
     try {
         const user_in_db = await Users.findById(userId).populate("Services");
         if (!user_in_db) {
@@ -52,8 +61,17 @@ const handle_request_Service = async (req, res) => {
     if (!ServiceId || !userId) {
         return res.status(400).json({ error: "Messing Data." });
     }
-    if (!Verify_user(req,res))
+    const isAuth = await Verify_user(req, res);
+    if (isAuth.status == false)
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+    }
     try {
         const user = await Users.findById(userId);
         if (!user) {

@@ -2,9 +2,17 @@ const {  Users } = require("../models/Database");
 require("dotenv").config();
 const Verify_user = require("../Middleware/verify_user");
 const EditProfile = async (req, res) => {
-    if (!Verify_user(req, res))
+    const isAuth = await Verify_user(req, res);
+    if (isAuth.status == false)
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
-
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+    }
     try {
         const { userId } = req.body;
         if (!userId) {
@@ -59,8 +67,19 @@ const getProfile = async (req, res) => {
     const userId = req.body.userId;
 
     if (!userId) return res.status(400).json({ error: "User Id is required." });
-    if (!Verify_user(req, res))
+    const isAuth = await Verify_user(req, res);
+    console.log("isAuth", isAuth);
+    if (isAuth.status == false)
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+        console.log("token refreshed", isAuth.newAccessToken);
+    }
     try {
         const user_in_db = await Users.findById(userId);
         if (!user_in_db) {
