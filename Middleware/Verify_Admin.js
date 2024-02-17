@@ -44,7 +44,7 @@ const Verify_Admin = async (req, res) => {
                                 const newAccessToken = jwt.sign(
                                     { userId: decoded.userId },
                                     process.env.ADMIN_ACCESS_TOKEN_SECRET,
-                                    { expiresIn: "10s" }
+                                    { expiresIn: "5m" }
                                 );
 
                                 console.log("Token refreshed");
