@@ -16,9 +16,11 @@ const addAdmin = async (req, res) => {
             Admin_User_Name: adminUser,
             Admin_Pwd: hashedPassword,
         });
-        res.status(201).json({ message: "Admin user saved successfully." });
+       return res
+           .status(201)
+           .json({ message: "Admin user saved successfully." });
     } catch (err) {
-        res.status(500).json({ error: "Internal server error." });
+       return res.status(500).json({ error: "Internal server error." });
     }
 };
 module.exports = { addAdmin };

@@ -53,14 +53,14 @@ const handleRefreshToken = async (req, res) => {
                     Gender: user.Gender,
                     IsEmailVerified: user.IsEmailVerified,
                 };
-                res.status(200).json({
+                return res.status(200).json({
                     message: "Access token refreshed Successully",
                     userData: UserData_To_Send,
                 });
             }
         );
     } catch (err) {
-        res.status(400).json({ error: err });
+       return res.status(400).json({ error: err });
     }
 };
 module.exports = { handleRefreshToken };

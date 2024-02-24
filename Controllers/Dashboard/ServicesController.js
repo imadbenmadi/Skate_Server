@@ -37,9 +37,9 @@ const handle_add_Service = async (req, res) => {
         // Save the Service to the database
         await newService.save();
 
-        res.status(201).json({ message: "Service added successfully." });
+       return res.status(201).json({ message: "Service added successfully." });
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+       return res.status(500).json({ error: "Internal server error." });
     }
 };
 const handle_delete_Service = async (req, res) => {
@@ -63,9 +63,11 @@ const handle_delete_Service = async (req, res) => {
                 .json({ error: "serviceId fields is required." });
         }
         await Services.findByIdAndDelete(serviceId);
-        res.status(200).json({ message: "service Deleted successfully." });
+       return res
+           .status(200)
+           .json({ message: "service Deleted successfully." });
     } catch (error) {
-        res.status(500).json({ error });
+      return res.status(500).json({ error });
     }
 };
 const handle_update_Service = async (req, res) => {
@@ -112,9 +114,11 @@ const handle_update_Service = async (req, res) => {
         }
         // Save the updated service
         await service.save();
-        res.status(200).json({ message: "service updated successfully." });
+        return res
+            .status(200)
+            .json({ message: "service updated successfully." });
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+       return res.status(500).json({ error: "Internal server error." });
     }
 };
 const handle_Accept_Service_request = async (req, res) => {
@@ -159,9 +163,9 @@ const handle_Accept_Service_request = async (req, res) => {
         await Users.findByIdAndUpdate(UserId, {
             $push: { Notifications: notificationToSend },
         }).exec();
-        res.status(200).json({ message: "Service request accepted." });
+       return res.status(200).json({ message: "Service request accepted." });
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+       return res.status(500).json({ error: "Internal server error." });
     }
 };
 const handle_Reject_Service_request = async (req, res) => {
@@ -196,9 +200,9 @@ const handle_Reject_Service_request = async (req, res) => {
         await Users.findByIdAndUpdate(UserId, {
             $push: { Notifications: notificationToSend },
         }).exec();
-        res.status(200).json({ message: "Service request rejected." });
+       return res.status(200).json({ message: "Service request rejected." });
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+       return res.status(500).json({ error: "Internal server error." });
     }
 };
 module.exports = {

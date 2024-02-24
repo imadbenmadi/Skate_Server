@@ -3,9 +3,9 @@ require("dotenv").config();
 const getAllBlogs = async (req, res) => {
     try {
         const blogs = await Blogs.find({});
-        res.status(200).json(blogs);
+        return res.status(200).json(blogs);
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 const get_Blog_ById = async (req, res) => {
@@ -22,9 +22,9 @@ const get_Blog_ById = async (req, res) => {
             return res.status(404).json({ error: "blog not found." });
         }
 
-        res.status(200).json(blog);
+        return res.status(200).json(blog);
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 

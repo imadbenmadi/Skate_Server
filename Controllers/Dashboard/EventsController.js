@@ -40,9 +40,9 @@ const handle_add_Event = async (req, res) => {
             { _id: { $in: userIds } },
             { $push: { Notifications: notificationToSend } }
         );
-        res.status(200).json({ message: "Event Created Successfully." });
+        return res.status(200).json({ message: "Event Created Successfully." });
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 const handle_delete_Event = async (req, res) => {
@@ -66,9 +66,9 @@ const handle_delete_Event = async (req, res) => {
                 .json({ error: "eventeId fields is required." });
         }
         await Events.findByIdAndDelete(eventeId);
-        res.status(200).json({ message: "evente Deleted successfully." });
+       return res.status(200).json({ message: "evente Deleted successfully." });
     } catch (error) {
-        res.status(500).json({ error });
+        return res.status(500).json({ error });
     }
 };
 const handle_update_Event = async (req, res) => {
@@ -115,9 +115,11 @@ const handle_update_Event = async (req, res) => {
         }
         // Save the updated evente
         await evente.save();
-        res.status(200).json({ message: "evente updated successfully." });
+        return res
+            .status(200)
+            .json({ message: "evente updated successfully." });
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 module.exports = { handle_add_Event, handle_delete_Event, handle_update_Event };

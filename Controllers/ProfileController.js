@@ -58,9 +58,9 @@ const EditProfile = async (req, res) => {
         // Save the updated user
         await userToUpdate.save();
 
-        res.status(200).json({ message: "Profile updated successfully" });
+       return res.status(200).json({ message: "Profile updated successfully" });
     } catch (error) {
-        res.status(500).json({ error: error });
+       return res.status(500).json({ error: error });
     }
 };
 const getProfile = async (req, res) => {
@@ -86,9 +86,9 @@ const getProfile = async (req, res) => {
             return res.status(401).json({ error: "user not found." });
         }
 
-        res.status(200).json(user_in_db);
+      return res.status(200).json(user_in_db);
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+      return res.status(500).json({ error: "Internal server error." });
     }
 };
 const DeleteProfile = async (req, res) => {
@@ -109,10 +109,10 @@ const DeleteProfile = async (req, res) => {
         }
 
         await Users.findByIdAndDelete(userId);
-        res.status(200).json(user_in_db);
+      return res.status(200).json(user_in_db);
     } catch (error) {
         console.error("Error deleting profile:", error);
-        res.status(500).json({ error: "Internal server error." });
+      return res.status(500).json({ error: "Internal server error." });
     }
 };
 

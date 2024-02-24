@@ -27,9 +27,9 @@ const handle_add_Blog = async (req, res) => {
         });
         await NewBlog.save();
 
-        res.status(200).json({ message: "Blog Created Successfully." });
+        return res.status(200).json({ message: "Blog Created Successfully." });
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 const handle_delete_Blog = async (req, res) => {
@@ -52,9 +52,9 @@ const handle_delete_Blog = async (req, res) => {
                 .json({ error: "Blogid fields is required." });
         }
         await Blogs.findByIdAndDelete(blogId);
-        res.status(200).json({ message: "Blog Deleted successfully." });
+        return res.status(200).json({ message: "Blog Deleted successfully." });
     } catch (error) {
-        res.status(500).json({ error });
+        return res.status(500).json({ error });
     }
 };
 const handle_update_Blog = async (req, res) => {
@@ -101,9 +101,9 @@ const handle_update_Blog = async (req, res) => {
         }
         // Save the updated blog
         await blog.save();
-        res.status(200).json({ message: "blog updated successfully." });
+        return res.status(200).json({ message: "blog updated successfully." });
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 

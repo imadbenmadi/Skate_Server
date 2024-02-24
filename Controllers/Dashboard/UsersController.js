@@ -42,13 +42,13 @@ const handle_add_User = async (req, res) => {
                 .status(409)
                 .json({ message: "Last Name must be more that 3 chars" });
         } else if (FirstName.length > 14) {
-            res.status(409).json({
-                message: "First Name must be less than 14 chars",
-            });
+           return res.status(409).json({
+               message: "First Name must be less than 14 chars",
+           });
         } else if (LastName.length > 14) {
-            res.status(409).json({
-                message: "LastName must be less than 14 chars",
-            });
+           return res.status(409).json({
+               message: "LastName must be less than 14 chars",
+           });
         } else if (Password.length < 8) {
             return res
                 .status(409)
@@ -83,14 +83,14 @@ const handle_add_User = async (req, res) => {
             Age: Age,
             Gender: Gender,
         });
-        res.status(200).json({
+        await newUser.save();
+        return res.status(200).json({
             message: "Account Created Successfully",
             _id: newUser._id,
             Date: new Date(),
         });
-        await newUser.save();
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+      return res.status(500).json({ error: "Internal server error." });
     }
 };
 const handle_delete_User = async (req, res) => {
@@ -116,9 +116,9 @@ const handle_delete_User = async (req, res) => {
             return res.status(404).json({ error: "User not found." });
         }
         await Users.findByIdAndDelete(id);
-        res.status(200).json({ message: "User Deleted Successfully." });
+        return res.status(200).json({ message: "User Deleted Successfully." });
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 const handle_modify_User = async (req, res) => {
@@ -254,9 +254,9 @@ const handle_modify_User = async (req, res) => {
         // Save the updated user
         await userToUpdate.save();
 
-        res.status(200).json({ message: "User updated successfully" });
+        return res.status(200).json({ message: "User updated successfully" });
     } catch (error) {
-        res.status(500).json({ error: error });
+        return res.status(500).json({ error: error });
     }
 };
 
@@ -276,9 +276,9 @@ const getAllUsers = async (req, res) => {
 
     try {
         const users = await Users.find({}, { Notifications: 0 }); // Exclude the Notifications field
-        res.status(200).json(users);
+        return res.status(200).json(users);
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
@@ -305,9 +305,9 @@ const get_user = async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: "User not found." });
         }
-        res.status(200).json(user);
+        return res.status(200).json(user);
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 const handle_notify_User = async (req, res) => {
@@ -353,7 +353,7 @@ const handle_notify_User = async (req, res) => {
         // res.status(200).json({ message: "User notified successfully." });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 module.exports = {

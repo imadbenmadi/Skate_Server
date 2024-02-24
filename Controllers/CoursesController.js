@@ -5,9 +5,9 @@ const Verify_user = require("../Middleware/verify_user");
 const getAllCourses = async (req, res) => {
     try {
         const courses = await Courses.find();
-        res.status(200).json(courses);
+        return res.status(200).json(courses);
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 const get_course_ById = async (req, res) => {
@@ -23,9 +23,9 @@ const get_course_ById = async (req, res) => {
         if (!course) {
             return res.status(404).json({ error: "Course not found." });
         }
-        res.status(200).json(course);
+        return res.status(200).json(course);
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 const get_courses_By_user_Id = async (req, res) => {
@@ -48,9 +48,9 @@ const get_courses_By_user_Id = async (req, res) => {
             return res.status(401).json({ error: "user not found." });
         }
 
-        res.status(200).json(user_in_db.Courses);
+        return res.status(200).json(user_in_db.Courses);
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 const handle_request_Course = async (req, res) => {
@@ -91,13 +91,15 @@ const handle_request_Course = async (req, res) => {
         const new_request_Course = new request_Course({
             UserId: userId,
             CourseId: courseId,
-        })
+        });
         await new_request_Course.save();
-        res.status(200).json({ message: "Course requested successfully." });
+        return res
+            .status(200)
+            .json({ message: "Course requested successfully." });
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: "Internal server error." });
     }
-}
+};
 module.exports = {
     getAllCourses,
     get_courses_By_user_Id,

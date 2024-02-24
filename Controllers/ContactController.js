@@ -21,9 +21,9 @@ const handleContact = async (req, res) => {
                     Date: new Date(),
                     Sender_email: Email,
                 });
-                res.status(200).json({
-                    message: "Message Sent Successfully via Email",
-                });
+               return res.status(200).json({
+                   message: "Message Sent Successfully via Email",
+               });
             } else if (id) {
                 await Messages.create({
                     Title: title,
@@ -31,17 +31,17 @@ const handleContact = async (req, res) => {
                     Date: new Date(),
                     Sender_id: id,
                 });
-                res.status(200).json({
-                    message: "Message Sent Successfully via id",
-                });
+               return res.status(200).json({
+                   message: "Message Sent Successfully via id",
+               });
             } else if (!Email && !id) {
-                res.status(400).json({ message: "Missing Email or id" });
+               return res.status(400).json({ message: "Missing Email or id" });
             }
         } catch (err) {
-            res.status(400).json({ err });
+          return res.status(400).json({ err });
         }
     } catch (err) {
-        res.status(400).json({ err });
+       return res.status(400).json({ err });
     }
 };
 module.exports = { handleContact };

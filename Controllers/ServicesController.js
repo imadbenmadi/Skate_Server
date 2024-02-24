@@ -5,10 +5,10 @@ const Verify_user = require("../Middleware/verify_user");
 const getAllServices = async (req, res) => {
     try {
         const services = await Services.find();
-        res.status(200).json(services);
+      return res.status(200).json(services);
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
-        console.log(error);
+      return res.status(500).json({ error: "Internal server error." });
+      return console.log(error);
     }
 };
 const get_Service_ById = async (req, res) => {
@@ -25,9 +25,9 @@ const get_Service_ById = async (req, res) => {
             return res.status(404).json({ error: "Service not found." });
         }
 
-        res.status(200).json(Service);
+       return res.status(200).json(Service);
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+       return res.status(500).json({ error: "Internal server error." });
     }
 };
 const get_Services_By_user_Id = async (req, res) => {
@@ -50,9 +50,9 @@ const get_Services_By_user_Id = async (req, res) => {
             return res.status(401).json({ error: "user not found." });
         }
 
-        res.status(200).json(user_in_db.Services);
+       return res.status(200).json(user_in_db.Services);
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+       return res.status(500).json({ error: "Internal server error." });
     }
 };
 const handle_request_Service = async (req, res) => {
@@ -96,9 +96,11 @@ const handle_request_Service = async (req, res) => {
             ServiceId: ServiceId,
         });
         await new_request_Service.save();
-        res.status(200).json({ message: "Service requested successfully." });
+      return res
+          .status(200)
+          .json({ message: "Service requested successfully." });
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+       return res.status(500).json({ error: "Internal server error." });
     }
 };
 module.exports = {

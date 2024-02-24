@@ -44,9 +44,11 @@ const handleVerifyAccount = async (req, res) => {
             _id: verificationToken._id,
         });
 
-        res.status(200).json({ message: "Account Verified Successfully" });
+        return res
+            .status(200)
+            .json({ message: "Account Verified Successfully" });
     } catch (err) {
-        res.status(400).json({
+        return res.status(400).json({
             error: "An error occurred while verifying the account",
         });
     }

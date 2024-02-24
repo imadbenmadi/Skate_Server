@@ -32,9 +32,9 @@ const handle_add_Courses = async (req, res) => {
         });
         // Save the course to the database
         await newCourse.save();
-        res.status(201).json({ message: "Course added successfully." });
+        return res.status(201).json({ message: "Course added successfully." });
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 const handle_delete_Courses = async (req, res)=>{
@@ -56,9 +56,11 @@ const handle_delete_Courses = async (req, res)=>{
             return res.status(400).json({ error: "CourseId fields is required." });
         }
         await Courses.findByIdAndDelete(courseId);
-        res.status(200).json({ message: "Course Deleted successfully." });
+        return res
+            .status(200)
+            .json({ message: "Course Deleted successfully." });
     } catch (error) {
-        res.status(500).json({ error });
+        return res.status(500).json({ error });
     }
 }
 const handle_update_Courses = async (req, res) => {
@@ -105,9 +107,11 @@ const handle_update_Courses = async (req, res) => {
         }
         // Save the updated course
         await course.save();
-        res.status(200).json({ message: "Course updated successfully." });
+        return res
+            .status(200)
+            .json({ message: "Course updated successfully." });
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
@@ -149,9 +153,9 @@ const handle_Accept_course_request = async (req, res) => {
             },
         }).exec();
 
-        res.status(200).json({ message: "Course request accepted." });
+        return res.status(200).json({ message: "Course request accepted." });
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 const handle_Reject_course_request = async (req, res) => {
@@ -188,9 +192,9 @@ const handle_Reject_course_request = async (req, res) => {
                 Notifications: Notificatio_ToSend,
             },
         }).exec();
-        res.status(200).json({ message: "Course request rejected." });
+        return res.status(200).json({ message: "Course request rejected." });
     } catch (error) {
-        res.status(500).json({ error: "Internal server error." });
+       return res.status(500).json({ error: "Internal server error." });
     }
 };
 module.exports = {

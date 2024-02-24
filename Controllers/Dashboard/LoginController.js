@@ -44,7 +44,7 @@ const handleLogin = async (req, res) => {
                     token: refreshToken,
                 });
             } catch (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     error: "Internal Server Error " + err.message,
                 });
             }
@@ -66,17 +66,16 @@ const handleLogin = async (req, res) => {
             if (req.cookies.refreshToken) {
                 res.clearCookie("refreshToken");
             }
-            res.status(200).json({
+            return res.status(200).json({
                 message: "Admin Logged In Successfully",
-                jwt: accessToken,
             });
         } else {
-            res.status(401).json({
-                error: "Name or Password isn't correct",
-            });
+           return res.status(401).json({
+               error: "Name or Password isn't correct",
+           });
         }
     } catch (err) {
-        res.status(400).json({ error: err });
+       return res.status(400).json({ error: err });
     }
 };
 module.exports = { handleLogin };
