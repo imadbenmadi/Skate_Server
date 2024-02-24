@@ -55,7 +55,7 @@ const handleRefreshToken = async (req, res) => {
             }
         );
     } catch (err) {
-        return res.status(400).json({ message: err });
+        return res.status(500).json({ message: err });
     }
 };
 module.exports = { handleRefreshToken };

@@ -105,7 +105,7 @@ const handle_send_Email = async (req, res) => {
         try {
             await email_verification_tokens.deleteMany({ userId: userId });
         } catch (err) {
-            return res.status(400).json({ err });
+            return res.status(500).json({ err });
         }
         const verificationToken = generateVerificationCode();
         const newVerificationToken = new email_verification_tokens({
@@ -119,7 +119,7 @@ const handle_send_Email = async (req, res) => {
             Date: new Date(),
         });
     } catch (err) {
-        return res.status(400).json({ err });
+        return res.status(500).json({ err });
     }
 };
 
