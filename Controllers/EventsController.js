@@ -11,26 +11,26 @@ const getAllEvents = async (req, res) => {
         const events = await Events.find({}).skip(skip).limit(limit);
         return res.status(200).json({ totalPages, events });
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const get_Event_ById = async (req, res) => {
     const EventId = req.params.id;
 
     if (!EventId) {
-        return res.status(409).json({ error: "Messing Data" });
+        return res.status(409).json({ message: "Messing Data" });
     }
 
     try {
         const Event = await Events.findById(EventId);
 
         if (!Event) {
-            return res.status(404).json({ error: "Event not found." });
+            return res.status(404).json({ message: "Event not found." });
         }
 
         return res.status(200).json(Event);
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 

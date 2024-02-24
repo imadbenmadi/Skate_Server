@@ -83,9 +83,7 @@ router.get("/", async (req, res) => {
                             }
                         );
                     } catch (refreshErr) {
-                        return res
-                            .status(500)
-                            .json({ error: refreshErr });
+                        return res.status(500).json({ message: refreshErr });
                     }
                 } else {
                     return res.status(401).json({
@@ -112,7 +110,7 @@ router.get("/", async (req, res) => {
             }
         });
     } catch (err) {
-        return res.status(500).json({ error: err });
+        return res.status(500).json({ message: err });
     }
 });
 

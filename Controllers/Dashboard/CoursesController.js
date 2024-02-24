@@ -6,7 +6,7 @@ const handle_add_Courses = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -18,7 +18,9 @@ const handle_add_Courses = async (req, res) => {
     try {
         const { Title, Description, Image, Price, Category } = req.body;
         if (!Title || !Description || !Image || !Category) {
-            return res.status(400).json({ error: "All fields are required." });
+            return res
+                .status(400)
+                .json({ message: "All fields are required." });
         }
         const creationDate = new Date();
         // Create a new course
@@ -34,14 +36,14 @@ const handle_add_Courses = async (req, res) => {
         await newCourse.save();
         return res.status(201).json({ message: "Course added successfully." });
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
-const handle_delete_Courses = async (req, res)=>{
+const handle_delete_Courses = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -52,8 +54,10 @@ const handle_delete_Courses = async (req, res)=>{
     }
     try {
         const { courseId } = req.body;
-        if (!courseId ) {
-            return res.status(400).json({ error: "CourseId fields is required." });
+        if (!courseId) {
+            return res
+                .status(400)
+                .json({ message: "CourseId fields is required." });
         }
         await Courses.findByIdAndDelete(courseId);
         return res
@@ -62,12 +66,12 @@ const handle_delete_Courses = async (req, res)=>{
     } catch (error) {
         return res.status(500).json({ error });
     }
-}
+};
 const handle_update_Courses = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -80,11 +84,11 @@ const handle_update_Courses = async (req, res) => {
         const { courseId, title, description, image, price, category, date } =
             req.body;
         if (!courseId) {
-            return res.status(400).json({ error: "Course ID is required." });
+            return res.status(400).json({ message: "Course ID is required." });
         }
         const course = await Courses.findById(courseId);
         if (!course) {
-            return res.status(404).json({ error: "Course not found." });
+            return res.status(404).json({ message: "Course not found." });
         }
         // Update each field if provided in the request body
         if (title) {
@@ -111,16 +115,15 @@ const handle_update_Courses = async (req, res) => {
             .status(200)
             .json({ message: "Course updated successfully." });
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
-
 
 const handle_Accept_course_request = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -133,7 +136,9 @@ const handle_Accept_course_request = async (req, res) => {
         const { UserId, CourseId } = req.body;
 
         if (!UserId || !CourseId) {
-            return res.status(400).json({ error: "All fields are required." });
+            return res
+                .status(400)
+                .json({ message: "All fields are required." });
         }
 
         // Remove the request from the database
@@ -155,14 +160,14 @@ const handle_Accept_course_request = async (req, res) => {
 
         return res.status(200).json({ message: "Course request accepted." });
     } catch (error) {
-        return res.status(500).json({ error: error});
+        return res.status(500).json({ message: error });
     }
 };
 const handle_Reject_course_request = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -175,7 +180,9 @@ const handle_Reject_course_request = async (req, res) => {
         const { UserId, CourseId } = req.body;
 
         if (!UserId || !CourseId) {
-            return res.status(400).json({ error: "All fields are required." });
+            return res
+                .status(400)
+                .json({ message: "All fields are required." });
         }
 
         // Remove the request from the database
@@ -194,7 +201,7 @@ const handle_Reject_course_request = async (req, res) => {
         }).exec();
         return res.status(200).json({ message: "Course request rejected." });
     } catch (error) {
-       return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 module.exports = {

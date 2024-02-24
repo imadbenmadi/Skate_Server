@@ -5,7 +5,7 @@ const handle_add_Blog = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
     
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -19,7 +19,7 @@ const handle_add_Blog = async (req, res) => {
         const { Title, Description } = req.body;
 
         if (!Title || !Description) {
-            return res.status(400).json({ error: "All fields are required." });
+            return res.status(400).json({ message: "All fields are required." });
         }
         const NewBlog = new Blogs({
             Title,
@@ -29,13 +29,13 @@ const handle_add_Blog = async (req, res) => {
 
         return res.status(200).json({ message: "Blog Created Successfully." });
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const handle_delete_Blog = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -49,7 +49,7 @@ const handle_delete_Blog = async (req, res) => {
         if (!blogId) {
             return res
                 .status(400)
-                .json({ error: "Blogid fields is required." });
+                .json({ message: "Blogid fields is required." });
         }
         await Blogs.findByIdAndDelete(blogId);
         return res.status(200).json({ message: "Blog Deleted successfully." });
@@ -61,7 +61,7 @@ const handle_update_Blog = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -74,11 +74,11 @@ const handle_update_Blog = async (req, res) => {
         const { blogId, title, description, image, price, category, date } =
             req.body;
         if (!blogId) {
-            return res.status(400).json({ error: "blog ID is required." });
+            return res.status(400).json({ message: "blog ID is required." });
         }
         const blog = await Blogs.findById(blogId);
         if (!blog) {
-            return res.status(404).json({ error: "blog not found." });
+            return res.status(404).json({ message: "blog not found." });
         }
         // Update each field if provided in the request body
         if (title) {
@@ -103,7 +103,7 @@ const handle_update_Blog = async (req, res) => {
         await blog.save();
         return res.status(200).json({ message: "blog updated successfully." });
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 

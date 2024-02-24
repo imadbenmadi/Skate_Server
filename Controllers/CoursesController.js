@@ -13,30 +13,30 @@ const getAllCourses = async (req, res) => {
         const courses = await Courses.find().skip(skip).limit(limit);
         return res.status(200).json({ totalPages, courses });
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const get_course_ById = async (req, res) => {
     const courseId = req.params.id;
     if (!courseId) {
-        return res.status(409).json({ error: "Messing Data" });
+        return res.status(409).json({ message: "Messing Data" });
     }
     try {
         const course = await Courses.findById(courseId);
         if (!course) {
-            return res.status(404).json({ error: "Course not found." });
+            return res.status(404).json({ message: "Course not found." });
         }
         return res.status(200).json(course);
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const get_courses_By_user_Id = async (req, res) => {
     const userId = req.params._id;
-    if (!userId) return res.status(409).json({ error: "Messing Data" });
+    if (!userId) return res.status(409).json({ message: "Messing Data" });
     const isAuth = await Verify_user(req, res);
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -57,21 +57,23 @@ const get_courses_By_user_Id = async (req, res) => {
             .skip(skip)
             .limit(limit);
         if (!user_in_db) {
-            return res.status(401).json({ error: "user not found." });
+            return res.status(401).json({ message: "user not found." });
         }
-        return res.status(200).json({totalPages , Courses : user_in_db.Courses});
+        return res
+            .status(200)
+            .json({ totalPages, Courses: user_in_db.Courses });
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const handle_request_Course = async (req, res) => {
     const { courseId, userId } = req.body;
     if (!courseId || !userId) {
-        return res.status(409).json({ error: "Messing Data." });
+        return res.status(409).json({ message: "Messing Data." });
     }
     const isAuth = await Verify_user(req, res);
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -83,7 +85,7 @@ const handle_request_Course = async (req, res) => {
     try {
         const user = await Users.findById(userId);
         if (!user) {
-            return res.status(404).json({ error: "User not found." });
+            return res.status(404).json({ message: "User not found." });
         }
         const existingRequest = await request_Course.findOne({
             UserId: userId,
@@ -97,12 +99,10 @@ const handle_request_Course = async (req, res) => {
         }
         const course = await Courses.findById(courseId);
         if (!course) {
-            return res.status(404).json({ error: "Course not found." });
+            return res.status(404).json({ message: "Course not found." });
         }
         if (user.Courses.includes(courseId)) {
-            return res
-                .status(400)
-                .json({ message: "You Own this Course" });
+            return res.status(400).json({ message: "You Own this Course" });
         }
         const new_request_Course = new request_Course({
             UserId: userId,
@@ -113,7 +113,7 @@ const handle_request_Course = async (req, res) => {
             .status(200)
             .json({ message: "Course requested successfully." });
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 module.exports = {

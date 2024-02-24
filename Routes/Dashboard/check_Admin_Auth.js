@@ -63,7 +63,7 @@ router.get("/", async (req, res) => {
                             }
                         );
                     } catch (refreshErr) {
-                        return res.status(500).json({ error: refreshErr });
+                        return res.status(500).json({ message: refreshErr });
                     }
                 } else {
                     // Other verification error, return unauthorized
@@ -79,7 +79,7 @@ router.get("/", async (req, res) => {
             }
         });
     } catch (err) {
-        return res.status(500).json({ error: err });
+        return res.status(500).json({ message: err });
     }
 });
 

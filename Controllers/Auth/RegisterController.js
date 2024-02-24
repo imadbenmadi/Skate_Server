@@ -118,19 +118,19 @@ const handleRegister = async (req, res) => {
                 .status(409)
                 .json({ message: "Last Name must be more that 3 chars" });
         } else if (FirstName.length > 14) {
-           return res.status(409).json({
-               message: "First Name must be less than 14 chars",
-           });
+            return res.status(409).json({
+                message: "First Name must be less than 14 chars",
+            });
         } else if (LastName.length > 14) {
-          return res.status(409).json({
-              message: "LastName must be less than 14 chars",
-          });
+            return res.status(409).json({
+                message: "LastName must be less than 14 chars",
+            });
         } else if (Password.length < 8) {
             return res
                 .status(409)
-                .json({ error: "Password must be at least 8 characters" });
+                .json({ message: "Password must be at least 8 characters" });
         } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(Email)) {
-            return res.status(409).json({ error: "Invalid Email" });
+            return res.status(409).json({ message: "Invalid Email" });
         } else if (Gender !== "male" && Gender !== "female") {
             return res.status(409).json({
                 error: "Invalid Gender, accepted values: male or female",
@@ -138,22 +138,22 @@ const handleRegister = async (req, res) => {
         } else if (Telephone.length < 9) {
             return res
                 .status(409)
-                .json({ error: "Telephone must be at least 9 characters" });
+                .json({ message: "Telephone must be at least 9 characters" });
         } else if (!isValidTelephone) {
             return res
                 .status(409)
-                .json({ error: "Telephone must be a number" });
+                .json({ message: "Telephone must be a number" });
         } else if (Age && isNaN(Age)) {
-            return res.status(409).json({ error: "Age must be a number" });
+            return res.status(409).json({ message: "Age must be a number" });
         }
 
         if (!(await isEmailValid(Email))) {
-            return res.status(409).json({ error: "Invalid email domain" });
+            return res.status(409).json({ message: "Invalid email domain" });
         }
 
         const existingUser = await Users.findOne({ Email: Email });
         if (existingUser) {
-            return res.status(400).json({ error: "Email already exists" });
+            return res.status(400).json({ message: "Email already exists" });
         }
 
         const verificationToken = generateVerificationCode();

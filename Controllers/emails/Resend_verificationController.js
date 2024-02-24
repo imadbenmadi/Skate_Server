@@ -81,26 +81,26 @@ const handle_send_Email = async (req, res) => {
         if (!userId) {
             return res.status(409).json({ message: "Missing Data" });
         } else {
-          const isAuth = await Verify_user(req, res);
-          if (isAuth.status == false)
-              return res
-                  .status(401)
-                  .json({ error: "Unauthorized: Invalid token" });
-          if (isAuth.status == true && isAuth.Refresh == true) {
-              res.cookie("accessToken", isAuth.newAccessToken, {
-                  httpOnly: true,
-                  sameSite: "None",
-                  secure: true,
-                  maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
-              });
-          }  
-        } 
+            const isAuth = await Verify_user(req, res);
+            if (isAuth.status == false)
+                return res
+                    .status(401)
+                    .json({ message: "Unauthorized: Invalid token" });
+            if (isAuth.status == true && isAuth.Refresh == true) {
+                res.cookie("accessToken", isAuth.newAccessToken, {
+                    httpOnly: true,
+                    sameSite: "None",
+                    secure: true,
+                    maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+                });
+            }
+        }
 
         const user = await Users.findById(userId);
         if (!user) {
-            return res.status(401).json({ error: "User not found" });
+            return res.status(401).json({ message: "User not found" });
         } else if (user.IsEmailVerified) {
-            return res.status(401).json({ error: "Email Already Verified" });
+            return res.status(401).json({ message: "Email Already Verified" });
         }
         try {
             await email_verification_tokens.deleteMany({ userId: userId });

@@ -9,7 +9,7 @@ const handle_add_User = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -52,9 +52,9 @@ const handle_add_User = async (req, res) => {
         } else if (Password.length < 8) {
             return res
                 .status(409)
-                .json({ error: "Password must be at least 8 characters" });
+                .json({ message: "Password must be at least 8 characters" });
         } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(Email)) {
-            return res.status(409).json({ error: "Invalid Email" });
+            return res.status(409).json({ message: "Invalid Email" });
         } else if (Gender !== "male" && Gender !== "female") {
             return res.status(409).json({
                 error: "Invalid Gender, accepted values: male or female",
@@ -62,17 +62,17 @@ const handle_add_User = async (req, res) => {
         } else if (Telephone.length < 9) {
             return res
                 .status(409)
-                .json({ error: "Telephone must be at least 9 characters" });
+                .json({ message: "Telephone must be at least 9 characters" });
         } else if (!isValidTelephone) {
             return res
                 .status(409)
-                .json({ error: "Telephone must be a number" });
+                .json({ message: "Telephone must be a number" });
         } else if (Age && isNaN(Age)) {
-            return res.status(409).json({ error: "Age must be a number" });
+            return res.status(409).json({ message: "Age must be a number" });
         }
         const existingUser = await Users.findOne({ Email: Email });
         if (existingUser) {
-            return res.status(404).json({ error: "Email already exists" });
+            return res.status(404).json({ message: "Email already exists" });
         }
         const newUser = new Users({
             FirstName: FirstName,
@@ -90,14 +90,14 @@ const handle_add_User = async (req, res) => {
             Date: new Date(),
         });
     } catch (error) {
-      return res.status(500).json({ error:error });
+      return res.status(500).json({ message:error });
     }
 };
 const handle_delete_User = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -109,23 +109,23 @@ const handle_delete_User = async (req, res) => {
     try {
         const id = req.params.id;
         if (!id) {
-            return res.status(400).json({ error: "User ID is required." });
+            return res.status(400).json({ message: "User ID is required." });
         }
         const user = await Users.findById(id);
         if (!user) {
-            return res.status(404).json({ error: "User not found." });
+            return res.status(404).json({ message: "User not found." });
         }
         await Users.findByIdAndDelete(id);
         return res.status(200).json({ message: "User Deleted Successfully." });
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const handle_modify_User = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -144,12 +144,12 @@ const handle_modify_User = async (req, res) => {
             NotificationsToAdd,
         } = req.body;
         if (!id) {
-            return res.status(400).json({ error: "User ID is required." });
+            return res.status(400).json({ message: "User ID is required." });
         }
 
         const userToUpdate = await Users.findById(id);
         if (!userToUpdate) {
-            return res.status(404).json({ error: "User not found." });
+            return res.status(404).json({ message: "User not found." });
         }
 
         // Extract fields that can be modified from the request body
@@ -212,7 +212,7 @@ const handle_modify_User = async (req, res) => {
                     }
                 }
             } catch (error) {
-                return res.status(500).json({ error: error });
+                return res.status(500).json({ message: error });
             }
         }
 
@@ -238,7 +238,7 @@ const handle_modify_User = async (req, res) => {
                     }
                 }
             } catch (error) {
-                return res.status(500).json({ error: error });
+                return res.status(500).json({ message: error });
             }
         }
 
@@ -252,7 +252,7 @@ const handle_modify_User = async (req, res) => {
 
         return res.status(200).json({ message: "User updated successfully" });
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 
@@ -260,7 +260,7 @@ const getAllUsers = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -274,7 +274,7 @@ const getAllUsers = async (req, res) => {
         const users = await Users.find({}, { Notifications: 0 }); // Exclude the Notifications field
         return res.status(200).json(users);
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 
@@ -282,7 +282,7 @@ const get_user = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -294,15 +294,15 @@ const get_user = async (req, res) => {
     try {
         const id = req.params.id;
         if (!id) {
-            return res.status(400).json({ error: "User ID is required." });
+            return res.status(400).json({ message: "User ID is required." });
         }
         const user = await Users.findById(id, { Notifications: 0 }); // Exclude the Notifications field
         if (!user) {
-            return res.status(404).json({ error: "User not found." });
+            return res.status(404).json({ message: "User not found." });
         }
         return res.status(200).json(user);
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const handle_notify_User = async (req, res) => {
@@ -327,7 +327,7 @@ const handle_notify_User = async (req, res) => {
         const { Title, Text, Description } = req.body;
 
         if (!id) {
-            return res.status(409).json({ error: "User ID is required." });
+            return res.status(409).json({ message: "User ID is required." });
         }
         if (!Title || !Text || !Description) {
             return res.status(409).json({
@@ -335,7 +335,7 @@ const handle_notify_User = async (req, res) => {
             });
         }
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 module.exports = {

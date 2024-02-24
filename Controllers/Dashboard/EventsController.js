@@ -1,11 +1,11 @@
-const { Events,Users } = require("../../models/Database");
+const { Events, Users } = require("../../models/Database");
 
 const Verify_Admin = require("../../Middleware/Verify_Admin");
 const handle_add_Event = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -18,7 +18,9 @@ const handle_add_Event = async (req, res) => {
         const { Title, Description } = req.body;
 
         if (!Title || !Description) {
-            return res.status(400).json({ error: "All fields are required." });
+            return res
+                .status(400)
+                .json({ message: "All fields are required." });
         }
         const NewBlog = new Events({
             Title,
@@ -42,14 +44,14 @@ const handle_add_Event = async (req, res) => {
         );
         return res.status(200).json({ message: "Event Created Successfully." });
     } catch (error) {
-        return res.status(500).json({ error: error});
+        return res.status(500).json({ message: error });
     }
 };
 const handle_delete_Event = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -63,10 +65,12 @@ const handle_delete_Event = async (req, res) => {
         if (!eventeId) {
             return res
                 .status(400)
-                .json({ error: "eventeId fields is required." });
+                .json({ message: "eventeId fields is required." });
         }
         await Events.findByIdAndDelete(eventeId);
-       return res.status(200).json({ message: "evente Deleted successfully." });
+        return res
+            .status(200)
+            .json({ message: "evente Deleted successfully." });
     } catch (error) {
         return res.status(500).json({ error });
     }
@@ -75,7 +79,7 @@ const handle_update_Event = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -88,11 +92,11 @@ const handle_update_Event = async (req, res) => {
         const { eventeId, title, description, image, price, category, date } =
             req.body;
         if (!eventeId) {
-            return res.status(400).json({ error: "evente ID is required." });
+            return res.status(400).json({ message: "evente ID is required." });
         }
         const evente = await Events.findById(eventeId);
         if (!evente) {
-            return res.status(404).json({ error: "evente not found." });
+            return res.status(404).json({ message: "evente not found." });
         }
         // Update each field if provided in the request body
         if (title) {
@@ -119,7 +123,7 @@ const handle_update_Event = async (req, res) => {
             .status(200)
             .json({ message: "evente updated successfully." });
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 module.exports = { handle_add_Event, handle_delete_Event, handle_update_Event };

@@ -1,10 +1,10 @@
-const {  Users } = require("../models/Database");
+const { Users } = require("../models/Database");
 require("dotenv").config();
 const Verify_user = require("../Middleware/verify_user");
 const EditProfile = async (req, res) => {
     const isAuth = await Verify_user(req, res);
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -16,23 +16,16 @@ const EditProfile = async (req, res) => {
     try {
         const { userId } = req.body;
         if (!userId) {
-            return res.status(409).json({ error: "Messing Data" });
+            return res.status(409).json({ message: "Messing Data" });
         }
 
         const userToUpdate = await Users.findById(userId);
         if (!userToUpdate) {
-            return res.status(404).json({ error: "User not found." });
+            return res.status(404).json({ message: "User not found." });
         }
 
         // Extract fields that can be modified from the request body
-        const {
-            FirstName,
-            LastName,
-            Email,
-            Age,
-            Gender,
-            Telephone,
-        } = req.body;
+        const { FirstName, LastName, Email, Age, Gender, Telephone } = req.body;
 
         // Update individual fields
         if (FirstName) {
@@ -44,7 +37,7 @@ const EditProfile = async (req, res) => {
         if (Email) {
             userToUpdate.Email = Email;
         }
-        
+
         if (Age) {
             userToUpdate.Age = Age;
         }
@@ -58,18 +51,20 @@ const EditProfile = async (req, res) => {
         // Save the updated user
         await userToUpdate.save();
 
-       return res.status(200).json({ message: "Profile updated successfully" });
+        return res
+            .status(200)
+            .json({ message: "Profile updated successfully" });
     } catch (error) {
-       return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const getProfile = async (req, res) => {
     const userId = req.body.userId;
 
-    if (!userId) return res.status(409).json({ error: "Messing Data" });
+    if (!userId) return res.status(409).json({ message: "Messing Data" });
     const isAuth = await Verify_user(req, res);
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -81,35 +76,35 @@ const getProfile = async (req, res) => {
     try {
         const user_in_db = await Users.findById(userId);
         if (!user_in_db) {
-            return res.status(401).json({ error: "user not found." });
+            return res.status(401).json({ message: "user not found." });
         }
 
-      return res.status(200).json(user_in_db);
+        return res.status(200).json(user_in_db);
     } catch (error) {
-      return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const DeleteProfile = async (req, res) => {
     const userId = req.body.userId;
 
-    if (!userId) return res.status(409).json({ error: "Messing Data" });
+    if (!userId) return res.status(409).json({ message: "Messing Data" });
     try {
         const verified = await Verify_user(req, res);
         if (!verified) {
             return res
                 .status(401)
-                .json({ error: "Unauthorized: Invalid token" });
+                .json({ message: "Unauthorized: Invalid token" });
         }
 
         const user_in_db = await Users.findById(userId);
         if (!user_in_db) {
-            return res.status(404).json({ error: "User not found." });
+            return res.status(404).json({ message: "User not found." });
         }
 
         await Users.findByIdAndDelete(userId);
-      return res.status(200).json(user_in_db);
+        return res.status(200).json(user_in_db);
     } catch (error) {
-      return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 

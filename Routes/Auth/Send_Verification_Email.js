@@ -41,7 +41,7 @@ router.post("/", async (req, res) => {
         if (Attempts[ipAddress].attempts >= 5) {
             return res
                 .status(429)
-                .json({ error: "Too many login attempts. Try again later." });
+                .json({ message: "Too many login attempts. Try again later." });
         }
     }
     Attempts[ipAddress] = Attempts[ipAddress] || {

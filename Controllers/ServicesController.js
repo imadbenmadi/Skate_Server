@@ -12,35 +12,35 @@ const getAllServices = async (req, res) => {
         const services = await Services.find().skip(skip).limit(limit);
         return res.status(200).json({ totalPages, services });
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const get_Service_ById = async (req, res) => {
     const ServiceId = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(ServiceId)) {
-        return res.status(409).json({ error: "Messing Data" });
+        return res.status(409).json({ message: "Messing Data" });
     }
 
     try {
         const Service = await Services.findById(ServiceId);
 
         if (!Service) {
-            return res.status(404).json({ error: "Service not found." });
+            return res.status(404).json({ message: "Service not found." });
         }
 
         return res.status(200).json(Service);
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const get_Services_By_user_Id = async (req, res) => {
     const userId = req.params._id;
-    if (!userId) return res.status(409).json({ error: "Missing Data" });
+    if (!userId) return res.status(409).json({ message: "Missing Data" });
 
     const isAuth = await Verify_user(req, res);
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
 
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("accessToken", isAuth.newAccessToken, {
@@ -54,7 +54,7 @@ const get_Services_By_user_Id = async (req, res) => {
     try {
         const user_in_db = await Users.findById(userId).populate("Services");
         if (!user_in_db) {
-            return res.status(404).json({ error: "User not found." });
+            return res.status(404).json({ message: "User not found." });
         }
 
         const page = parseInt(req.query.page) || 1;
@@ -71,7 +71,7 @@ const get_Services_By_user_Id = async (req, res) => {
             services,
         });
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(500).json({ message: error.message });
     }
 };
 
@@ -79,11 +79,11 @@ const handle_request_Service = async (req, res) => {
     const { ServiceId, userId } = req.body;
     const accessToken = req.cookies.accessToken;
     if (!ServiceId || !userId) {
-        return res.status(409).json({ error: "Messing Data." });
+        return res.status(409).json({ message: "Messing Data." });
     }
     const isAuth = await Verify_user(req, res);
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -95,7 +95,7 @@ const handle_request_Service = async (req, res) => {
     try {
         const user = await Users.findById(userId);
         if (!user) {
-            return res.status(404).json({ error: "User not found." });
+            return res.status(404).json({ message: "User not found." });
         }
         const existingRequest = await request_Service.findOne({
             UserId: userId,
@@ -109,7 +109,7 @@ const handle_request_Service = async (req, res) => {
         }
         const Service = await Services.findById(ServiceId);
         if (!Service) {
-            return res.status(404).json({ error: "Service not found." });
+            return res.status(404).json({ message: "Service not found." });
         }
         const new_request_Service = new request_Service({
             UserId: userId,
@@ -120,7 +120,7 @@ const handle_request_Service = async (req, res) => {
             .status(200)
             .json({ message: "Service requested successfully." });
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 module.exports = {

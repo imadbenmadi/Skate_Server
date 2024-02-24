@@ -3,15 +3,10 @@ require("dotenv").config();
 const { Users, Refresh_tokens } = require("../../models/Database");
 
 const handleRefreshToken = async (req, res) => {
-
     try {
- 
-        
         const refreshToken = req.cookies.refreshToken;
         if (!refreshToken) {
-            return res
-                .status(409)
-                .json({ error: "Messing Data" });
+            return res.status(409).json({ message: "Messing Data" });
         }
         const found_in_DB = await Refresh_tokens.findOne({
             token: refreshToken,
@@ -21,7 +16,7 @@ const handleRefreshToken = async (req, res) => {
                 .status(403)
                 .json({ message: "Refresh Token not found in the database" }); //Forbidden
         // evaluate jwt
-       
+
         jwt.verify(
             refreshToken,
             process.env.REFRESH_TOKEN_SECRET,
@@ -60,7 +55,7 @@ const handleRefreshToken = async (req, res) => {
             }
         );
     } catch (err) {
-       return res.status(400).json({ error: err });
+        return res.status(400).json({ message: err });
     }
 };
 module.exports = { handleRefreshToken };

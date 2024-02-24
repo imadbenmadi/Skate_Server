@@ -11,13 +11,13 @@ const handleLogin = async (req, res) => {
     try {
         const { Name, Password } = req.body;
         if (!Name || !Password) {
-            return res.status(409).json({ error: "Missing Data" });
+            return res.status(409).json({ message: "Missing Data" });
         }
         const Admin_in_Db = await Admin_data.findOne({
             Admin_User_Name: Name,
         }).exec();
         if (!Admin_in_Db)
-            return res.status(401).json({ error: "not authorized" });
+            return res.status(401).json({ message: "not authorized" });
         const passwordsMatch = await comparePasswords(
             Password,
             Admin_in_Db.Admin_Pwd
@@ -25,7 +25,7 @@ const handleLogin = async (req, res) => {
         if (!passwordsMatch) {
             return res
                 .status(401)
-                .json({ error: "Invalid username or password." });
+                .json({ message: "Invalid username or password." });
         }
 
         if (Admin_in_Db && passwordsMatch) {
@@ -77,7 +77,7 @@ const handleLogin = async (req, res) => {
             });
         }
     } catch (err) {
-        return res.status(400).json({ error: err });
+        return res.status(400).json({ message: err });
     }
 };
 module.exports = { handleLogin };

@@ -84,7 +84,7 @@ const handle_send_Email = async (req, res) => {
             if (isAuth.status == false)
                 return res
                     .status(401)
-                    .json({ error: "Unauthorized: Invalid token" });
+                    .json({ message: "Unauthorized: Invalid token" });
             if (isAuth.status == true && isAuth.Refresh == true) {
                 res.cookie("accessToken", isAuth.newAccessToken, {
                     httpOnly: true,
@@ -93,18 +93,18 @@ const handle_send_Email = async (req, res) => {
                     maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
                 });
             }
-        } 
+        }
 
         const user = await Users.findById(userId);
         if (!user) {
-            return res.status(404).json({ error: "User not found" });
-        }else if(user.IsEmailVerified){
-            return res.status(401).json({error:"Email Already Verified"})
+            return res.status(404).json({ message: "User not found" });
+        } else if (user.IsEmailVerified) {
+            return res.status(401).json({ error: "Email Already Verified" });
         }
         try {
-            await email_verification_tokens.deleteMany({ userId: userId });   
-        }catch(err){
-             return (400).json({ err });
+            await email_verification_tokens.deleteMany({ userId: userId });
+        } catch (err) {
+            return (400).json({ err });
         }
 
         const verificationToken = generateVerificationCode();

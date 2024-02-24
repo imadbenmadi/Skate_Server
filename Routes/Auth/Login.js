@@ -44,7 +44,7 @@ router.post("/", (req, res) => {
         if (loginAttempts[ipAddress].attempts >= 5) {
             return res
                 .status(429)
-                .json({ error: "Too many login attempts. Try again later." });
+                .json({ message: "Too many login attempts. Try again later." });
         }
     }
 
@@ -57,7 +57,7 @@ router.post("/", (req, res) => {
         blockIP(ipAddress, 60000); // Block IP address for 1 minute (60000 milliseconds)
         return res
             .status(429)
-            .json({ error: "Too many login attempts. Try again later." });
+            .json({ message: "Too many login attempts. Try again later." });
     }
 
     // Handle login

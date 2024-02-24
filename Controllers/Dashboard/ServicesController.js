@@ -8,7 +8,7 @@ const handle_add_Service = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -21,7 +21,9 @@ const handle_add_Service = async (req, res) => {
         const { Title, Description, Image, Category } = req.body;
 
         if (!Title || !Description || !Image || !Category) {
-            return res.status(400).json({ error: "All fields are required." });
+            return res
+                .status(400)
+                .json({ message: "All fields are required." });
         }
 
         const creationDate = new Date();
@@ -37,16 +39,16 @@ const handle_add_Service = async (req, res) => {
         // Save the Service to the database
         await newService.save();
 
-       return res.status(201).json({ message: "Service added successfully." });
+        return res.status(201).json({ message: "Service added successfully." });
     } catch (error) {
-       return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const handle_delete_Service = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -60,21 +62,21 @@ const handle_delete_Service = async (req, res) => {
         if (!serviceId) {
             return res
                 .status(400)
-                .json({ error: "serviceId fields is required." });
+                .json({ message: "serviceId fields is required." });
         }
         await Services.findByIdAndDelete(serviceId);
-       return res
-           .status(200)
-           .json({ message: "service Deleted successfully." });
+        return res
+            .status(200)
+            .json({ message: "service Deleted successfully." });
     } catch (error) {
-      return res.status(500).json({ error });
+        return res.status(500).json({ error });
     }
 };
 const handle_update_Service = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -87,11 +89,11 @@ const handle_update_Service = async (req, res) => {
         const { serviceId, title, description, image, price, category, date } =
             req.body;
         if (!serviceId) {
-            return res.status(400).json({ error: "service ID is required." });
+            return res.status(400).json({ message: "service ID is required." });
         }
         const service = await Services.findById(serviceId);
         if (!service) {
-            return res.status(404).json({ error: "service not found." });
+            return res.status(404).json({ message: "service not found." });
         }
         // Update each field if provided in the request body
         if (title) {
@@ -118,14 +120,14 @@ const handle_update_Service = async (req, res) => {
             .status(200)
             .json({ message: "service updated successfully." });
     } catch (error) {
-       return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const handle_Accept_Service_request = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
     if (isAuth.status == false)
-        return res.status(401).json({ error: "Unauthorized: Invalid token" });
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -137,7 +139,9 @@ const handle_Accept_Service_request = async (req, res) => {
     try {
         const { UserId, ServiceId } = req.body;
         if (!UserId || !ServiceId) {
-            return res.status(400).json({ error: "All fields are required." });
+            return res
+                .status(400)
+                .json({ message: "All fields are required." });
         }
 
         // Remove the request from the database
@@ -163,29 +167,31 @@ const handle_Accept_Service_request = async (req, res) => {
         await Users.findByIdAndUpdate(UserId, {
             $push: { Notifications: notificationToSend },
         }).exec();
-       return res.status(200).json({ message: "Service request accepted." });
+        return res.status(200).json({ message: "Service request accepted." });
     } catch (error) {
-       return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const handle_Reject_Service_request = async (req, res) => {
-   const isAuth = await Verify_Admin(req, res);
+    const isAuth = await Verify_Admin(req, res);
 
-   if (isAuth.status == false)
-       return res.status(401).json({ error: "Unauthorized: Invalid token" });
-   if (isAuth.status == true && isAuth.Refresh == true) {
-       res.cookie("admin_accessToken", isAuth.newAccessToken, {
-           httpOnly: true,
-           sameSite: "None",
-           secure: true,
-           maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
-       });
-   }
+    if (isAuth.status == false)
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("admin_accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+    }
     try {
         const { UserId, ServiceId } = req.body;
 
         if (!UserId || !ServiceId) {
-            return res.status(400).json({ error: "All fields are required." });
+            return res
+                .status(400)
+                .json({ message: "All fields are required." });
         }
 
         // Remove the request from the database
@@ -200,9 +206,9 @@ const handle_Reject_Service_request = async (req, res) => {
         await Users.findByIdAndUpdate(UserId, {
             $push: { Notifications: notificationToSend },
         }).exec();
-       return res.status(200).json({ message: "Service request rejected." });
+        return res.status(200).json({ message: "Service request rejected." });
     } catch (error) {
-       return res.status(500).json({ error: error});
+        return res.status(500).json({ message: error });
     }
 };
 module.exports = {

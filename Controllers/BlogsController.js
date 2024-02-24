@@ -10,26 +10,26 @@ const getAllBlogs = async (req, res) => {
         const blogs = await Blogs.find().skip(skip).limit(limit);
         return res.status(200).json({ totalPages, blogs });
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 const get_Blog_ById = async (req, res) => {
     const blogId = req.params.id;
 
     if (!blogId) {
-        return res.status(409).json({ error: "Messing Data" });
+        return res.status(409).json({ message: "Messing Data" });
     }
 
     try {
         const blog = await Blogs.findById(blogId);
 
         if (!blog) {
-            return res.status(404).json({ error: "blog not found." });
+            return res.status(404).json({ message: "blog not found." });
         }
 
         return res.status(200).json(blog);
     } catch (error) {
-        return res.status(500).json({ error: error });
+        return res.status(500).json({ message: error });
     }
 };
 
