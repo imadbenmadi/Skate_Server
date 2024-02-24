@@ -68,15 +68,7 @@ const Admin_data = mongoose.model(
         Admin_Pwd: { type: String },
     })
 );
-const request_Service = mongoose.model(
-    "request_Service",
-    new mongoose.Schema({
-        requests: [
-            { UserId: { type: mongoose.Types.ObjectId, ref: "Users" } },
-            { EtudeId: { type: mongoose.Types.ObjectId, ref: "Services" } },
-        ],
-    })
-);
+
 const Messages = mongoose.model(
     "Messages",
     new mongoose.Schema({
@@ -94,7 +86,13 @@ const request_Course = mongoose.model(
         CourseId: { type: mongoose.Types.ObjectId, ref: "Courses" },
     })
 );
-
+const request_Service = mongoose.model(
+    "request_Service",
+    new mongoose.Schema({
+        UserId: { type: mongoose.Types.ObjectId, ref: "Users" },
+        ServiceId: { type: mongoose.Types.ObjectId, ref: "Services" },
+    })
+);
 // Services Courses Blogs Events
 const Services = mongoose.model(
     "Services",

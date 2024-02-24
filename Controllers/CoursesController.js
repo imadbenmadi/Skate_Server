@@ -92,7 +92,7 @@ const handle_request_Course = async (req, res) => {
 
         if (existingRequest) {
             return res
-                .status(409)
+                .status(400)
                 .json({ error: "Course already requested by the user." });
         }
         const course = await Courses.findById(courseId);
