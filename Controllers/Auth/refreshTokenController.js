@@ -10,8 +10,8 @@ const handleRefreshToken = async (req, res) => {
         const refreshToken = req.cookies.refreshToken;
         if (!refreshToken) {
             return res
-                .status(401)
-                .json({ error: "Refresh cookies is Missing" });
+                .status(409)
+                .json({ error: "Messing Data" });
         }
         const found_in_DB = await Refresh_tokens.findOne({
             token: refreshToken,

@@ -77,7 +77,6 @@ const sendVerificationEmail = (Email, verificationToken) => {
 const handle_send_Email = async (req, res) => {
     try {
         const { userId } = req.body;
-       const accessToken = req.cookies.accessToken;
         if (!userId) {
             return res.status(409).json({ message: "Missing Data" });
         } else {
