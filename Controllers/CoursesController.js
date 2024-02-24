@@ -46,11 +46,20 @@ const get_courses_By_user_Id = async (req, res) => {
         });
     }
     try {
-        const user_in_db = await Users.findById(userId).populate("Courses");
+        const page = parseInt(req.query.page) || 1;
+        let limit = parseInt(req.query.limit) || 20;
+        const totalCourses = await Courses.countDocuments();
+        const totalPages = Math.ceil(totalCourses / limit);
+        const skip = (page - 1) * limit;
+
+        const user_in_db = await Users.findById(userId)
+            .populate("Courses")
+            .skip(skip)
+            .limit(limit);
         if (!user_in_db) {
             return res.status(401).json({ error: "user not found." });
         }
-        return res.status(200).json(user_in_db.Courses);
+        return res.status(200).json({totalPages , Courses : user_in_db.Courses});
     } catch (error) {
         return res.status(500).json({ error: error });
     }
