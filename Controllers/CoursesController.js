@@ -93,11 +93,16 @@ const handle_request_Course = async (req, res) => {
         if (existingRequest) {
             return res
                 .status(400)
-                .json({ error: "Course already requested by the user." });
+                .json({ message: "You have already Requested this Course" });
         }
         const course = await Courses.findById(courseId);
         if (!course) {
             return res.status(404).json({ error: "Course not found." });
+        }
+        if (user.Courses.includes(courseId)) {
+            return res
+                .status(400)
+                .json({ message: "You Own this Course" });
         }
         const new_request_Course = new request_Course({
             UserId: userId,

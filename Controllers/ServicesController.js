@@ -105,7 +105,7 @@ const handle_request_Service = async (req, res) => {
         if (existingRequest) {
             return res
                 .status(400)
-                .json({ error: "Service already requested by the user." });
+                .json({ message: "You have already Requested this Service" });
         }
         const Service = await Services.findById(ServiceId);
         if (!Service) {
