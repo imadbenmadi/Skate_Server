@@ -5,7 +5,7 @@ const getAllEvents = async (req, res) => {
         const events = await Events.find({});
       return res.status(200).json(events);
     } catch (error) {
-     return res.status(500).json({ error: "Internal server error." });
+     return res.status(500).json({ error: error });
     }
 };
 const get_Event_ById = async (req, res) => {
@@ -24,7 +24,7 @@ const get_Event_ById = async (req, res) => {
 
       return res.status(200).json(Event);
     } catch (error) {
-      return res.status(500).json({ error: "Internal server error." });
+      return res.status(500).json({ error: error });
     }
 };
 

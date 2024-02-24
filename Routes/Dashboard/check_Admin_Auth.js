@@ -41,7 +41,7 @@ router.get("/", async (req, res) => {
                                     return res.status(401).json({
                                         error: "Unauthorized: Failed to verify JWT. Refresh token does not match",
                                     });
-                                } 
+                                }
 
                                 // Generate new access token
                                 const newAccessToken = jwt.sign(
@@ -63,9 +63,7 @@ router.get("/", async (req, res) => {
                             }
                         );
                     } catch (refreshErr) {
-                        return res
-                            .status(500)
-                            .json({ error: "Internal Server Error" });
+                        return res.status(500).json({ error: refreshErr });
                     }
                 } else {
                     // Other verification error, return unauthorized
@@ -81,7 +79,7 @@ router.get("/", async (req, res) => {
             }
         });
     } catch (err) {
-        return res.status(500).json({ error: "Internal Server Error" });
+        return res.status(500).json({ error: err });
     }
 });
 

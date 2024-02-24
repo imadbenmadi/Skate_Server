@@ -39,7 +39,7 @@ const handle_add_Service = async (req, res) => {
 
        return res.status(201).json({ message: "Service added successfully." });
     } catch (error) {
-       return res.status(500).json({ error: "Internal server error." });
+       return res.status(500).json({ error: error });
     }
 };
 const handle_delete_Service = async (req, res) => {
@@ -118,7 +118,7 @@ const handle_update_Service = async (req, res) => {
             .status(200)
             .json({ message: "service updated successfully." });
     } catch (error) {
-       return res.status(500).json({ error: "Internal server error." });
+       return res.status(500).json({ error: error });
     }
 };
 const handle_Accept_Service_request = async (req, res) => {
@@ -165,7 +165,7 @@ const handle_Accept_Service_request = async (req, res) => {
         }).exec();
        return res.status(200).json({ message: "Service request accepted." });
     } catch (error) {
-       return res.status(500).json({ error: "Internal server error." });
+       return res.status(500).json({ error: error });
     }
 };
 const handle_Reject_Service_request = async (req, res) => {
@@ -202,7 +202,7 @@ const handle_Reject_Service_request = async (req, res) => {
         }).exec();
        return res.status(200).json({ message: "Service request rejected." });
     } catch (error) {
-       return res.status(500).json({ error: "Internal server error." });
+       return res.status(500).json({ error: error});
     }
 };
 module.exports = {

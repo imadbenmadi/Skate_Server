@@ -10,7 +10,7 @@ const getAllBlogs = async (req, res) => {
         const blogs = await Blogs.find().skip(skip).limit(limit);
         return res.status(200).json({ totalPages, blogs });
     } catch (error) {
-        return res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: error });
     }
 };
 const get_Blog_ById = async (req, res) => {
@@ -29,7 +29,7 @@ const get_Blog_ById = async (req, res) => {
 
         return res.status(200).json(blog);
     } catch (error) {
-        return res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: error });
     }
 };
 

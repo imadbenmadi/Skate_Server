@@ -42,7 +42,7 @@ const handle_add_Event = async (req, res) => {
         );
         return res.status(200).json({ message: "Event Created Successfully." });
     } catch (error) {
-        return res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: error});
     }
 };
 const handle_delete_Event = async (req, res) => {
@@ -119,7 +119,7 @@ const handle_update_Event = async (req, res) => {
             .status(200)
             .json({ message: "evente updated successfully." });
     } catch (error) {
-        return res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: error });
     }
 };
 module.exports = { handle_add_Event, handle_delete_Event, handle_update_Event };

@@ -34,7 +34,7 @@ const handle_add_Courses = async (req, res) => {
         await newCourse.save();
         return res.status(201).json({ message: "Course added successfully." });
     } catch (error) {
-        return res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: error });
     }
 };
 const handle_delete_Courses = async (req, res)=>{
@@ -111,7 +111,7 @@ const handle_update_Courses = async (req, res) => {
             .status(200)
             .json({ message: "Course updated successfully." });
     } catch (error) {
-        return res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: error });
     }
 };
 
@@ -155,7 +155,7 @@ const handle_Accept_course_request = async (req, res) => {
 
         return res.status(200).json({ message: "Course request accepted." });
     } catch (error) {
-        return res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: error});
     }
 };
 const handle_Reject_course_request = async (req, res) => {
@@ -194,7 +194,7 @@ const handle_Reject_course_request = async (req, res) => {
         }).exec();
         return res.status(200).json({ message: "Course request rejected." });
     } catch (error) {
-       return res.status(500).json({ error: "Internal server error." });
+       return res.status(500).json({ error: error });
     }
 };
 module.exports = {

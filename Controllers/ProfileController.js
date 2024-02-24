@@ -86,7 +86,7 @@ const getProfile = async (req, res) => {
 
       return res.status(200).json(user_in_db);
     } catch (error) {
-      return res.status(500).json({ error: "Internal server error." });
+      return res.status(500).json({ error: error });
     }
 };
 const DeleteProfile = async (req, res) => {
@@ -109,7 +109,7 @@ const DeleteProfile = async (req, res) => {
         await Users.findByIdAndDelete(userId);
       return res.status(200).json(user_in_db);
     } catch (error) {
-      return res.status(500).json({ error: "Internal server error." });
+      return res.status(500).json({ error: error });
     }
 };
 

@@ -90,7 +90,7 @@ const handle_add_User = async (req, res) => {
             Date: new Date(),
         });
     } catch (error) {
-      return res.status(500).json({ error: "Internal server error." });
+      return res.status(500).json({ error:error });
     }
 };
 const handle_delete_User = async (req, res) => {
@@ -118,7 +118,7 @@ const handle_delete_User = async (req, res) => {
         await Users.findByIdAndDelete(id);
         return res.status(200).json({ message: "User Deleted Successfully." });
     } catch (error) {
-        return res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: error });
     }
 };
 const handle_modify_User = async (req, res) => {
@@ -212,7 +212,7 @@ const handle_modify_User = async (req, res) => {
                     }
                 }
             } catch (error) {
-                return res.status(500).json({ error: "Internal server error" });
+                return res.status(500).json({ error: error });
             }
         }
 
@@ -238,7 +238,7 @@ const handle_modify_User = async (req, res) => {
                     }
                 }
             } catch (error) {
-                return res.status(500).json({ error: "Internal server error" });
+                return res.status(500).json({ error: error });
             }
         }
 
@@ -274,7 +274,7 @@ const getAllUsers = async (req, res) => {
         const users = await Users.find({}, { Notifications: 0 }); // Exclude the Notifications field
         return res.status(200).json(users);
     } catch (error) {
-        return res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: error });
     }
 };
 
@@ -302,7 +302,7 @@ const get_user = async (req, res) => {
         }
         return res.status(200).json(user);
     } catch (error) {
-        return res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: error });
     }
 };
 const handle_notify_User = async (req, res) => {
@@ -335,7 +335,7 @@ const handle_notify_User = async (req, res) => {
             });
         }
     } catch (error) {
-        return res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: error });
     }
 };
 module.exports = {

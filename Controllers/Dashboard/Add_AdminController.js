@@ -20,7 +20,7 @@ const addAdmin = async (req, res) => {
            .status(201)
            .json({ message: "Admin user saved successfully." });
     } catch (err) {
-       return res.status(500).json({ error: "Internal server error." });
+       return res.status(500).json({ error: err });
     }
 };
 module.exports = { addAdmin };

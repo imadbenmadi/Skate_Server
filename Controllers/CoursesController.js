@@ -99,7 +99,7 @@ const handle_request_Course = async (req, res) => {
             .status(200)
             .json({ message: "Course requested successfully." });
     } catch (error) {
-        return res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: error });
     }
 };
 module.exports = {

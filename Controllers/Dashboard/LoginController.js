@@ -13,9 +13,11 @@ const handleLogin = async (req, res) => {
         if (!Name || !Password) {
             return res.status(409).json({ error: "Missing Data" });
         }
-        const Admin_in_Db = await Admin_data.findOne({ Admin_User_Name: Name }).exec();
+        const Admin_in_Db = await Admin_data.findOne({
+            Admin_User_Name: Name,
+        }).exec();
         if (!Admin_in_Db)
-            return res.status(401).json({error : "not authorized"})
+            return res.status(401).json({ error: "not authorized" });
         const passwordsMatch = await comparePasswords(
             Password,
             Admin_in_Db.Admin_Pwd
@@ -37,7 +39,7 @@ const handleLogin = async (req, res) => {
                 process.env.ADMIN_REFRESH_TOKEN_SECRET,
                 { expiresIn: "1d" }
             );
-            
+
             try {
                 await Refresh_tokens.create({
                     userId: Admin_in_Db._id,
@@ -45,7 +47,7 @@ const handleLogin = async (req, res) => {
                 });
             } catch (err) {
                 return res.status(500).json({
-                    error: "Internal Server Error " + err.message,
+                    error: err,
                 });
             }
             res.cookie("admin_accessToken", accessToken, {
@@ -70,12 +72,12 @@ const handleLogin = async (req, res) => {
                 message: "Admin Logged In Successfully",
             });
         } else {
-           return res.status(401).json({
-               error: "Name or Password isn't correct",
-           });
+            return res.status(401).json({
+                error: "Name or Password isn't correct",
+            });
         }
     } catch (err) {
-       return res.status(400).json({ error: err });
+        return res.status(400).json({ error: err });
     }
 };
 module.exports = { handleLogin };

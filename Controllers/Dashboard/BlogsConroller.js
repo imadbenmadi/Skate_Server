@@ -29,7 +29,7 @@ const handle_add_Blog = async (req, res) => {
 
         return res.status(200).json({ message: "Blog Created Successfully." });
     } catch (error) {
-        return res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: error });
     }
 };
 const handle_delete_Blog = async (req, res) => {
@@ -103,7 +103,7 @@ const handle_update_Blog = async (req, res) => {
         await blog.save();
         return res.status(200).json({ message: "blog updated successfully." });
     } catch (error) {
-        return res.status(500).json({ error: "Internal server error." });
+        return res.status(500).json({ error: error });
     }
 };
 
