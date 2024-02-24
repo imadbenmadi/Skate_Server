@@ -68,7 +68,6 @@ const getProfile = async (req, res) => {
 
     if (!userId) return res.status(400).json({ error: "User Id is required." });
     const isAuth = await Verify_user(req, res);
-    console.log("isAuth", isAuth);
     if (isAuth.status == false)
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
@@ -78,7 +77,6 @@ const getProfile = async (req, res) => {
             secure: true,
             maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
         });
-        console.log("token refreshed", isAuth.newAccessToken);
     }
     try {
         const user_in_db = await Users.findById(userId);
@@ -111,7 +109,6 @@ const DeleteProfile = async (req, res) => {
         await Users.findByIdAndDelete(userId);
       return res.status(200).json(user_in_db);
     } catch (error) {
-        console.error("Error deleting profile:", error);
       return res.status(500).json({ error: "Internal server error." });
     }
 };

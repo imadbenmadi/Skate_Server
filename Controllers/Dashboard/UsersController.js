@@ -190,15 +190,13 @@ const handle_modify_User = async (req, res) => {
             userToUpdate.IsEmailVerified = IsEmailVerified;
         }
 
-        // Update Courses
         if (CoursesToAdd && CoursesToAdd.length > 0) {
             const coursesToAddUnique = CoursesToAdd.filter(
                 (course) => !userToUpdate.Courses.includes(course)
             );
             userToUpdate.Courses.push(...coursesToAddUnique);
         }
-        // console.log("courses to remove : ", CoursesToRemove);
-        // console.log("serveses to remove : ", ServicesToRemove);
+
         if (CoursesToRemove && CoursesToRemove.length > 0) {
             try {
                 for (const courseId of CoursesToRemove) {
@@ -214,7 +212,6 @@ const handle_modify_User = async (req, res) => {
                     }
                 }
             } catch (error) {
-                console.error("Error removing courses:", error);
                 return res.status(500).json({ error: "Internal server error" });
             }
         }
@@ -241,7 +238,6 @@ const handle_modify_User = async (req, res) => {
                     }
                 }
             } catch (error) {
-                console.error("Error removing services:", error);
                 return res.status(500).json({ error: "Internal server error" });
             }
         }
@@ -297,7 +293,6 @@ const get_user = async (req, res) => {
     }
     try {
         const id = req.params.id;
-        console.log(id);
         if (!id) {
             return res.status(400).json({ error: "User ID is required." });
         }
@@ -339,20 +334,7 @@ const handle_notify_User = async (req, res) => {
                 error: "Title and Text and Description are required.",
             });
         }
-        // const user = await Users.findOne({_id : id});
-        // if (!user) {
-        //     return res.status(404).json({ error: "User not found." });
-        // }
-        // user.Notifications.push({
-        //     Title: Title,
-        //     Text: Text,
-        //     Description: Description,
-        //     Date: new Date(),
-        // });
-        // await user.save();
-        // res.status(200).json({ message: "User notified successfully." });
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ error: "Internal server error." });
     }
 };
