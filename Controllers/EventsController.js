@@ -18,7 +18,7 @@ const get_Event_ById = async (req, res) => {
     const EventId = req.params.id;
 
     if (!EventId) {
-        return res.status(400).json({ error: "Invalid Event ID." });
+        return res.status(409).json({ error: "Messing Data" });
     }
 
     try {

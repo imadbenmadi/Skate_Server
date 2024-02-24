@@ -14,7 +14,7 @@ const get_Service_ById = async (req, res) => {
     const ServiceId = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(ServiceId)) {
-        return res.status(400).json({ error: "Invalid Service ID." });
+        return res.status(409).json({ error: "Messing Data" });
     }
 
     try {
@@ -31,7 +31,7 @@ const get_Service_ById = async (req, res) => {
 };
 const get_Services_By_user_Id = async (req, res) => {
     const userId = req.params._idd;
-    if (!userId) return res.status(400).json({ error: "User Id is required." });
+    if (!userId) return res.status(409).json({ error: "Messing Data" });
     const isAuth = await Verify_user(req, res);
     if (isAuth.status == false)
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
@@ -58,7 +58,7 @@ const handle_request_Service = async (req, res) => {
     const { ServiceId, userId } = req.body;
     const accessToken = req.cookies.accessToken;
     if (!ServiceId || !userId) {
-        return res.status(400).json({ error: "Messing Data." });
+        return res.status(409).json({ error: "Messing Data." });
     }
     const isAuth = await Verify_user(req, res);
     if (isAuth.status == false)

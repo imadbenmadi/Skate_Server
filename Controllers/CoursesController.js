@@ -19,7 +19,7 @@ const getAllCourses = async (req, res) => {
 const get_course_ById = async (req, res) => {
     const courseId = req.params.id;
     if (!courseId) {
-        return res.status(400).json({ error: "Invalid course ID." });
+        return res.status(409).json({ error: "Messing Data" });
     }
     try {
         const course = await Courses.findById(courseId);
@@ -33,7 +33,7 @@ const get_course_ById = async (req, res) => {
 };
 const get_courses_By_user_Id = async (req, res) => {
     const userId = req.params._id;
-    if (!userId) return res.status(400).json({ error: "Messing Data" });
+    if (!userId) return res.status(409).json({ error: "Messing Data" });
     const isAuth = await Verify_user(req, res);
     if (isAuth.status == false)
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
@@ -67,7 +67,7 @@ const get_courses_By_user_Id = async (req, res) => {
 const handle_request_Course = async (req, res) => {
     const { courseId, userId } = req.body;
     if (!courseId || !userId) {
-        return res.status(400).json({ error: "Messing Data." });
+        return res.status(409).json({ error: "Messing Data." });
     }
     const isAuth = await Verify_user(req, res);
     if (isAuth.status == false)

@@ -6,7 +6,7 @@ const handleContact = async (req, res) => {
         if (!title || !message) {
             return res
                 .status(409)
-                .json({ message: "Missing title or massage" });
+                .json({ message: "Missing Data" });
         } else if (
             Email &&
             !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(Email)

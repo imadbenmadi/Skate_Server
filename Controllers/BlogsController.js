@@ -17,7 +17,7 @@ const get_Blog_ById = async (req, res) => {
     const blogId = req.params.id;
 
     if (!blogId) {
-        return res.status(400).json({ error: "Invalid blog ID." });
+        return res.status(409).json({ error: "Messing Data" });
     }
 
     try {

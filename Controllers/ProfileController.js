@@ -16,7 +16,7 @@ const EditProfile = async (req, res) => {
     try {
         const { userId } = req.body;
         if (!userId) {
-            return res.status(400).json({ error: "Messing Data" });
+            return res.status(409).json({ error: "Messing Data" });
         }
 
         const userToUpdate = await Users.findById(userId);
@@ -66,7 +66,7 @@ const EditProfile = async (req, res) => {
 const getProfile = async (req, res) => {
     const userId = req.body.userId;
 
-    if (!userId) return res.status(400).json({ error: "User Id is required." });
+    if (!userId) return res.status(409).json({ error: "Messing Data" });
     const isAuth = await Verify_user(req, res);
     if (isAuth.status == false)
         return res.status(401).json({ error: "Unauthorized: Invalid token" });
@@ -92,7 +92,7 @@ const getProfile = async (req, res) => {
 const DeleteProfile = async (req, res) => {
     const userId = req.body.userId;
 
-    if (!userId) return res.status(400).json({ error: "User Id is required." });
+    if (!userId) return res.status(409).json({ error: "Messing Data" });
     try {
         const verified = await Verify_user(req, res);
         if (!verified) {
