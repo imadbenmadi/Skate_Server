@@ -72,7 +72,7 @@ const handle_delete_Event = async (req, res) => {
             .status(200)
             .json({ message: "evente Deleted successfully." });
     } catch (error) {
-        return res.status(500).json({ error });
+        return res.status(500).json({ message: error });
     }
 };
 const handle_update_Event = async (req, res) => {

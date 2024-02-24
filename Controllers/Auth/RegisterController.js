@@ -179,7 +179,7 @@ const handleRegister = async (req, res) => {
             Date: new Date(),
         });
     } catch (err) {
-        return res.status(500).json({ err });
+        return res.status(500).json({ message: err });
     }
 };
 

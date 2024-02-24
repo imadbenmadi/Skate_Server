@@ -54,7 +54,7 @@ const handle_delete_Blog = async (req, res) => {
         await Blogs.findByIdAndDelete(blogId);
         return res.status(200).json({ message: "Blog Deleted successfully." });
     } catch (error) {
-        return res.status(500).json({ error });
+        return res.status(500).json({ message: error });
     }
 };
 const handle_update_Blog = async (req, res) => {

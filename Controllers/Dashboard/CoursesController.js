@@ -64,7 +64,7 @@ const handle_delete_Courses = async (req, res) => {
             .status(200)
             .json({ message: "Course Deleted successfully." });
     } catch (error) {
-        return res.status(500).json({ error });
+        return res.status(500).json({ message: error });
     }
 };
 const handle_update_Courses = async (req, res) => {

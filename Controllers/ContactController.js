@@ -39,7 +39,7 @@ const handleContact = async (req, res) => {
             return res.status(500).json({ err });
         }
     } catch (err) {
-        return res.status(500).json({ err });
+        return res.status(500).json({message :  err });
     }
 };
 module.exports = { handleContact };
