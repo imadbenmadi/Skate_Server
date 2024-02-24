@@ -78,7 +78,6 @@ const handle_send_Email = async (req, res) => {
     try {
         const { userId } = req.body;
         const accessToken = req.cookies.accessToken;
-        console.log("acess token", accessToken);
         if (!userId) {
             return res.status(409).json({ message: "Missing Data" });
         } else {
@@ -99,10 +98,8 @@ const handle_send_Email = async (req, res) => {
 
         const user = await Users.findById(userId);
         if (!user) {
-            console.log("User not found");
             return res.status(401).json({ error: "User not found" });
         } else if (user.IsEmailVerified) {
-            console.log("Email Already Verified");
             return res.status(401).json({ error: "Email Already Verified" });
         }
         try {
@@ -110,7 +107,6 @@ const handle_send_Email = async (req, res) => {
         } catch (err) {
             return res.status(400).json({ err });
         }
-
         const verificationToken = generateVerificationCode();
         const newVerificationToken = new email_verification_tokens({
             userId: userId,
@@ -120,11 +116,9 @@ const handle_send_Email = async (req, res) => {
         sendVerificationEmail(user.Email, verificationToken);
         return res.status(200).json({
             message: "Email Sended Successfully",
-
             Date: new Date(),
         });
     } catch (err) {
-        console.log(" Error in Send_Verification_EmailController: ", err);
         return res.status(400).json({ err });
     }
 };
