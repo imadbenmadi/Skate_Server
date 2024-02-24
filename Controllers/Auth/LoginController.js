@@ -34,7 +34,7 @@ const handleLogin = async (req, res) => {
                 });
             } catch (err) {
                return res.status(500).json({
-                   error: "Internal Server Error " + err.message,
+                   error: err,
                });
             }
             res.cookie("accessToken", accessToken, {
