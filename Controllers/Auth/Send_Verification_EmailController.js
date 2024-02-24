@@ -118,12 +118,10 @@ const handle_send_Email = async (req, res) => {
         sendVerificationEmail(user.Email, verificationToken);
         return res.status(200).json({
             message: "Email Sended Successfully",
-
             Date: new Date(),
         });
     } catch (err) {
         return res.status(400).json({ err });
-        console.log(" Error in Send_Verification_EmailController: ", err);
     }
 };
 
