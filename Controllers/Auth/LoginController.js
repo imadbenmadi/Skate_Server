@@ -9,7 +9,7 @@ const handleLogin = async (req, res) => {
             return res.status(409).json({ message: "Missing Data" });
         } else if (Password.length < 8) {
             return res.status(409).json({
-                error: "Password must be at least 8 characters",
+                message: "Password must be at least 8 characters",
             });
         } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(Email)) {
             return res.status(409).json({ message: "Invalid Email" });
@@ -34,7 +34,7 @@ const handleLogin = async (req, res) => {
                 });
             } catch (err) {
                 return res.status(500).json({
-                    error: err,
+                    message: err,
                 });
             }
             res.cookie("accessToken", accessToken, {
@@ -88,11 +88,11 @@ const handleLogin = async (req, res) => {
             });
         } else {
             return res.status(401).json({
-                error: "Username or Password isn't correct",
+                message: "Username or Password isn't correct",
             });
         }
     } catch (err) {
-        return res.status(400).json({ message: err });
+        return res.status(500).json({ message: err });
     }
 };
 module.exports = { handleLogin };

@@ -54,7 +54,7 @@ router.post("/", async (req, res) => {
     if (Attempts[ipAddress].attempts >= 5) {
         blockIP(ipAddress, 300000); // Block IP address for 5 minutes (300,000 milliseconds)
         return res.status(429).json({
-            error: "Too many attempts. Try again later.",
+            message: "Too many attempts. Try again later.",
         });
     }
 

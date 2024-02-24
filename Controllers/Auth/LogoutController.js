@@ -11,7 +11,7 @@ const handleLogout = async (req, res) => {
         try {
             await Refresh_tokens.deleteOne({ token: refreshToken });
         } catch (error) {
-            return res.status(500).json({ error });
+            return res.status(500).json({ message : error });
         }
     }
     res.clearCookie("refreshToken", {

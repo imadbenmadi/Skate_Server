@@ -99,7 +99,7 @@ const handle_send_Email = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         } else if (user.IsEmailVerified) {
-            return res.status(401).json({ error: "Email Already Verified" });
+            return res.status(401).json({ message: "Email Already Verified" });
         }
         try {
             await email_verification_tokens.deleteMany({ userId: userId });

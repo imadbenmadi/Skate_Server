@@ -133,7 +133,7 @@ const handleRegister = async (req, res) => {
             return res.status(409).json({ message: "Invalid Email" });
         } else if (Gender !== "male" && Gender !== "female") {
             return res.status(409).json({
-                error: "Invalid Gender, accepted values: male or female",
+                message: "Invalid Gender, accepted values: male or female",
             });
         } else if (Telephone.length < 9) {
             return res
@@ -179,7 +179,7 @@ const handleRegister = async (req, res) => {
             Date: new Date(),
         });
     } catch (err) {
-        return res.status(400).json({ err });
+        return res.status(500).json({ err });
     }
 };
 

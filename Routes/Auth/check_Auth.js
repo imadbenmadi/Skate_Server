@@ -19,7 +19,8 @@ router.get("/", async (req, res) => {
                     try {
                         if (!refreshToken) {
                             return res.status(401).json({
-                                error: "Unauthorized: Refresh token is missing",
+                                message:
+                                    "Unauthorized: Refresh token is missing",
                             });
                         }
 
@@ -29,7 +30,7 @@ router.get("/", async (req, res) => {
 
                         if (!found_in_DB) {
                             return res.status(401).json({
-                                error: "Unauthorized",
+                                message: "Unauthorized",
                             });
                         }
 
@@ -39,13 +40,13 @@ router.get("/", async (req, res) => {
                             async (err, decoded) => {
                                 if (err) {
                                     return res.status(401).json({
-                                        error: "Unauthorized",
+                                        message: "Unauthorized",
                                     });
                                 } else if (
                                     found_in_DB.userId != decoded.userId
                                 ) {
                                     return res.status(401).json({
-                                        error: "Unauthorized",
+                                        message: "Unauthorized",
                                     });
                                 }
 
@@ -87,7 +88,7 @@ router.get("/", async (req, res) => {
                     }
                 } else {
                     return res.status(401).json({
-                        error: "Unauthorized: Access token is invalid",
+                        message: "Unauthorized: Access token is invalid",
                     });
                 }
             } else {

@@ -57,7 +57,7 @@ const handle_add_User = async (req, res) => {
             return res.status(409).json({ message: "Invalid Email" });
         } else if (Gender !== "male" && Gender !== "female") {
             return res.status(409).json({
-                error: "Invalid Gender, accepted values: male or female",
+                message: "Invalid Gender, accepted values: male or female",
             });
         } else if (Telephone.length < 9) {
             return res
@@ -310,7 +310,7 @@ const handle_notify_User = async (req, res) => {
 
     if (isAuth.status == false) {
         return res.status(401).json({
-            error: "Unauthorized: Invalidtoken",
+            message: "Unauthorized: Invalidtoken",
         });
     }
     if (isAuth.status == true && isAuth.Refresh == true) {
@@ -331,7 +331,7 @@ const handle_notify_User = async (req, res) => {
         }
         if (!Title || !Text || !Description) {
             return res.status(409).json({
-                error: "Title and Text and Description are required.",
+                message: "Title and Text and Description are required.",
             });
         }
     } catch (error) {

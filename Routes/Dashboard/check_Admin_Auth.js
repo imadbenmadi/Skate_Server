@@ -19,7 +19,8 @@ router.get("/", async (req, res) => {
                     try {
                         if (!refreshToken) {
                             return res.status(401).json({
-                                error: "Unauthorized: Refresh token is missing",
+                                message:
+                                    "Unauthorized: Refresh token is missing",
                             });
                         }
 
@@ -29,7 +30,8 @@ router.get("/", async (req, res) => {
 
                         if (!found_in_DB) {
                             return res.status(401).json({
-                                error: "Unauthorized: Refresh token not found in the database",
+                                message:
+                                    "Unauthorized: Refresh token not found in the database",
                             });
                         }
 
@@ -39,7 +41,8 @@ router.get("/", async (req, res) => {
                             async (err, decoded) => {
                                 if (err) {
                                     return res.status(401).json({
-                                        error: "Unauthorized: Failed to verify JWT. Refresh token does not match",
+                                        message:
+                                            "Unauthorized: Failed to verify JWT. Refresh token does not match",
                                     });
                                 }
 
@@ -69,7 +72,7 @@ router.get("/", async (req, res) => {
                     // Other verification error, return unauthorized
 
                     return res.status(401).json({
-                        error: "Unauthorized: Access token is invalid",
+                        message: "Unauthorized: Access token is invalid",
                     });
                 }
             } else {

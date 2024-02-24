@@ -3,7 +3,7 @@ const { Users } = require("../../models/Database");
 const handle_check = async (req, res) => {
     try {
         const userId = req.body.userId;
-        if (!userId) return res.status(409).json({ error: "messing Data" });
+        if (!userId) return res.status(409).json({ message: "messing Data" });
         const user = await Users.findById(userId).select("IsEmailVerified");
         if (!user) {
             return res.status(404).json({ message: "User Not Found" });

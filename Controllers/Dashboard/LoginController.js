@@ -47,7 +47,7 @@ const handleLogin = async (req, res) => {
                 });
             } catch (err) {
                 return res.status(500).json({
-                    error: err,
+                    message: err,
                 });
             }
             res.cookie("admin_accessToken", accessToken, {
@@ -73,7 +73,7 @@ const handleLogin = async (req, res) => {
             });
         } else {
             return res.status(401).json({
-                error: "Name or Password isn't correct",
+                message: "Name or Password isn't correct",
             });
         }
     } catch (err) {
