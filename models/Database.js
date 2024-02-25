@@ -31,6 +31,8 @@ const Users = mongoose.model(
                         "event",
                         "course",
                         "service",
+                        "blog",
+                        "message",
                         "other",
                     ],
                 },
