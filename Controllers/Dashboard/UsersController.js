@@ -296,7 +296,7 @@ const get_user = async (req, res) => {
         if (!id) {
             return res.status(400).json({ message: "User ID is required." });
         }
-        const user = await Users.findById(id, { Notifications: 0 }); // Exclude the Notifications field
+        const user = await Users.findById(id); // Exclude the Notifications field
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
@@ -323,9 +323,8 @@ const handle_notify_User = async (req, res) => {
     }
     try {
         const id = req.params.id;
-
         const { Title, Text, Description } = req.body;
-
+        const Type = req.body.Type || "other";
         if (!id) {
             return res.status(409).json({ message: "User ID is required." });
         }
@@ -334,7 +333,22 @@ const handle_notify_User = async (req, res) => {
                 message: "Title and Text and Description are required.",
             });
         }
-    } catch (error) {
+        const user_in_db = await Users.findById(id);
+        if(!user_in_db) {
+            return res.status(404).json({ message: "User not found." });
+        }
+        const notification = {
+            Type: Type,
+            Title: Title,
+            Text: Text,
+            Description: Description,
+            Date: new Date(),
+        };
+        user_in_db.Notifications.push(notification);
+        console.log(user_in_db.Notifications);
+        await user_in_db.save();
+        return res.status(200).json({ message: "Notification sent successfully." });
+    } catch (error) {console.log(error);
         return res.status(500).json({ message: error });
     }
 };

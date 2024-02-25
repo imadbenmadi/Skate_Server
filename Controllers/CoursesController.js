@@ -3,15 +3,17 @@ const { Courses, Users, request_Course } = require("../models/Database");
 require("dotenv").config();
 const Verify_user = require("../Middleware/verify_user");
 const getAllCourses = async (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    let limit = parseInt(req.query.limit) || 20;
+    // const page = parseInt(req.query.page) || 1;
+    // let limit = parseInt(req.query.limit) || 20;
 
     try {
-        const totalCount = await Courses.countDocuments();
-        const totalPages = Math.ceil(totalCount / limit);
-        const skip = (page - 1) * limit;
-        const courses = await Courses.find().skip(skip).limit(limit);
-        return res.status(200).json({ totalPages, courses });
+        // const totalCount = await Courses.countDocuments();
+        // const totalPages = Math.ceil(totalCount / limit);
+        // const skip = (page - 1) * limit;
+        // const courses = await Courses.find().skip(skip).limit(limit);
+        const courses = await Courses.find();
+        // return res.status(200).json({ totalPages, courses });
+        return res.status(200).json({ courses });
     } catch (error) {
         return res.status(500).json({ message: error });
     }
@@ -46,22 +48,20 @@ const get_courses_By_user_Id = async (req, res) => {
         });
     }
     try {
-        const page = parseInt(req.query.page) || 1;
-        let limit = parseInt(req.query.limit) || 20;
-        const totalCourses = await Courses.countDocuments();
-        const totalPages = Math.ceil(totalCourses / limit);
-        const skip = (page - 1) * limit;
+        // const page = parseInt(req.query.page) || 1;
+        // let limit = parseInt(req.query.limit) || 20;
+        // const totalCourses = await Courses.countDocuments();
+        // const totalPages = Math.ceil(totalCourses / limit);
+        // const skip = (page - 1) * limit;
 
-        const user_in_db = await Users.findById(userId)
-            .populate("Courses")
-            .skip(skip)
-            .limit(limit);
+        const user_in_db = await Users.findById(userId).populate("Courses");
+        // .skip(skip)
+        // .limit(limit);
         if (!user_in_db) {
             return res.status(401).json({ message: "user not found." });
         }
-        return res
-            .status(200)
-            .json({ totalPages, Courses: user_in_db.Courses });
+        return res.status(200).json({ Courses: user_in_db.Courses });
+        // .json({ totalPages, Courses: user_in_db.Courses });
     } catch (error) {
         return res.status(500).json({ message: error });
     }
