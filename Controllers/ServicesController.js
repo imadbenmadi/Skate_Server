@@ -59,17 +59,18 @@ const get_Services_By_user_Id = async (req, res) => {
             return res.status(404).json({ message: "User not found." });
         }
 
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 20;
-        const totalCount = user_in_db.Services.length;
-        const totalPages = Math.ceil(totalCount / limit);
-        const startIndex = (page - 1) * limit;
-        const endIndex = page * limit;
+        // const page = parseInt(req.query.page) || 1;
+        // const limit = parseInt(req.query.limit) || 20;
+        // const totalCount = user_in_db.Services.length;
+        // const totalPages = Math.ceil(totalCount / limit);
+        // const startIndex = (page - 1) * limit;
+        // const endIndex = page * limit;
 
-        const services = user_in_db.Services.slice(startIndex, endIndex);
+        // const services = user_in_db.Services.slice(startIndex, endIndex);
+        const services = user_in_db.Services;
 
         return res.status(200).json({
-            totalPages,
+            // totalPages,
             services,
         });
     } catch (error) {
