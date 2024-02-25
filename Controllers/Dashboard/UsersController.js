@@ -123,7 +123,7 @@ const handle_delete_User = async (req, res) => {
 };
 const handle_modify_User = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
-
+    
     if (isAuth.status == false)
         return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
@@ -144,10 +144,10 @@ const handle_modify_User = async (req, res) => {
             NotificationsToAdd,
         } = req.body;
         if (!id) {
-            return res.status(400).json({ message: "User ID is required." });
+            return res.status(409).json({ message: "Messing Data" });
         }
 
-        const userToUpdate = await Users.findById(id);
+        const userToUpdate = await Users.findById(id); 
         if (!userToUpdate) {
             return res.status(404).json({ message: "User not found." });
         }
