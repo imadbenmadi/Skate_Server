@@ -1,14 +1,16 @@
 const { Blogs, Users } = require("../models/Database");
 require("dotenv").config();
 const getAllBlogs = async (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    let limit = parseInt(req.query.limit) || 20;
+    // const page = parseInt(req.query.page) || 1;
+    // let limit = parseInt(req.query.limit) || 20;
     try {
-        const totalCount = await Blogs.countDocuments();
-        const totalPages = Math.ceil(totalCount / limit);
-        const skip = (page - 1) * limit;
-        const blogs = await Blogs.find().skip(skip).limit(limit);
-        return res.status(200).json({ totalPages, blogs });
+        // const totalCount = await Blogs.countDocuments();
+        // const totalPages = Math.ceil(totalCount / limit);
+        // const skip = (page - 1) * limit;
+        // const blogs = await Blogs.find().skip(skip).limit(limit);
+        const blogs = await Blogs.find();
+        // return res.status(200).json({ totalPages, blogs });
+        return res.status(200).json({ blogs });
     } catch (error) {
         return res.status(500).json({ message: error });
     }

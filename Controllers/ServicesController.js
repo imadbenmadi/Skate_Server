@@ -4,13 +4,15 @@ require("dotenv").config();
 const Verify_user = require("../Middleware/verify_user");
 const getAllServices = async (req, res) => {
     try {
-        const page = parseInt(req.query.page) || 1;
-        let limit = parseInt(req.query.limit) || 20;
-        const totalCount = await Services.countDocuments();
-        const totalPages = Math.ceil(totalCount / limit);
-        const skip = (page - 1) * limit;
-        const services = await Services.find().skip(skip).limit(limit);
-        return res.status(200).json({ totalPages, services });
+        // const page = parseInt(req.query.page) || 1;
+        // let limit = parseInt(req.query.limit) || 20;
+        // const totalCount = await Services.countDocuments();
+        // const totalPages = Math.ceil(totalCount / limit);
+        // const skip = (page - 1) * limit;
+        // const services = await Services.find().skip(skip).limit(limit);
+        const services = await Services.find();
+        // return res.status(200).json({ totalPages, services });
+        return res.status(200).json({ services });
     } catch (error) {
         return res.status(500).json({ message: error });
     }

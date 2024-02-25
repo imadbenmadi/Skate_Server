@@ -2,14 +2,16 @@ const { Events, Users } = require("../models/Database");
 require("dotenv").config();
 const getAllEvents = async (req, res) => {
     try {
-        const page = parseInt(req.query.page) || 1;
-        let limit = parseInt(req.query.limit) || 20;
-        const totalCount = await Events.countDocuments();
-        const totalPages = Math.ceil(totalCount / limit);
-        const skip = (page - 1) * limit;
+        // const page = parseInt(req.query.page) || 1;
+        // let limit = parseInt(req.query.limit) || 20;
+        // const totalCount = await Events.countDocuments();
+        // const totalPages = Math.ceil(totalCount / limit);
+        // const skip = (page - 1) * limit;
 
-        const events = await Events.find({}).skip(skip).limit(limit);
-        return res.status(200).json({ totalPages, events });
+        // const events = await Events.find({}).skip(skip).limit(limit);
+        const events = await Events.find({});
+        // return res.status(200).json({ totalPages, events });
+        return res.status(200).json({ events });
     } catch (error) {
         return res.status(500).json({ message: error });
     }
