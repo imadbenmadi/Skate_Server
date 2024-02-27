@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const EventsController = require("../../controllers/Dashboard/EventsController");
+const EventsController = require("../../Controllers/Dashboard/EventsController");
 router.post("/", EventsController.handle_add_Event);
 router.delete("/", EventsController.handle_delete_Event);
 router.put("/", EventsController.handle_update_Event);
