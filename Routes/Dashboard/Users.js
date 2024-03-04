@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const UsersConroller = require("../../Controllers/Dashboard/UsersController");
+const UsersConroller = require("../../controllers/Dashboard/UsersController");
 router.post("/", UsersConroller.handle_add_User);
 router.post("/:id/Notify", UsersConroller.handle_notify_User);
 router.delete("/:id", UsersConroller.handle_delete_User);

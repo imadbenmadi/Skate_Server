@@ -4,9 +4,30 @@ const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const credentials = require("./Middleware/credentials");
-const corsOptions = require("./config/corsOptions");
 const path = require("path");
+const allowedOrigins = [
+    "https://backend.skate-consult.com",
+    "https://skate-consult.com",
+    "http://localhost:5173",
+    "http://localhost:3500",
+];
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error(`Not allowed by CORS , origin : ${origin}`));
+        }
+    },
+    optionsSuccessStatus: 200,
+};
+const credentials = (req, res, next) => {
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.header("Access-Control-Allow-Credentials", true);
+    }
+    next();
+};
 require("dotenv").config();
 const limiter = rateLimit({
     windowMs: 60 * 1000, // 15 minutes
@@ -33,12 +54,20 @@ async function connect_to_db() {
 }
 
 connect_to_db().catch((err) => console.log(err));
+app.get("/", () => {
+    console.log(allowedOrigins);
+});
 app.use("/check_Auth", require("./Routes/Auth/check_Auth"));
 app.use("/VerifyAccount", require("./Routes/Auth/verifyAccount"));
-app.use("/Send_Verification_Email", require("./Routes/Auth/Send_Verification_Email"));
-app.use("/ReSend_Verification_Email" ,require("./Routes/emails/Resend_verification"));
+app.use(
+    "/Send_Verification_Email",
+    require("./Routes/Auth/Send_Verification_Email")
+);
+app.use(
+    "/ReSend_Verification_Email",
+    require("./Routes/emails/Resend_verification")
+);
 app.use("/is_email_verified", require("./Routes/Auth/is_email_verified"));
-
 
 app.use("/Login", require("./Routes/Auth/Login"));
 app.use("/Register", require("./Routes/Auth/Register"));
@@ -51,10 +80,12 @@ app.use("/Services", require("./Routes/Services"));
 app.use("/Blogs", require("./Routes/Blogs"));
 app.use("/Events", require("./Routes/Events"));
 
-
 app.use("/Dashboard/Login", require("./Routes/Dashboard/Admin_Login"));
-app.use("/Dashboard/check_Auth", require("./Routes/Dashboard/check_Admin_Auth"));
-app.use("/Dashboard/User",require("./Routes/Dashboard/Users"));
+app.use(
+    "/Dashboard/check_Auth",
+    require("./Routes/Dashboard/check_Admin_Auth")
+);
+app.use("/Dashboard/User", require("./Routes/Dashboard/Users"));
 app.use("/Dashboard/Courses", require("./Routes/Dashboard/Courses"));
 app.use("/Dashboard/Services", require("./Routes/Dashboard/Servicecs"));
 app.use("/Dashboard/Blogs", require("./Routes/Dashboard/Blogs"));
