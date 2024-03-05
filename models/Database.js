@@ -123,6 +123,7 @@ const Blogs = mongoose.model(
     "Blogs",
     new mongoose.Schema({
         Title: { type: String },
+        Text: { type: String },
         Description: { type: String },
         Image: { type: String },
         Date: { type: Date, default: Date.now() },
@@ -132,6 +133,7 @@ const Events = mongoose.model(
     "Events",
     new mongoose.Schema({
         Title: { type: String },
+        Text: { type: String },
         Description: { type: String },
         Date: { type: Date, default: Date.now() },
         Image: { type: String },
