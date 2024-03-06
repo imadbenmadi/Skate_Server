@@ -41,7 +41,7 @@ const handle_add_Courses = async (req, res) => {
 };
 const handle_delete_Courses = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
-
+    console.log(isAuth);
     if (isAuth.status == false)
         return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
