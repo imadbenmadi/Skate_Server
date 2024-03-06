@@ -19,7 +19,7 @@ const handle_add_Event = async (req, res) => {
 
         if (!Title || !Description) {
             return res
-                .status(400)
+                .status(409)
                 .json({ message: "All fields are required." });
         }
         const NewBlog = new Events({
@@ -64,7 +64,7 @@ const handle_delete_Event = async (req, res) => {
         const { eventeId } = req.body;
         if (!eventeId) {
             return res
-                .status(400)
+                .status(409)
                 .json({ message: "eventeId fields is required." });
         }
         await Events.findByIdAndDelete(eventeId);
@@ -92,7 +92,7 @@ const handle_update_Event = async (req, res) => {
         const { eventeId, title, description, image, price, category, date } =
             req.body;
         if (!eventeId) {
-            return res.status(400).json({ message: "evente ID is required." });
+            return res.status(409).json({ message: "evente ID is required." });
         }
         const evente = await Events.findById(eventeId);
         if (!evente) {

@@ -22,7 +22,7 @@ const handle_add_Service = async (req, res) => {
 
         if (!Title || !Description || !Image || !Category) {
             return res
-                .status(400)
+                .status(409)
                 .json({ message: "All fields are required." });
         }
 
@@ -61,7 +61,7 @@ const handle_delete_Service = async (req, res) => {
         const { serviceId } = req.body;
         if (!serviceId) {
             return res
-                .status(400)
+                .status(409)
                 .json({ message: "serviceId fields is required." });
         }
         await Services.findByIdAndDelete(serviceId);
@@ -89,7 +89,7 @@ const handle_update_Service = async (req, res) => {
         const { serviceId, title, description, image, price, category, date } =
             req.body;
         if (!serviceId) {
-            return res.status(400).json({ message: "service ID is required." });
+            return res.status(409).json({ message: "service ID is required." });
         }
         const service = await Services.findById(serviceId);
         if (!service) {
@@ -140,7 +140,7 @@ const handle_Accept_Service_request = async (req, res) => {
         const { UserId, ServiceId } = req.body;
         if (!UserId || !ServiceId) {
             return res
-                .status(400)
+                .status(409)
                 .json({ message: "All fields are required." });
         }
 
@@ -190,7 +190,7 @@ const handle_Reject_Service_request = async (req, res) => {
 
         if (!UserId || !ServiceId) {
             return res
-                .status(400)
+                .status(409)
                 .json({ message: "All fields are required." });
         }
 

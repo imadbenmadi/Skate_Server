@@ -19,7 +19,7 @@ const handle_add_Blog = async (req, res) => {
         const { Title, Description } = req.body;
 
         if (!Title || !Description) {
-            return res.status(400).json({ message: "All fields are required." });
+            return res.status(409).json({ message: "All fields are required." });
         }
         const NewBlog = new Blogs({
             Title,
@@ -48,7 +48,7 @@ const handle_delete_Blog = async (req, res) => {
         const { blogId } = req.body;
         if (!blogId) {
             return res
-                .status(400)
+                .status(409)
                 .json({ message: "Blogid fields is required." });
         }
         await Blogs.findByIdAndDelete(blogId);
@@ -74,7 +74,7 @@ const handle_update_Blog = async (req, res) => {
         const { blogId, title, description, image, price, category, date } =
             req.body;
         if (!blogId) {
-            return res.status(400).json({ message: "blog ID is required." });
+            return res.status(409).json({ message: "blog ID is required." });
         }
         const blog = await Blogs.findById(blogId);
         if (!blog) {

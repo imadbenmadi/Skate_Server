@@ -19,7 +19,7 @@ const handle_add_Courses = async (req, res) => {
         const { Title, Description, Image, Price, Category } = req.body;
         if (!Title || !Description || !Image || !Category) {
             return res
-                .status(400)
+                .status(409)
                 .json({ message: "All fields are required." });
         }
         const creationDate = new Date();
@@ -56,7 +56,7 @@ const handle_delete_Courses = async (req, res) => {
         const { courseId } = req.body;
         if (!courseId) {
             return res
-                .status(400)
+                .status(409)
                 .json({ message: "CourseId fields is required." });
         }
         await Courses.findByIdAndDelete(courseId);
@@ -84,7 +84,7 @@ const handle_update_Courses = async (req, res) => {
         const { courseId, title, description, image, price, category, date } =
             req.body;
         if (!courseId) {
-            return res.status(400).json({ message: "Course ID is required." });
+            return res.status(409).json({ message: "Course ID is required." });
         }
         const course = await Courses.findById(courseId);
         if (!course) {
@@ -137,7 +137,7 @@ const handle_Accept_course_request = async (req, res) => {
 
         if (!UserId || !CourseId) {
             return res
-                .status(400)
+                .status(409)
                 .json({ message: "All fields are required." });
         }
 
@@ -181,7 +181,7 @@ const handle_Reject_course_request = async (req, res) => {
 
         if (!UserId || !CourseId) {
             return res
-                .status(400)
+                .status(409)
                 .json({ message: "All fields are required." });
         }
 

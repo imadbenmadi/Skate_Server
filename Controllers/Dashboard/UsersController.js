@@ -109,7 +109,7 @@ const handle_delete_User = async (req, res) => {
     try {
         const id = req.params.id;
         if (!id) {
-            return res.status(400).json({ message: "User ID is required." });
+            return res.status(409).json({ message: "User ID is required." });
         }
         const user = await Users.findById(id);
         if (!user) {
@@ -294,7 +294,7 @@ const get_user = async (req, res) => {
     try {
         const id = req.params.id;
         if (!id) {
-            return res.status(400).json({ message: "User ID is required." });
+            return res.status(409).json({ message: "User ID is required." });
         }
         const user = await Users.findById(id); // Exclude the Notifications field
         if (!user) {
