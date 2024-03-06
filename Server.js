@@ -55,7 +55,7 @@ async function connect_to_db() {
 
 connect_to_db().catch((err) => console.log(err));
 app.get("/", () => {
-    console.log(allowedOrigins);
+    res.send("Hello World");
 });
 app.use("/check_Auth", require("./Routes/Auth/check_Auth"));
 app.use("/VerifyAccount", require("./Routes/Auth/verifyAccount"));

@@ -42,13 +42,13 @@ const handle_add_User = async (req, res) => {
                 .status(409)
                 .json({ message: "Last Name must be more that 3 chars" });
         } else if (FirstName.length > 14) {
-           return res.status(409).json({
-               message: "First Name must be less than 14 chars",
-           });
+            return res.status(409).json({
+                message: "First Name must be less than 14 chars",
+            });
         } else if (LastName.length > 14) {
-           return res.status(409).json({
-               message: "LastName must be less than 14 chars",
-           });
+            return res.status(409).json({
+                message: "LastName must be less than 14 chars",
+            });
         } else if (Password.length < 8) {
             return res
                 .status(409)
@@ -90,7 +90,7 @@ const handle_add_User = async (req, res) => {
             Date: new Date(),
         });
     } catch (error) {
-      return res.status(500).json({ message:error });
+        return res.status(500).json({ message: error });
     }
 };
 const handle_delete_User = async (req, res) => {
@@ -123,7 +123,7 @@ const handle_delete_User = async (req, res) => {
 };
 const handle_modify_User = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
-    
+
     if (isAuth.status == false)
         return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
@@ -147,7 +147,7 @@ const handle_modify_User = async (req, res) => {
             return res.status(409).json({ message: "Messing Data" });
         }
 
-        const userToUpdate = await Users.findById(id); 
+        const userToUpdate = await Users.findById(id);
         if (!userToUpdate) {
             return res.status(404).json({ message: "User not found." });
         }
@@ -334,7 +334,7 @@ const handle_notify_User = async (req, res) => {
             });
         }
         const user_in_db = await Users.findById(id);
-        if(!user_in_db) {
+        if (!user_in_db) {
             return res.status(404).json({ message: "User not found." });
         }
         const notification = {
@@ -345,10 +345,12 @@ const handle_notify_User = async (req, res) => {
             Date: new Date(),
         };
         user_in_db.Notifications.push(notification);
-        console.log(user_in_db.Notifications);
         await user_in_db.save();
-        return res.status(200).json({ message: "Notification sent successfully." });
-    } catch (error) {console.log(error);
+        return res
+            .status(200)
+            .json({ message: "Notification sent successfully." });
+    } catch (error) {
+        console.log(error);
         return res.status(500).json({ message: error });
     }
 };
