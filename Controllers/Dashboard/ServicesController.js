@@ -3,6 +3,32 @@ const { Services, request_Service, Users } = require("../../models/Database");
 const jwt = require("jsonwebtoken");
 
 const Verify_Admin = require("../../Middleware/Verify_Admin");
+const handle_get_Services_Request = async (req, res) => {
+    console.log("get services request");
+    const isAuth = await Verify_Admin(req, res);
+    if (isAuth.status == false)
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("admin_accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+    }
+    try {
+        const requests = await request_Service
+            .find()
+            .populate({
+                path: "UserId",
+                select: "FirstName LastName Email Telephone IsEmailVerified ", // Specify the fields you want to include
+            })
+            .populate("ServiceId");
+        return res.status(200).json({ requests });
+    } catch (error) {
+        return res.status(500).json({ message: error });
+    }
+};
 
 const handle_add_Service = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
@@ -212,6 +238,7 @@ const handle_Reject_Service_request = async (req, res) => {
     }
 };
 module.exports = {
+    handle_get_Services_Request,
     handle_add_Service,
     handle_Accept_Service_request,
     handle_Reject_Service_request,
