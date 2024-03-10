@@ -94,15 +94,35 @@ router.get("/", async (req, res) => {
             } else {
                 const user = await Users.findOne({ _id: decoded.userId });
                 const UserData_To_Send = {
-                    _id: user._id ? user._id : null,
-                    Email: user.Email ? user.Email : null,
-                    FirstName: user.FirstName ? user.FirstName : null,
-                    LastName: user.LastName ? user.LastName : null,
-                    Notifications: user.Notifications ? user.Notifications : null,
-                    Courses: user.Courses ? user.Courses : null,
-                    Services: user.Services ? user.Services : null,
-                    Gender: user.Gender ? user.Gender : null,
-                    IsEmailVerified: user.IsEmailVerified ? user.IsEmailVerified : null,
+                    _id: user ? (user._id ? user._id : null) : null,
+                    Email: user ? (user.Email ? user.Email : null) : null,
+                    FirstName: user
+                        ? user.FirstName
+                            ? user.FirstName
+                            : null
+                        : null,
+                    LastName: user
+                        ? user.LastName
+                            ? user.LastName
+                            : null
+                        : null,
+                    Notifications: user
+                        ? user.Notifications
+                            ? user.Notifications
+                            : null
+                        : null,
+                    Courses: user ? (user.Courses ? user.Courses : null) : null,
+                    Services: user
+                        ? user.Services
+                            ? user.Services
+                            : null
+                        : null,
+                    Gender: user ? (user.Gender ? user.Gender : null) : null,
+                    IsEmailVerified: user
+                        ? user.IsEmailVerified
+                            ? user.IsEmailVerified
+                            : null
+                        : null,
                 };
                 return res.status(200).json({
                     message: "Access token is valid",
