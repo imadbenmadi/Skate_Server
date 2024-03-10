@@ -6,7 +6,6 @@ const Verify_Admin = async (req, res) => {
     const secretKey = process.env.ADMIN_ACCESS_TOKEN_SECRET;
     const accessToken = req.cookies.admin_accessToken;
     const refreshToken = req.cookies.admin_refreshToken;
-    console.log(accessToken, refreshToken);
     try {
         const decoded = jwt.verify(accessToken, secretKey);
         return { status: true, Refresh: false };

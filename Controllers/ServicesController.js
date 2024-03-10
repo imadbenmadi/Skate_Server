@@ -101,8 +101,8 @@ const handle_request_Service = async (req, res) => {
             return res.status(404).json({ message: "User not found." });
         }
         const existingRequest = await request_Service.findOne({
-            UserId: userId,
-            ServiceId: ServiceId,
+            User: userId,
+            Service: ServiceId,
         });
 
         if (existingRequest) {
@@ -115,8 +115,8 @@ const handle_request_Service = async (req, res) => {
             return res.status(404).json({ message: "Service not found." });
         }
         const new_request_Service = new request_Service({
-            UserId: userId,
-            ServiceId: ServiceId,
+            User: userId,
+            Service: ServiceId,
         });
         await new_request_Service.save();
         return res

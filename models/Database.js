@@ -91,8 +91,8 @@ const request_Course = mongoose.model(
 const request_Service = mongoose.model(
     "request_Service",
     new mongoose.Schema({
-        UserId: { type: mongoose.Types.ObjectId, ref: "Users" },
-        ServiceId: { type: mongoose.Types.ObjectId, ref: "Services" },
+        User: { type: mongoose.Types.ObjectId, ref: "Users" },
+        Service: { type: mongoose.Types.ObjectId, ref: "Services" },
     })
 );
 // Services Courses Blogs Events

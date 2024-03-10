@@ -94,15 +94,15 @@ router.get("/", async (req, res) => {
             } else {
                 const user = await Users.findOne({ _id: decoded.userId });
                 const UserData_To_Send = {
-                    _id: user._id,
-                    Email: user.Email,
-                    FirstName: user.FirstName,
-                    LastName: user.LastName,
-                    Notifications: user.Notifications,
-                    Courses: user.Courses,
-                    Services: user.Services,
-                    Gender: user.Gender,
-                    IsEmailVerified: user.IsEmailVerified,
+                    _id: user._id ? user._id : null,
+                    Email: user.Email ? user.Email : null,
+                    FirstName: user.FirstName ? user.FirstName : null,
+                    LastName: user.LastName ? user.LastName : null,
+                    Notifications: user.Notifications ? user.Notifications : null,
+                    Courses: user.Courses ? user.Courses : null,
+                    Services: user.Services ? user.Services : null,
+                    Gender: user.Gender ? user.Gender : null,
+                    IsEmailVerified: user.IsEmailVerified ? user.IsEmailVerified : null,
                 };
                 return res.status(200).json({
                     message: "Access token is valid",

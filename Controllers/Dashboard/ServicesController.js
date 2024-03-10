@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 
 const Verify_Admin = require("../../Middleware/Verify_Admin");
 const handle_get_Services_Request = async (req, res) => {
-    console.log("get services request");
     const isAuth = await Verify_Admin(req, res);
     if (isAuth.status == false)
         return res.status(401).json({ message: "Unauthorized: Invalid token" });
@@ -20,10 +19,11 @@ const handle_get_Services_Request = async (req, res) => {
         const requests = await request_Service
             .find()
             .populate({
-                path: "UserId",
+                path: "User",
                 select: "FirstName LastName Email Telephone IsEmailVerified ", // Specify the fields you want to include
             })
-            .populate("ServiceId");
+            .populate("Service");
+        console.log(requests);
         return res.status(200).json({ requests });
     } catch (error) {
         return res.status(500).json({ message: error });

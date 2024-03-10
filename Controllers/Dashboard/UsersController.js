@@ -258,7 +258,6 @@ const handle_modify_User = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
-    console.log("from user", isAuth);
     if (isAuth.status == false)
         return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
@@ -350,7 +349,6 @@ const handle_notify_User = async (req, res) => {
             .status(200)
             .json({ message: "Notification sent successfully." });
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ message: error });
     }
 };
