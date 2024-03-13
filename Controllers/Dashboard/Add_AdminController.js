@@ -17,7 +17,7 @@ const addAdmin = async (req, res) => {
             Admin_Pwd: hashedPassword,
         });
         return res
-            .status(201)
+            .status(200)
             .json({ message: "Admin user saved successfully." });
     } catch (err) {
         return res.status(500).json({ message: err });

@@ -65,7 +65,7 @@ const handle_add_Service = async (req, res) => {
         // Save the Service to the database
         await newService.save();
 
-        return res.status(201).json({ message: "Service added successfully." });
+        return res.status(200).json({ message: "Service added successfully." });
     } catch (error) {
         return res.status(500).json({ message: error });
     }
