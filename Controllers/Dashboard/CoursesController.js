@@ -28,7 +28,6 @@ const handle_add_Courses = async (req, res) => {
             Title,
             Description,
             Price,
-            
             Category,
             Date: creationDate,
         });
@@ -80,30 +79,30 @@ const handle_update_Courses = async (req, res) => {
         });
     }
     try {
-        const { courseId, title, description, image, price, category, date } =
-            req.body;
-        if (!courseId) {
-            return res.status(409).json({ message: "Course ID is required." });
+        const { Title, Description, image, Price, Category, date } = req.body;
+        const { id } = req.params;
+        if (!id) {
+            return res.status(409).json({ message: "Course ID Not Found." });
         }
-        const course = await Courses.findById(courseId);
+        const course = await Courses.findById(id);
         if (!course) {
             return res.status(404).json({ message: "Course not found." });
         }
         // Update each field if provided in the request body
-        if (title) {
-            course.Title = title;
+        if (Title) {
+            course.Title = Title;
         }
-        if (description) {
-            course.Description = description;
+        if (Description) {
+            course.Description = Description;
         }
         if (image) {
             course.Image = image;
         }
-        if (price) {
-            course.Price = price;
+        if (Price) {
+            course.Price = Price;
         }
-        if (category) {
-            course.Category = category;
+        if (Category) {
+            course.Category = Category;
         }
         if (date) {
             course.Date = date;
