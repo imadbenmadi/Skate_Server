@@ -80,7 +80,6 @@ const get_Services_By_user_Id = async (req, res) => {
 
 const handle_request_Service = async (req, res) => {
     const { ServiceId, userId } = req.body;
-    const accessToken = req.cookies.accessToken;
     if (!ServiceId || !userId) {
         return res.status(409).json({ message: "Messing Data." });
     }

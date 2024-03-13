@@ -4,7 +4,7 @@ const CoursesController = require("../../Controllers/Dashboard/CoursesController
 router.post("/", CoursesController.handle_add_Courses);
 router.delete("/", CoursesController.handle_delete_Courses);
 router.put("/", CoursesController.handle_update_Courses);
-
+router.get("/Requests", CoursesController.handle_get_Courses_Request);
 router.post(
     "/Accept_course_request",
     CoursesController.handle_Accept_course_request

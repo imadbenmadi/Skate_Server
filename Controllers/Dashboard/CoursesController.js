@@ -16,8 +16,8 @@ const handle_add_Courses = async (req, res) => {
         });
     }
     try {
-        const { Title, Description, Image, Price, Category } = req.body;
-        if (!Title || !Description || !Image || !Category) {
+        const { Title, Description, Price, Category } = req.body;
+        if (!Title || !Description || !Price || !Category) {
             return res
                 .status(409)
                 .json({ message: "All fields are required." });
@@ -27,8 +27,8 @@ const handle_add_Courses = async (req, res) => {
         const newCourse = new Courses({
             Title,
             Description,
-            Image,
             Price,
+            
             Category,
             Date: creationDate,
         });
@@ -117,7 +117,31 @@ const handle_update_Courses = async (req, res) => {
         return res.status(500).json({ message: error });
     }
 };
-
+const handle_get_Courses_Request = async (req, res) => {
+    const isAuth = await Verify_Admin(req, res);
+    if (isAuth.status == false)
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("admin_accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+    }
+    try {
+        const requests = await request_Course
+            .find()
+            .populate({
+                path: "User",
+                select: "FirstName LastName Email Telephone IsEmailVerified ", // Specify the fields you want to include
+            })
+            .populate("Course");
+        return res.status(200).json({ requests });
+    } catch (error) {
+        return res.status(500).json({ message: error });
+    }
+};
 const handle_Accept_course_request = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
@@ -209,4 +233,5 @@ module.exports = {
     handle_Reject_course_request,
     handle_delete_Courses,
     handle_update_Courses,
+    handle_get_Courses_Request,
 };

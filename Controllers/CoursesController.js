@@ -88,8 +88,8 @@ const handle_request_Course = async (req, res) => {
             return res.status(404).json({ message: "User not found." });
         }
         const existingRequest = await request_Course.findOne({
-            UserId: userId,
-            CourseId: courseId,
+            User: userId,
+            Course: courseId,
         });
 
         if (existingRequest) {
@@ -105,8 +105,8 @@ const handle_request_Course = async (req, res) => {
             return res.status(400).json({ message: "You Own this Course" });
         }
         const new_request_Course = new request_Course({
-            UserId: userId,
-            CourseId: courseId,
+            User: userId,
+            Course: courseId,
         });
         await new_request_Course.save();
         return res

@@ -84,8 +84,8 @@ const Messages = mongoose.model(
 const request_Course = mongoose.model(
     "request_Course",
     new mongoose.Schema({
-        UserId: { type: mongoose.Types.ObjectId, ref: "Users" },
-        CourseId: { type: mongoose.Types.ObjectId, ref: "Courses" },
+        User: { type: mongoose.Types.ObjectId, ref: "Users" },
+        Course: { type: mongoose.Types.ObjectId, ref: "Courses" },
     })
 );
 const request_Service = mongoose.model(

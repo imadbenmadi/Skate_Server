@@ -23,7 +23,6 @@ const handle_get_Services_Request = async (req, res) => {
                 select: "FirstName LastName Email Telephone IsEmailVerified ", // Specify the fields you want to include
             })
             .populate("Service");
-        console.log(requests);
         return res.status(200).json({ requests });
     } catch (error) {
         return res.status(500).json({ message: error });
@@ -44,9 +43,9 @@ const handle_add_Service = async (req, res) => {
         });
     }
     try {
-        const { Title, Description, Image, Category } = req.body;
+        const { Title, Text, Description, Price, Category } = req.body;
 
-        if (!Title || !Description || !Image || !Category) {
+        if (!Title || !Text || !Description || !Price || !Category) {
             return res
                 .status(409)
                 .json({ message: "All fields are required." });
@@ -57,8 +56,9 @@ const handle_add_Service = async (req, res) => {
         // Create a new Service
         const newService = new Services({
             Title,
+            Text,
             Description,
-            Image,
+            Price,
             Category,
         });
 
