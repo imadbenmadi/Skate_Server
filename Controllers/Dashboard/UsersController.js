@@ -3,6 +3,7 @@ const {
     request_Course,
     request_Service,
     Courses,
+    Services
 } = require("../../models/Database");
 const ObjectId = require("mongoose").Types.ObjectId; // Import ObjectId from mongoose
 const { Types } = require("mongoose");
@@ -484,7 +485,64 @@ const delete_user_course = async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
 };
+const delete_user_service = async (req, res) => {
+    try {
+        const isAuth = await Verify_Admin(req, res);
 
+        if (!isAuth.status) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+
+        if (isAuth.Refresh) {
+            res.cookie("admin_accessToken", isAuth.newAccessToken, {
+                httpOnly: true,
+                sameSite: "None",
+                secure: true,
+                maxAge: 60 * 60 * 1000,
+            });
+        }
+
+        const { id, service_id } = req.params;
+        // Validate input parameters
+        if (!id || !service_id) {
+            return res
+                .status(400)
+                .json({ message: "User ID and Service ID are required." });
+        }
+
+        // Find the user by ID
+        const user = await Users.findById(id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        // Find the service by ID
+        const service = await Services.findById(service_id);
+        if (!service) {
+            return res.status(404).json({ message: "Service not found." });
+        }
+
+        // Check if the user owns the specified service
+        const indexToRemove = user.Services.findIndex(
+            (service) => String(service) === service_id
+        );
+        if (indexToRemove === -1) {
+            return res
+                .status(404)
+                .json({ message: "User does not own this service." });
+        }
+
+        // Remove the service from the user's list of services
+        user.Services.splice(indexToRemove, 1);
+        await user.save();
+
+        return res
+            .status(200)
+            .json({ message: "Service deleted successfully." });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
 module.exports = {
     handle_add_User,
     handle_delete_User,
@@ -495,4 +553,5 @@ module.exports = {
     get_user_course_requests,
     get_user_service_requests,
     delete_user_course,
+    delete_user_service,
 };

@@ -11,4 +11,5 @@ router.get("/:id", UsersConroller.get_user);
 router.get("/:id/Requests/Courses", UsersConroller.get_user_course_requests);
 router.get("/:id/Requests/Services", UsersConroller.get_user_service_requests);
 router.delete("/:id/Courses/:course_id", UsersConroller.delete_user_course);
+router.delete("/:id/Services/:service_id", UsersConroller.delete_user_service);
 module.exports = router;

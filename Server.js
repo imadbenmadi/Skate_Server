@@ -85,7 +85,7 @@ app.use(
     "/Dashboard/check_Auth",
     require("./Routes/Dashboard/check_Admin_Auth")
 );
-app.use("/Dashboard/User", require("./Routes/Dashboard/Users"));
+app.use("/Dashboard/Users", require("./Routes/Dashboard/Users"));
 app.use("/Dashboard/Courses", require("./Routes/Dashboard/Courses"));
 app.use("/Dashboard/Services", require("./Routes/Dashboard/Servicecs"));
 app.use("/Dashboard/Blogs", require("./Routes/Dashboard/Blogs"));
