@@ -169,7 +169,7 @@ const handle_Accept_course_request = async (req, res) => {
         }
 
         // Remove the request from the database
-        await request_Course.deleteMany({ UserId, CourseId });
+        await request_Course.deleteMany({ User: UserId, Course: CourseId });
 
         const Notificatio_ToSend = {
             Type: "course",
@@ -214,7 +214,7 @@ const handle_Reject_course_request = async (req, res) => {
         }
 
         // Remove the request from the database
-        await request_Course.deleteMany({ UserId, CourseId });
+        await request_Course.deleteMany({ User: UserId, Course: CourseId });
         const Notificatio_ToSend = {
             Type: "course",
             Title: "Course request Rejected",

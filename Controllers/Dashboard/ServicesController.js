@@ -181,7 +181,7 @@ const handle_Accept_Service_request = async (req, res) => {
         }
 
         // Remove the request from the database
-        await request_Service.deleteMany({ UserId, ServiceId });
+        await request_Service.deleteMany({ User: UserId, Service: ServiceId });
 
         // Add the Service to the user's list of Services
         await Users.updateOne(
@@ -231,7 +231,7 @@ const handle_Reject_Service_request = async (req, res) => {
         }
 
         // Remove the request from the database
-        await request_Service.deleteMany({ UserId, ServiceId });
+        await request_Service.deleteMany({ User: UserId, Service: ServiceId });
         // Push a notification to the user
         const notificationToSend = {
             Type: "service",
