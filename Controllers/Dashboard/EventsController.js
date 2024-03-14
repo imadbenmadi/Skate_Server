@@ -15,15 +15,16 @@ const handle_add_Event = async (req, res) => {
         });
     }
     try {
-        const { Title, Description } = req.body;
+        const { Title, Text, Description } = req.body;
 
-        if (!Title || !Description) {
+        if (!Title || !Description || !Text) {
             return res
                 .status(409)
                 .json({ message: "All fields are required." });
         }
         const NewBlog = new Events({
             Title,
+            Text,
             Description,
         });
         await NewBlog.save();

@@ -16,13 +16,14 @@ const handle_add_Blog = async (req, res) => {
         
     }
     try {
-        const { Title, Description } = req.body;
+        const { Title,Text, Description } = req.body;
 
-        if (!Title || !Description) {
+        if (!Title || !Description || !Text) {
             return res.status(409).json({ message: "All fields are required." });
         }
         const NewBlog = new Blogs({
             Title,
+            Text,
             Description,
         });
         await NewBlog.save();
