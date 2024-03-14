@@ -1,4 +1,9 @@
-const { Users } = require("../../models/Database");
+const {
+    Users,
+    request_Course,
+    request_Service,
+    Courses,
+} = require("../../models/Database");
 const ObjectId = require("mongoose").Types.ObjectId; // Import ObjectId from mongoose
 const { Types } = require("mongoose");
 const mongoose = require("mongoose");
@@ -297,7 +302,7 @@ const get_user = async (req, res) => {
         }
         const user = await Users.findById(id)
             .populate("Services")
-            .populate("Courses")
+            .populate("Courses");
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
@@ -354,6 +359,132 @@ const handle_notify_User = async (req, res) => {
         return res.status(500).json({ message: error });
     }
 };
+const get_user_course_requests = async (req, res) => {
+    const isAuth = await Verify_Admin(req, res);
+
+    if (isAuth.status == false) {
+        return res.status(401).json({
+            message: "Unauthorized",
+        });
+    }
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("admin_accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000,
+        });
+    }
+    try {
+        const id = req.params.id;
+        if (!id) {
+            return res.status(409).json({ message: "User ID is required." });
+        }
+        const user = await Users.findById(id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+        const courseRequests = await request_Course.find({
+            _id: { $in: user.Course_Requests },
+        });
+        return res.status(200).json(courseRequests);
+    } catch (error) {
+        return res.status(500).json({ message: error });
+    }
+};
+const get_user_service_requests = async (req, res) => {
+    const isAuth = await Verify_Admin(req, res);
+
+    if (isAuth.status == false) {
+        return res.status(401).json({
+            message: "Unauthorized",
+        });
+    }
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("admin_accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000,
+        });
+    }
+    try {
+        const id = req.params.id;
+        if (!id) {
+            return res.status(409).json({ message: "User ID is required." });
+        }
+        const user = await Users.findById(id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+        const serviceRequests = await request_Service.find({
+            _id: { $in: user.Service_Requests },
+        });
+        return res.status(200).json(serviceRequests);
+    } catch (error) {
+        return res.status(500).json({ message: error });
+    }
+};
+const delete_user_course = async (req, res) => {
+    try {
+        const isAuth = await Verify_Admin(req, res);
+
+        if (!isAuth.status) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+
+        if (isAuth.Refresh) {
+            res.cookie("admin_accessToken", isAuth.newAccessToken, {
+                httpOnly: true,
+                sameSite: "None",
+                secure: true,
+                maxAge: 60 * 60 * 1000,
+            });
+        }
+
+        const { id, course_id } = req.params;
+        console.log(id, course_id);
+        // Validate input parameters
+        if (!id || !course_id) {
+            return res
+                .status(400)
+                .json({ message: "User ID and Course ID are required." });
+        }
+
+        // Find the user by ID
+        const user = await Users.findById(id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        // Find the course by ID
+        const course = await Courses.findById(course_id);
+        if (!course) {
+            return res.status(404).json({ message: "Course not found." });
+        }
+
+        // Check if the user owns the specified course
+        const indexToRemove = user.Courses.findIndex(
+            (course) => String(course) === course_id
+        );
+        if (indexToRemove === -1) {
+            return res
+                .status(404)
+                .json({ message: "User does not own this course." });
+        }
+
+        // Remove the course from the user's list of courses
+        user.Courses.splice(indexToRemove, 1);
+        await user.save();
+
+        return res
+            .status(200)
+            .json({ message: "Course deleted successfully." });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     handle_add_User,
     handle_delete_User,
@@ -361,4 +492,7 @@ module.exports = {
     getAllUsers,
     get_user,
     handle_notify_User,
+    get_user_course_requests,
+    get_user_service_requests,
+    delete_user_course,
 };

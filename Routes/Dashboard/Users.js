@@ -4,7 +4,11 @@ const UsersConroller = require("../../Controllers/Dashboard/UsersController");
 router.post("/", UsersConroller.handle_add_User);
 router.post("/:id/Notify", UsersConroller.handle_notify_User);
 router.delete("/:id", UsersConroller.handle_delete_User);
+
 router.put("/", UsersConroller.handle_modify_User);
 router.get("/", UsersConroller.getAllUsers);
 router.get("/:id", UsersConroller.get_user);
+router.get("/:id/Requests/Courses", UsersConroller.get_user_course_requests);
+router.get("/:id/Requests/Services", UsersConroller.get_user_service_requests);
+router.delete("/:id/Courses/:course_id", UsersConroller.delete_user_course);
 module.exports = router;

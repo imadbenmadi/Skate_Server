@@ -9,7 +9,12 @@ router.get("/", async (req, res) => {
     const secretKey = process.env.ACCESS_TOKEN_SECRET;
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
-
+    if (req.cookies.admin_accessToken) {
+        res.clearCookie("admin_accessToken");
+    }
+    if (req.cookies.admin_refreshToken) {
+        res.clearCookie("admin_refreshToken");
+    }
     try {
         // Verify the access token
         jwt.verify(accessToken, secretKey, async (err, decoded) => {
