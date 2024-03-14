@@ -91,6 +91,7 @@ const handle_delete_Service = async (req, res) => {
                 .json({ message: "serviceId fields is required." });
         }
         await Services.findByIdAndDelete(id);
+        await request_Service.deleteMany({ Service: id });
         return res
             .status(200)
             .json({ message: "service Deleted successfully." });

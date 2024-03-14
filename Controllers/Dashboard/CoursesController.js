@@ -58,6 +58,7 @@ const handle_delete_Courses = async (req, res) => {
                 .json({ message: "CourseId fields is required." });
         }
         await Courses.findByIdAndDelete(id);
+        await request_Course.deleteMany({ Course: id });
         return res
             .status(200)
             .json({ message: "Course Deleted successfully." });
