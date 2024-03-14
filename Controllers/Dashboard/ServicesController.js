@@ -113,7 +113,8 @@ const handle_update_Service = async (req, res) => {
         });
     }
     try {
-        const { Title, Description, image, Price, Category, date } = req.body;
+        const { Title, Text, Description, image, Price, Category, date } =
+            req.body;
         const { id } = req.params;
 
         if (!id) {
@@ -128,6 +129,9 @@ const handle_update_Service = async (req, res) => {
         // Update each field if provided in the request body
         if (Title) {
             service.Title = Title;
+        }
+        if (Text) {
+            service.Text = Text;
         }
         if (Description) {
             service.Description = Description;

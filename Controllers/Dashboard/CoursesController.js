@@ -80,7 +80,8 @@ const handle_update_Courses = async (req, res) => {
         });
     }
     try {
-        const { Title, Description, image, Price, Category, date } = req.body;
+        const { Title, Text, Description, image, Price, Category, date } =
+            req.body;
         const { id } = req.params;
         if (!id) {
             return res.status(409).json({ message: "Course ID Not Found." });
@@ -92,6 +93,9 @@ const handle_update_Courses = async (req, res) => {
         // Update each field if provided in the request body
         if (Title) {
             course.Title = Title;
+        }
+        if (Text) {
+            course.Text = Text;
         }
         if (Description) {
             course.Description = Description;

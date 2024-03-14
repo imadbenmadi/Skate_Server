@@ -62,13 +62,13 @@ const handle_delete_Event = async (req, res) => {
         });
     }
     try {
-        const { eventeId } = req.body;
-        if (!eventeId) {
+        const { id } = req.params;
+        if (!id) {
             return res
                 .status(409)
-                .json({ message: "eventeId fields is required." });
+                .json({ message: "Event Id fields is required." });
         }
-        await Events.findByIdAndDelete(eventeId);
+        await Events.findByIdAndDelete(id);
         return res
             .status(200)
             .json({ message: "evente Deleted successfully." });
@@ -90,30 +90,28 @@ const handle_update_Event = async (req, res) => {
         });
     }
     try {
-        const { eventeId, title, description, image, price, category, date } =
+        const {  Title,Text, Description, image,   date } =
             req.body;
-        if (!eventeId) {
+        const { id } = req.params;
+        if (!id) {
             return res.status(409).json({ message: "evente ID is required." });
         }
-        const evente = await Events.findById(eventeId);
+        const evente = await Events.findById(id);
         if (!evente) {
             return res.status(404).json({ message: "evente not found." });
         }
         // Update each field if provided in the request body
-        if (title) {
-            evente.Title = title;
+        if (Title) {
+            evente.Title = Title;
         }
-        if (description) {
-            evente.Description = description;
+        if (Text) {
+            evente.Text = Text;
+        }
+        if (Description) {
+            evente.Description = Description;
         }
         if (image) {
             evente.Image = image;
-        }
-        if (price) {
-            evente.Price = price;
-        }
-        if (category) {
-            evente.Category = category;
         }
         if (date) {
             evente.Date = date;
