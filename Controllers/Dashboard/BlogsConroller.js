@@ -3,7 +3,7 @@ const { Blogs } = require("../../models/Database");
 const Verify_Admin = require("../../Middleware/Verify_Admin");
 const handle_add_Blog = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
-    
+
     if (isAuth.status == false)
         return res.status(401).json({ message: "Unauthorized: Invalid token" });
     if (isAuth.status == true && isAuth.Refresh == true) {
@@ -13,13 +13,14 @@ const handle_add_Blog = async (req, res) => {
             secure: true,
             maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
         });
-        
     }
     try {
-        const { Title,Text, Description } = req.body;
+        const { Title, Text, Description } = req.body;
 
         if (!Title || !Description || !Text) {
-            return res.status(409).json({ message: "All fields are required." });
+            return res
+                .status(409)
+                .json({ message: "All fields are required." });
         }
         const NewBlog = new Blogs({
             Title,
@@ -43,10 +44,10 @@ const handle_delete_Blog = async (req, res) => {
             sameSite: "None",
             secure: true,
             maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
-        }); 
+        });
     }
     try {
-        const { blogId } = req.body;
+        const { blogId } = req.params;
         if (!blogId) {
             return res
                 .status(409)
@@ -72,30 +73,27 @@ const handle_update_Blog = async (req, res) => {
         });
     }
     try {
-        const { blogId, title, description, image, price, category, date } =
-            req.body;
-        if (!blogId) {
+        const { Title, Text, Description, image, date } = req.body;
+        const { id } = req.params;
+        if (!id) {
             return res.status(409).json({ message: "blog ID is required." });
         }
-        const blog = await Blogs.findById(blogId);
+        const blog = await Blogs.findById(id);
         if (!blog) {
             return res.status(404).json({ message: "blog not found." });
         }
         // Update each field if provided in the request body
-        if (title) {
-            blog.Title = title;
+        if (Title) {
+            blog.Title = Title;
         }
-        if (description) {
-            blog.Description = description;
+        if (Text) {
+            blog.Text = Text;
+        }
+        if (Description) {
+            blog.Description = Description;
         }
         if (image) {
             blog.Image = image;
-        }
-        if (price) {
-            blog.Price = price;
-        }
-        if (category) {
-            blog.Category = category;
         }
         if (date) {
             blog.Date = date;
