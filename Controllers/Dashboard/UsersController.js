@@ -295,7 +295,9 @@ const get_user = async (req, res) => {
         if (!id) {
             return res.status(409).json({ message: "User ID is required." });
         }
-        const user = await Users.findById(id); // Exclude the Notifications field
+        const user = await Users.findById(id)
+            .populate("Services")
+            .populate("Courses")
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
