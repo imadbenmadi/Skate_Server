@@ -23,6 +23,12 @@ router.get("/", async (req, res) => {
                     // Access token expired, attempt to refresh it
                     try {
                         if (!refreshToken) {
+                            if (req.cookies.accessToken) {
+                                res.clearCookie("accessToken");
+                            }
+                            if (req.cookies.refreshToken) {
+                                res.clearCookie("refreshToken");
+                            }
                             return res.status(401).json({
                                 message:
                                     "Unauthorized: Refresh token is missing",
@@ -34,6 +40,12 @@ router.get("/", async (req, res) => {
                         }).exec();
 
                         if (!found_in_DB) {
+                            if (req.cookies.accessToken) {
+                                res.clearCookie("accessToken");
+                            }
+                            if (req.cookies.refreshToken) {
+                                res.clearCookie("refreshToken");
+                            }
                             return res.status(401).json({
                                 message: "Unauthorized",
                             });
@@ -44,12 +56,24 @@ router.get("/", async (req, res) => {
                             process.env.REFRESH_TOKEN_SECRET,
                             async (err, decoded) => {
                                 if (err) {
+                                    if (req.cookies.accessToken) {
+                                        res.clearCookie("accessToken");
+                                    }
+                                    if (req.cookies.refreshToken) {
+                                        res.clearCookie("refreshToken");
+                                    }
                                     return res.status(401).json({
                                         message: "Unauthorized",
                                     });
                                 } else if (
                                     found_in_DB.userId != decoded.userId
                                 ) {
+                                    if (req.cookies.accessToken) {
+                                        res.clearCookie("accessToken");
+                                    }
+                                    if (req.cookies.refreshToken) {
+                                        res.clearCookie("refreshToken");
+                                    }
                                     return res.status(401).json({
                                         message: "Unauthorized",
                                     });
@@ -89,9 +113,21 @@ router.get("/", async (req, res) => {
                             }
                         );
                     } catch (refreshErr) {
+                        if (req.cookies.accessToken) {
+                            res.clearCookie("accessToken");
+                        }
+                        if (req.cookies.refreshToken) {
+                            res.clearCookie("refreshToken");
+                        }
                         return res.status(500).json({ message: refreshErr });
                     }
                 } else {
+                    if (req.cookies.accessToken) {
+                        res.clearCookie("accessToken");
+                    }
+                    if (req.cookies.refreshToken) {
+                        res.clearCookie("refreshToken");
+                    }
                     return res.status(401).json({
                         message: "Unauthorized: Access token is invalid",
                     });
@@ -136,6 +172,12 @@ router.get("/", async (req, res) => {
             }
         });
     } catch (err) {
+        if (req.cookies.accessToken) {
+            res.clearCookie("accessToken");
+        }
+        if (req.cookies.refreshToken) {
+            res.clearCookie("refreshToken");
+        }
         return res.status(500).json({ message: err });
     }
 });
