@@ -183,6 +183,7 @@ const handle_Accept_course_request = async (req, res) => {
 
         return res.status(200).json({ message: "Course request accepted." });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ message: error });
     }
 };
