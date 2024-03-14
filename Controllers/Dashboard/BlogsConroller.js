@@ -47,13 +47,13 @@ const handle_delete_Blog = async (req, res) => {
         });
     }
     try {
-        const { blogId } = req.params;
-        if (!blogId) {
+        const { id } = req.params;
+        if (!id) {
             return res
                 .status(409)
                 .json({ message: "Blogid fields is required." });
         }
-        await Blogs.findByIdAndDelete(blogId);
+        await Blogs.findByIdAndDelete(id);
         return res.status(200).json({ message: "Blog Deleted successfully." });
     } catch (error) {
         return res.status(500).json({ message: error });
