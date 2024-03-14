@@ -3,7 +3,7 @@ const {
     request_Course,
     request_Service,
     Courses,
-    Services
+    Services,
 } = require("../../models/Database");
 const ObjectId = require("mongoose").Types.ObjectId; // Import ObjectId from mongoose
 const { Types } = require("mongoose");
@@ -385,9 +385,10 @@ const get_user_course_requests = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
-        const courseRequests = await request_Course.find({
-            _id: { $in: user.Course_Requests },
-        });
+        const courseRequests = await request_Course
+            .find({ User: id })
+            .populate("User")
+            .populate("Course");
         return res.status(200).json(courseRequests);
     } catch (error) {
         return res.status(500).json({ message: error });
@@ -414,13 +415,15 @@ const get_user_service_requests = async (req, res) => {
         if (!id) {
             return res.status(409).json({ message: "User ID is required." });
         }
-        const user = await Users.findById(id);
+        const user = await Users.findById(id)
+            ;
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
-        const serviceRequests = await request_Service.find({
-            _id: { $in: user.Service_Requests },
-        });
+        const serviceRequests = await request_Service
+            .find({ User: id })
+            .populate("User")
+            .populate("Service");
         return res.status(200).json(serviceRequests);
     } catch (error) {
         return res.status(500).json({ message: error });
@@ -542,7 +545,7 @@ const delete_user_service = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
-}
+};
 module.exports = {
     handle_add_User,
     handle_delete_User,
