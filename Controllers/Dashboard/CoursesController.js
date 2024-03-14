@@ -51,13 +51,13 @@ const handle_delete_Courses = async (req, res) => {
         });
     }
     try {
-        const { courseId } = req.body;
-        if (!courseId) {
+        const { id } = req.params;
+        if (!id) {
             return res
                 .status(409)
                 .json({ message: "CourseId fields is required." });
         }
-        await Courses.findByIdAndDelete(courseId);
+        await Courses.findByIdAndDelete(id);
         return res
             .status(200)
             .json({ message: "Course Deleted successfully." });

@@ -84,13 +84,13 @@ const handle_delete_Service = async (req, res) => {
         });
     }
     try {
-        const { serviceId } = req.params;
-        if (!serviceId) {
+        const { id } = req.params;
+        if (!id) {
             return res
                 .status(409)
                 .json({ message: "serviceId fields is required." });
         }
-        await Services.findByIdAndDelete(serviceId);
+        await Services.findByIdAndDelete(id);
         return res
             .status(200)
             .json({ message: "service Deleted successfully." });
