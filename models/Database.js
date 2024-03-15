@@ -39,7 +39,7 @@ const Users = mongoose.model(
                 Title: { type: String },
                 Text: { type: String },
                 Description: { type: String },
-                Date: { type: Date },
+                Date: { type: Date , default: Date.now},
                 Readed: { type: Boolean, default: false },
             },
         ],
@@ -52,7 +52,8 @@ const email_verification_tokens = mongoose.model(
         userId: { type: mongoose.Types.ObjectId, ref: "Users" },
         token: { type: String },
         expire: { type: Date, default: Date.now() + 24 * 60 * 60 * 1000 },
-        Date: { type: Date, default: Date.now() },
+        Date: { type: Date, default: Date.now }
+
     })
 );
 const Refresh_tokens = mongoose.model(
@@ -86,6 +87,8 @@ const request_Course = mongoose.model(
     new mongoose.Schema({
         User: { type: mongoose.Types.ObjectId, ref: "Users" },
         Course: { type: mongoose.Types.ObjectId, ref: "Courses" },
+        Date: { type: Date, default: Date.now }
+
     })
 );
 const request_Service = mongoose.model(
@@ -93,6 +96,8 @@ const request_Service = mongoose.model(
     new mongoose.Schema({
         User: { type: mongoose.Types.ObjectId, ref: "Users" },
         Service: { type: mongoose.Types.ObjectId, ref: "Services" },
+        Date: { type: Date, default: Date.now }
+
     })
 );
 // Services Courses Blogs Events
@@ -126,7 +131,8 @@ const Blogs = mongoose.model(
         Text: { type: String },
         Description: { type: String },
         Image: { type: String },
-        Date: { type: Date, default: Date.now() },
+        Date: { type: Date, default: Date.now }
+
     })
 );
 const Events = mongoose.model(
@@ -135,7 +141,7 @@ const Events = mongoose.model(
         Title: { type: String },
         Text: { type: String },
         Description: { type: String },
-        Date: { type: Date, default: Date.now() },
+        Date: { type: Date, default: Date.now },
         Image: { type: String },
     })
 );
