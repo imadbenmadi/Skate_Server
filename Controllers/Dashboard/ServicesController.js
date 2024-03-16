@@ -201,7 +201,10 @@ const handle_Accept_Service_request = async (req, res) => {
             Date: new Date(),
         };
         await Users.findByIdAndUpdate(UserId, {
-            $push: { Notifications: notificationToSend },
+            $push: {
+                Services: ServiceId,
+                Notifications: notificationToSend,
+            },
         }).exec();
         return res.status(200).json({ message: "Service request accepted." });
     } catch (error) {
