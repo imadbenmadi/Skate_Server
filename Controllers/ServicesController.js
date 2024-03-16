@@ -10,10 +10,11 @@ const getAllServices = async (req, res) => {
         // const totalPages = Math.ceil(totalCount / limit);
         // const skip = (page - 1) * limit;
         // const services = await Services.find().skip(skip).limit(limit);
-        const services = await Services.find();
+        const services = (await Services.find()).reverse();
         // return res.status(200).json({ totalPages, services });
         return res.status(200).json({ services });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ message: error });
     }
 };

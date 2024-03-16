@@ -8,7 +8,7 @@ const getAllBlogs = async (req, res) => {
         // const totalPages = Math.ceil(totalCount / limit);
         // const skip = (page - 1) * limit;
         // const blogs = await Blogs.find().skip(skip).limit(limit);
-        const blogs = await Blogs.find();
+        const blogs = (await Blogs.find()).reverse();
         // return res.status(200).json({ totalPages, blogs });
         return res.status(200).json({ blogs });
     } catch (error) {

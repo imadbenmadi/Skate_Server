@@ -9,7 +9,7 @@ const getAllEvents = async (req, res) => {
         // const skip = (page - 1) * limit;
 
         // const events = await Events.find({}).skip(skip).limit(limit);
-        const events = await Events.find({});
+        const events = (await Events.find({})).reverse();
         // return res.status(200).json({ totalPages, events });
         return res.status(200).json({ events });
     } catch (error) {

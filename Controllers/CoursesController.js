@@ -11,7 +11,7 @@ const getAllCourses = async (req, res) => {
         // const totalPages = Math.ceil(totalCount / limit);
         // const skip = (page - 1) * limit;
         // const courses = await Courses.find().skip(skip).limit(limit);
-        const courses = await Courses.find();
+        const courses = (await Courses.find()).reverse();
         // return res.status(200).json({ totalPages, courses });
         return res.status(200).json({ courses });
     } catch (error) {
