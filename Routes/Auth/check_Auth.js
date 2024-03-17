@@ -104,6 +104,7 @@ router.get("/", async (req, res) => {
                                     Services: user.Services,
                                     Gender: user.Gender,
                                     IsEmailVerified: user.IsEmailVerified,
+                                    
                                 };
                                 return res.status(200).json({
                                     message:

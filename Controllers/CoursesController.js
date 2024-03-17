@@ -67,8 +67,9 @@ const get_courses_By_user_Id = async (req, res) => {
     }
 };
 const handle_request_Course = async (req, res) => {
-    const { courseId, userId } = req.body;
-    if (!courseId || !userId) {
+    const { CourseId, userId } = req.body;
+    console.log(CourseId, userId);
+    if (!CourseId || !userId) {
         return res.status(409).json({ message: "Messing Data." });
     }
     const isAuth = await Verify_user(req, res);
@@ -89,7 +90,7 @@ const handle_request_Course = async (req, res) => {
         }
         const existingRequest = await request_Course.findOne({
             User: userId,
-            Course: courseId,
+            Course: CourseId,
         });
 
         if (existingRequest) {
@@ -97,16 +98,16 @@ const handle_request_Course = async (req, res) => {
                 .status(400)
                 .json({ message: "You have already Requested this Course" });
         }
-        const course = await Courses.findById(courseId);
+        const course = await Courses.findById(CourseId);
         if (!course) {
             return res.status(404).json({ message: "Course not found." });
         }
-        if (user.Courses.includes(courseId)) {
+        if (user.Courses.includes(CourseId)) {
             return res.status(400).json({ message: "You Own this Course" });
         }
         const new_request_Course = new request_Course({
             User: userId,
-            Course: courseId,
+            Course: CourseId,
         });
         await new_request_Course.save();
         return res

@@ -1,4 +1,4 @@
-const { Users } = require("../models/Database");
+const { Users , request_Course, request_Service } = require("../models/Database");
 require("dotenv").config();
 const Verify_user = require("../Middleware/verify_user");
 const EditProfile = async (req, res) => {
@@ -14,7 +14,7 @@ const EditProfile = async (req, res) => {
         });
     }
     try {
-        const { userId } = req.body;
+        const { userId } = req.params;
         if (!userId) {
             return res.status(409).json({ message: "Messing Data" });
         }
@@ -59,7 +59,7 @@ const EditProfile = async (req, res) => {
     }
 };
 const getProfile = async (req, res) => {
-    const userId = req.body.userId;
+    const userId = req.params.id;
 
     if (!userId) return res.status(409).json({ message: "Messing Data" });
     const isAuth = await Verify_user(req, res);
@@ -78,14 +78,20 @@ const getProfile = async (req, res) => {
         if (!user_in_db) {
             return res.status(401).json({ message: "user not found." });
         }
-
-        return res.status(200).json(user_in_db);
+        const Courses_requests = await request_Course.find({ user: userId });
+        const Services_requests = await request_Service.find({ user: userId });
+        const userData = {
+            user: user_in_db,
+            Courses_requests,
+            Services_requests,
+        };
+        return res.status(200).json({ userData});
     } catch (error) {
         return res.status(500).json({ message: error });
     }
 };
 const DeleteProfile = async (req, res) => {
-    const userId = req.body.userId;
+    const {userId} = req.params;
 
     if (!userId) return res.status(409).json({ message: "Messing Data" });
     try {
