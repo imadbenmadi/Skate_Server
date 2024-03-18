@@ -95,16 +95,42 @@ const handle_delete_Event = async (req, res) => {
         if (!id) {
             return res
                 .status(409)
-                .json({ message: "Event Id fields is required." });
+                .json({ message: "Event Id field is required." });
         }
+
+        // Find the event by id
+        const event = await Events.findById(id);
+
+        // Check if the event exists
+        if (!event) {
+            return res.status(404).json({ message: "Event not found." });
+        }
+
+        if (event.Image) {
+            const imagePath = path.join(
+                __dirname,
+                "../../Public/Events",
+                event.Image
+            );
+            fs.unlink(imagePath, (err) => {
+                if (err) {
+                    console.error("Error deleting image:", err);
+                } else {
+                    console.log("Image deleted successfully");
+                }
+            });
+        }
+
+        // Delete the event from the database
         await Events.findByIdAndDelete(id);
-        return res
-            .status(200)
-            .json({ message: "evente Deleted successfully." });
+
+        return res.status(200).json({ message: "Event deleted successfully." });
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ message: error });
     }
 };
+
 const handle_update_Event = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 

@@ -79,14 +79,42 @@ const handle_delete_Blog = async (req, res) => {
         if (!id) {
             return res
                 .status(409)
-                .json({ message: "Blogid fields is required." });
+                .json({ message: "Blog id field is required." });
         }
+
+        // Find the blog by id
+        const blog = await Blogs.findById(id);
+
+        // Check if the blog exists
+        if (!blog) {
+            return res.status(404).json({ message: "Blog not found." });
+        }
+
+        // Delete the associated image if it exists
+        if (blog.Image) {
+            const imagePath = path.join(
+                __dirname,
+                "../../Public/Blogs",
+                blog.Image
+            );
+            fs.unlink(imagePath, (err) => {
+                if (err) {
+                    console.error("Error deleting image:", err);
+                } else {
+                    console.log("Image deleted successfully");
+                }
+            });
+        }
+
+        // Delete the blog from the database
         await Blogs.findByIdAndDelete(id);
-        return res.status(200).json({ message: "Blog Deleted successfully." });
+
+        return res.status(200).json({ message: "Blog deleted successfully." });
     } catch (error) {
         return res.status(500).json({ message: error });
     }
 };
+
 const handle_update_Blog = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 

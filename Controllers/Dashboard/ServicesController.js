@@ -120,17 +120,47 @@ const handle_delete_Service = async (req, res) => {
         if (!id) {
             return res
                 .status(409)
-                .json({ message: "serviceId fields is required." });
+                .json({ message: "ServiceId field is required." });
         }
+
+        // Find the service by id
+        const service = await Services.findById(id);
+
+        // Check if the service exists
+        if (!service) {
+            return res.status(404).json({ message: "Service not found." });
+        }
+
+        // Check if the service has an associated image
+        if (service.Image) {
+            const imagePath = path.join(
+                __dirname,
+                "../../Public/Services",
+                service.Image
+            );
+            fs.unlink(imagePath, (err) => {
+                if (err) {
+                    console.error("Error deleting image:", err);
+                } else {
+                    console.log("Image deleted successfully");
+                }
+            });
+        }
+
+        // Delete the service from the database
         await Services.findByIdAndDelete(id);
+
+        // Delete any related requests for this service
         await request_Service.deleteMany({ Service: id });
+
         return res
             .status(200)
-            .json({ message: "service Deleted successfully." });
+            .json({ message: "Service deleted successfully." });
     } catch (error) {
         return res.status(500).json({ message: error });
     }
 };
+
 const handle_update_Service = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 

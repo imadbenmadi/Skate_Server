@@ -85,13 +85,42 @@ const handle_delete_Courses = async (req, res) => {
         if (!id) {
             return res
                 .status(409)
-                .json({ message: "CourseId fields is required." });
+                .json({ message: "CourseId field is required." });
         }
+
+        // Find the course by id
+        const course = await Courses.findById(id);
+
+        // Check if the course exists
+        if (!course) {
+            return res.status(404).json({ message: "Course not found." });
+        }
+
+        // Check if the course has an associated image
+        if (course.Image) {
+            const imagePath = path.join(
+                __dirname,
+                "../../Public/Courses",
+                course.Image
+            );
+            fs.unlink(imagePath, (err) => {
+                if (err) {
+                    console.error("Error deleting image:", err);
+                } else {
+                    console.log("Image deleted successfully");
+                }
+            });
+        }
+
+        // Delete the course from the database
         await Courses.findByIdAndDelete(id);
+
+        // Delete any related requests for this course
         await request_Course.deleteMany({ Course: id });
+
         return res
             .status(200)
-            .json({ message: "Course Deleted successfully." });
+            .json({ message: "Course deleted successfully." });
     } catch (error) {
         return res.status(500).json({ message: error });
     }
