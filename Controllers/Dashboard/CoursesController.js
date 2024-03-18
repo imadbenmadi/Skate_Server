@@ -1,12 +1,29 @@
 const { Courses, request_Course, Users } = require("../../models/Database");
-
+const path = require("path");
+const fs = require("fs");
 const Verify_Admin = require("../../Middleware/Verify_Admin");
-
+const Delete_image = (generatedFilename) => {
+    const imagePath = path.join(
+        __dirname,
+        "../../Public/Courses",
+        generatedFilename
+    );
+    try {
+        fs.unlinkSync(imagePath);
+        console.log("Image deleted successfully");
+    } catch (err) {
+        console.error("Error deleting image:", err);
+    }
+};
 const handle_add_Courses = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
-    if (isAuth.status == false)
+    if (isAuth.status == false) {
+         if (req.body.generatedFilename) {
+             Delete_image(req.body.generatedFilename);
+        }
         return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    }
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -18,11 +35,18 @@ const handle_add_Courses = async (req, res) => {
     try {
         const { Title,Text, Description, Price, Category } = req.body;
         if (!Title || !Text || !Description || !Price || !Category) {
+            if (req.body.generatedFilename) {
+                Delete_image(req.body.generatedFilename);
+            }
             return res
                 .status(409)
                 .json({ message: "All fields are required." });
-        } else if (isNaN(Price))
+        } else if (isNaN(Price)) {
+            if (req.body.generatedFilename) {
+                Delete_image(req.body.generatedFilename);
+            }
             return res.status(409).json({ message: "Invalide Price" });
+        }
         const creationDate = new Date();
         const generatedFilename = req.body.generatedFilename;
         const newCourse = new Courses({
@@ -38,6 +62,9 @@ const handle_add_Courses = async (req, res) => {
         await newCourse.save();
         return res.status(200).json({ message: "Course added successfully." });
     } catch (error) {
+        if (req.body.generatedFilename) {
+            Delete_image(req.body.generatedFilename);
+        }
         return res.status(500).json({ message: error });
     }
 };

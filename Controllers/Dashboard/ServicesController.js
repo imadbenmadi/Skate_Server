@@ -3,6 +3,23 @@ const { Services, request_Service, Users } = require("../../models/Database");
 const jwt = require("jsonwebtoken");
 
 const Verify_Admin = require("../../Middleware/Verify_Admin");
+
+const path = require("path");
+const fs = require("fs");
+const Delete_image = (generatedFilename) => {
+    const imagePath = path.join(
+        __dirname,
+        "../../Public/Services",
+        generatedFilename
+    );
+    try {
+        fs.unlinkSync(imagePath);
+        console.log("Image deleted successfully");
+    } catch (err) {
+        console.error("Error deleting image:", err);
+    }
+};
+
 const handle_get_Services_Request = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
     if (isAuth.status == false)
@@ -32,8 +49,12 @@ const handle_get_Services_Request = async (req, res) => {
 const handle_add_Service = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
-    if (isAuth.status == false)
+    if (isAuth.status == false) {
+         if (req.body.generatedFilename) {
+             Delete_image(req.body.generatedFilename);
+        }
         return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    }
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -45,14 +66,18 @@ const handle_add_Service = async (req, res) => {
     try {
         const { Title, Text, Description, Price, Category } = req.body;
         if (!Title || !Text || !Description || !Price || !Category) {
+            if (req.body.generatedFilename) {
+                Delete_image(req.body.generatedFilename);
+            }
             return res
                 .status(409)
                 .json({ message: "All fields are required." });
+        } else if (isNaN(Price)){
+            if (req.body.generatedFilename) {
+                Delete_image(req.body.generatedFilename);
+            }
+            return res.status(409).json({ message: "Invalide Price" });
         }
-        else if (isNaN(Price))
-             return res
-                 .status(409)
-                 .json({ message: "Invalide Price" });
         const creationDate = new Date();
         const generatedFilename = req.body.generatedFilename;
 
@@ -71,6 +96,9 @@ const handle_add_Service = async (req, res) => {
 
         return res.status(200).json({ message: "Service added successfully." });
     } catch (error) {
+        if (req.body.generatedFilename) {
+            Delete_image(req.body.generatedFilename);
+        }
         return res.status(500).json({ message: error });
     }
 };

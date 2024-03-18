@@ -1,11 +1,31 @@
 const { Blogs } = require("../../models/Database");
-
+const path = require("path");
+const fs = require("fs");
 const Verify_Admin = require("../../Middleware/Verify_Admin");
+
+const Delete_image = (generatedFilename) => {
+    const imagePath = path.join(
+        __dirname,
+        "../../Public/Blogs",
+        generatedFilename
+    );
+    try {
+        fs.unlinkSync(imagePath);
+        console.log("Image deleted successfully");
+    } catch (err) {
+        console.error("Error deleting image:", err);
+    }
+};
+
 const handle_add_Blog = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
-    if (isAuth.status == false)
+    if (isAuth.status == false) {
+         if (req.body.generatedFilename) {
+             Delete_image(req.body.generatedFilename);
+        }
         return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    }
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -18,6 +38,9 @@ const handle_add_Blog = async (req, res) => {
         const { Title, Text, Description } = req.body;
 
         if (!Title || !Description || !Text) {
+            if (req.body.generatedFilename) {
+                Delete_image(req.body.generatedFilename);
+            }
             return res
                 .status(409)
                 .json({ message: "All fields are required." });
@@ -27,12 +50,15 @@ const handle_add_Blog = async (req, res) => {
             Title,
             Text,
             Description,
-            Image : generatedFilename,
+            Image: generatedFilename,
         });
         await NewBlog.save();
 
         return res.status(200).json({ message: "Blog Created Successfully." });
     } catch (error) {
+        if (req.body.generatedFilename) {
+            Delete_image(req.body.generatedFilename);
+        }
         return res.status(500).json({ message: error });
     }
 };
