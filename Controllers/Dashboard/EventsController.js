@@ -22,10 +22,13 @@ const handle_add_Event = async (req, res) => {
                 .status(409)
                 .json({ message: "All fields are required." });
         }
+        const generatedFilename = req.body.generatedFilename;
+
         const NewBlog = new Events({
             Title,
             Text,
             Description,
+            Image: generatedFilename,
         });
         await NewBlog.save();
         // Push notification to all users

@@ -44,14 +44,17 @@ const handle_add_Service = async (req, res) => {
     }
     try {
         const { Title, Text, Description, Price, Category } = req.body;
-
         if (!Title || !Text || !Description || !Price || !Category) {
             return res
                 .status(409)
                 .json({ message: "All fields are required." });
         }
-
+        else if (isNaN(Price))
+             return res
+                 .status(409)
+                 .json({ message: "Invalide Price" });
         const creationDate = new Date();
+        const generatedFilename = req.body.generatedFilename;
 
         // Create a new Service
         const newService = new Services({
@@ -59,6 +62,7 @@ const handle_add_Service = async (req, res) => {
             Text,
             Description,
             Price,
+            Image: generatedFilename,
             Category,
         });
 

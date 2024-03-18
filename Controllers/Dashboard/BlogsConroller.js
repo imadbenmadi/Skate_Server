@@ -22,10 +22,12 @@ const handle_add_Blog = async (req, res) => {
                 .status(409)
                 .json({ message: "All fields are required." });
         }
+        const generatedFilename = req.body.generatedFilename;
         const NewBlog = new Blogs({
             Title,
             Text,
             Description,
+            Image : generatedFilename,
         });
         await NewBlog.save();
 

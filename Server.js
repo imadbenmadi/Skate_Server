@@ -1,6 +1,7 @@
 const express = require("express");
 const rateLimit = require("express-rate-limit");
 const app = express();
+const multer = require("multer");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -42,6 +43,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/", express.static(path.join(__dirname, "/Public")));
+app.use("/", express.static(path.join(__dirname, "/Public/Blogs")));
 
 mongoose.set("strictQuery", false);
 const mongoDB = process.env.MONGO_URI;
@@ -54,6 +56,7 @@ async function connect_to_db() {
 }
 
 connect_to_db().catch((err) => console.log(err));
+
 app.get("/", (req,res) => {
     res.send("Hello World");
 });
