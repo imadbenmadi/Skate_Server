@@ -447,7 +447,6 @@ const delete_user_course = async (req, res) => {
         }
 
         const { id, course_id } = req.params;
-        console.log(id, course_id);
         // Validate input parameters
         if (!id || !course_id) {
             return res

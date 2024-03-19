@@ -126,7 +126,6 @@ const handle_delete_Event = async (req, res) => {
 
         return res.status(200).json({ message: "Event deleted successfully." });
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ message: error });
     }
 };

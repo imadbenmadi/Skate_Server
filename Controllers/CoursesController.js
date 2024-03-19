@@ -68,7 +68,6 @@ const get_courses_By_user_Id = async (req, res) => {
 };
 const handle_request_Course = async (req, res) => {
     const { CourseId, userId } = req.body;
-    console.log(CourseId, userId);
     if (!CourseId || !userId) {
         return res.status(409).json({ message: "Messing Data." });
     }

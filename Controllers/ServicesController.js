@@ -14,7 +14,6 @@ const getAllServices = async (req, res) => {
         // return res.status(200).json({ totalPages, services });
         return res.status(200).json({ services });
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ message: error });
     }
 };

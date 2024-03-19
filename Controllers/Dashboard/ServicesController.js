@@ -199,7 +199,6 @@ const handle_update_Service = async (req, res) => {
             }
             return res.status(404).json({ message: "service not found." });
         }
-            console.log(req.generatedFilename);
 
         if (req.file) {
             if (service.Image) {
