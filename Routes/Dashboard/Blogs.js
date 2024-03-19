@@ -36,6 +36,14 @@ router.post(
     BlogsConroller.handle_add_Blog
 );
 router.delete("/:id", BlogsConroller.handle_delete_Blog);
-router.put("/:id", BlogsConroller.handle_update_Blog);
+router.put(
+    "/:id",
+    upload.single("image"),
+    (req, res, next) => {
+        req.body.generatedFilename = req.generatedFilename;
+        next();
+    },
+    BlogsConroller.handle_update_Blog
+);
 
 module.exports = router;

@@ -35,5 +35,13 @@ router.post(
     EventsController.handle_add_Event
 );
 router.delete("/:id", EventsController.handle_delete_Event);
-router.put("/:id", EventsController.handle_update_Event);
+router.put(
+    "/:id",
+    upload.single("image"),
+    (req, res, next) => {
+        req.body.generatedFilename = req.generatedFilename;
+        next();
+    },
+    EventsController.handle_update_Event
+);
 module.exports = router;

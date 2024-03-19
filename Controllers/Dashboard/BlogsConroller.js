@@ -21,8 +21,8 @@ const handle_add_Blog = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
     if (isAuth.status == false) {
-         if (req.body.generatedFilename) {
-             Delete_image(req.body.generatedFilename);
+        if (req.body.generatedFilename) {
+            Delete_image(req.body.generatedFilename);
         }
         return res.status(401).json({ message: "Unauthorized: Invalid token" });
     }
@@ -118,8 +118,14 @@ const handle_delete_Blog = async (req, res) => {
 const handle_update_Blog = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
-    if (isAuth.status == false)
-        return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    if (isAuth.status == false) {
+        if (req.body.generatedFilename) {
+            Delete_image(req.body.generatedFilename);
+            return res
+                .status(401)
+                .json({ message: "Unauthorized: Invalid token" });
+        }
+    }
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -129,14 +135,33 @@ const handle_update_Blog = async (req, res) => {
         });
     }
     try {
-        const { Title, Text, Description, image, date } = req.body;
+        const { Title, Text, Description, date } = req.body;
         const { id } = req.params;
         if (!id) {
+            if (req.body.generatedFilename) {
+                Delete_image(req.body.generatedFilename);
+            }
             return res.status(409).json({ message: "blog ID is required." });
         }
         const blog = await Blogs.findById(id);
         if (!blog) {
+            if (req.body.generatedFilename) {
+                Delete_image(req.body.generatedFilename);
+            }
             return res.status(404).json({ message: "blog not found." });
+        }
+        if (req.file) {
+            if (blog.Image) {
+                const imagePath = path.join(
+                    __dirname,
+                    "../../Public/Blogs",
+                    blog.Image
+                );
+                fs.unlinkSync(imagePath);
+                console.log("Previous image deleted successfully");
+            }
+            // Set the new image filename to the blogs
+            blog.Image = req.generatedFilename;
         }
         // Update each field if provided in the request body
         if (Title) {
@@ -148,9 +173,7 @@ const handle_update_Blog = async (req, res) => {
         if (Description) {
             blog.Description = Description;
         }
-        if (image) {
-            blog.Image = image;
-        }
+
         if (date) {
             blog.Date = date;
         }
@@ -158,6 +181,9 @@ const handle_update_Blog = async (req, res) => {
         await blog.save();
         return res.status(200).json({ message: "blog updated successfully." });
     } catch (error) {
+        if (req.body.generatedFilename) {
+            Delete_image(req.body.generatedFilename);
+        }
         return res.status(500).json({ message: error });
     }
 };

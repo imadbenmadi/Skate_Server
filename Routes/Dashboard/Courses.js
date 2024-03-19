@@ -35,7 +35,15 @@ router.post(
     CoursesController.handle_add_Courses
 );
 router.delete("/:id", CoursesController.handle_delete_Courses);
-router.put("/:id", CoursesController.handle_update_Courses);
+router.put(
+    "/:id",
+    upload.single("image"),
+    (req, res, next) => {
+        req.body.generatedFilename = req.generatedFilename;
+        next();
+    },
+    CoursesController.handle_update_Courses
+);
 router.get("/Requests", CoursesController.handle_get_Courses_Request);
 router.post(
     "/Requests/Accept",

@@ -164,8 +164,12 @@ const handle_delete_Service = async (req, res) => {
 const handle_update_Service = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
-    if (isAuth.status == false)
+    if (isAuth.status == false) {
+        if (req.body.generatedFilename) {
+            Delete_image(req.body.generatedFilename);
+        }
         return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    }
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -175,18 +179,40 @@ const handle_update_Service = async (req, res) => {
         });
     }
     try {
-        const { Title, Text, Description, image, Price, Category, date } =
+        const { Title, Text, Description,  Price, Category, date } =
             req.body;
         const { id } = req.params;
 
         if (!id) {
+
+            if (req.body.generatedFilename) {
+                Delete_image(req.body.generatedFilename);
+            }
             return res
                 .status(409)
                 .json({ message: "Could not find Service Id." });
         }
         const service = await Services.findById(id);
         if (!service) {
+            if (req.body.generatedFilename) {
+                Delete_image(req.body.generatedFilename);
+            }
             return res.status(404).json({ message: "service not found." });
+        }
+            console.log(req.generatedFilename);
+
+        if (req.file) {
+            if (service.Image) {
+                const imagePath = path.join(
+                    __dirname,
+                    "../../Public/Services",
+                    service.Image
+                );
+                fs.unlinkSync(imagePath);
+                console.log("Previous image deleted successfully");
+            }
+            // Set the new image filename to the Services
+            service.Image = req.generatedFilename;
         }
         // Update each field if provided in the request body
         if (Title) {
@@ -198,9 +224,6 @@ const handle_update_Service = async (req, res) => {
         if (Description) {
             service.Description = Description;
         }
-        if (image) {
-            service.Image = image;
-        }
         if (Price) {
             service.Price = Price;
         }
@@ -210,14 +233,14 @@ const handle_update_Service = async (req, res) => {
         if (date) {
             service.Date = date;
         }
-        console.log("service before saveing to db:", service);
-        // Save the updated service
         await service.save();
-        console.log("service after saveing to db:", service);
         return res
             .status(200)
             .json({ message: "service updated successfully." });
     } catch (error) {
+        if (req.body.generatedFilename) {
+            Delete_image(req.body.generatedFilename);
+        }
         return res.status(500).json({ message: error });
     }
 };

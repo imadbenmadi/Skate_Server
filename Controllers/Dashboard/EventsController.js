@@ -71,9 +71,9 @@ const handle_add_Event = async (req, res) => {
         );
         return res.status(200).json({ message: "Event Created Successfully." });
     } catch (error) {
-         if (req.body.generatedFilename) {
-             Delete_image(req.body.generatedFilename);
-         }
+        if (req.body.generatedFilename) {
+            Delete_image(req.body.generatedFilename);
+        }
         return res.status(500).json({ message: error });
     }
 };
@@ -134,8 +134,12 @@ const handle_delete_Event = async (req, res) => {
 const handle_update_Event = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
-    if (isAuth.status == false)
+    if (isAuth.status == false) {
+        if (req.body.generatedFilename) {
+            Delete_image(req.body.generatedFilename);
+        }
         return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    }
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -145,15 +149,33 @@ const handle_update_Event = async (req, res) => {
         });
     }
     try {
-        const {  Title,Text, Description, image,   date } =
-            req.body;
+        const { Title, Text, Description, date } = req.body;
         const { id } = req.params;
         if (!id) {
+            if (req.body.generatedFilename) {
+                Delete_image(req.body.generatedFilename);
+            }
             return res.status(409).json({ message: "evente ID is required." });
         }
         const evente = await Events.findById(id);
         if (!evente) {
+            if (req.body.generatedFilename) {
+                Delete_image(req.body.generatedFilename);
+            }
             return res.status(404).json({ message: "evente not found." });
+        }
+        if (req.file) {
+            if (evente.Image) {
+                const imagePath = path.join(
+                    __dirname,
+                    "../../Public/Events",
+                    evente.Image
+                );
+                fs.unlinkSync(imagePath);
+                console.log("Previous image deleted successfully");
+            }
+            // Set the new image filename to the eventes
+            evente.Image = req.generatedFilename;
         }
         // Update each field if provided in the request body
         if (Title) {
@@ -165,9 +187,7 @@ const handle_update_Event = async (req, res) => {
         if (Description) {
             evente.Description = Description;
         }
-        if (image) {
-            evente.Image = image;
-        }
+        
         if (date) {
             evente.Date = date;
         }
@@ -177,6 +197,9 @@ const handle_update_Event = async (req, res) => {
             .status(200)
             .json({ message: "evente updated successfully." });
     } catch (error) {
+        if (req.body.generatedFilename) {
+            Delete_image(req.body.generatedFilename);
+        }
         return res.status(500).json({ message: error });
     }
 };

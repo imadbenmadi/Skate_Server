@@ -2,6 +2,7 @@ const { Courses, request_Course, Users } = require("../../models/Database");
 const path = require("path");
 const fs = require("fs");
 const Verify_Admin = require("../../Middleware/Verify_Admin");
+const { log } = require("console");
 const Delete_image = (generatedFilename) => {
     const imagePath = path.join(
         __dirname,
@@ -128,8 +129,12 @@ const handle_delete_Courses = async (req, res) => {
 const handle_update_Courses = async (req, res) => {
     const isAuth = await Verify_Admin(req, res);
 
-    if (isAuth.status == false)
+    if (isAuth.status == false) {
+        if (req.body.generatedFilename) {
+            Delete_image(req.body.generatedFilename);
+        }
         return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    }
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("admin_accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -139,15 +144,35 @@ const handle_update_Courses = async (req, res) => {
         });
     }
     try {
-        const { Title, Text, Description, image, Price, Category, date } =
+        const { Title, Text, Description, Price, Category, date } =
             req.body;
         const { id } = req.params;
         if (!id) {
+            if (req.body.generatedFilename) {
+                Delete_image(req.body.generatedFilename);
+            }
             return res.status(409).json({ message: "Course ID Not Found." });
         }
         const course = await Courses.findById(id);
         if (!course) {
+            if (req.body.generatedFilename) {
+                Delete_image(req.body.generatedFilename);
+            }
             return res.status(404).json({ message: "Course not found." });
+        }
+        if (req.file) {
+            if (course.Image) {
+                const imagePath = path.join(
+                    __dirname,
+                    "../../Public/Courses",
+                    course.Image
+                );
+                fs.unlinkSync(imagePath);
+                console.log("Previous image deleted successfully");
+            }
+            // Set the new image filename to the course
+            log(req.body.generatedFilename);
+            course.Image = req.body.generatedFilename;
         }
         // Update each field if provided in the request body
         if (Title) {
@@ -158,9 +183,6 @@ const handle_update_Courses = async (req, res) => {
         }
         if (Description) {
             course.Description = Description;
-        }
-        if (image) {
-            course.Image = image;
         }
         if (Price) {
             course.Price = Price;
@@ -177,6 +199,9 @@ const handle_update_Courses = async (req, res) => {
             .status(200)
             .json({ message: "Course updated successfully." });
     } catch (error) {
+        if (req.body.generatedFilename) {
+            Delete_image(req.body.generatedFilename);
+        }
         return res.status(500).json({ message: error });
     }
 };
