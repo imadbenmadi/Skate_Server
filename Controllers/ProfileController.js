@@ -14,12 +14,12 @@ const EditProfile = async (req, res) => {
         });
     }
     try {
-        const { userId } = req.params;
-        if (!userId) {
+        const { id } = req.params;
+        if (!id) {
             return res.status(409).json({ message: "Messing Data" });
         }
 
-        const userToUpdate = await Users.findById(userId);
+        const userToUpdate = await Users.findById(id);
         if (!userToUpdate) {
             return res.status(404).json({ message: "User not found." });
         }
@@ -113,9 +113,66 @@ const DeleteProfile = async (req, res) => {
         return res.status(500).json({ message: error });
     }
 };
+const ReadedNotification = async (req, res) => {
+    const { id } = req.params;
+    if (!id) {
+        return res.status(409).json({ message: "Messing Data" });
+    }
+    try {
+        const user = await Users.findById(id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+        const notification = user.Notifications.id(req.body.notificationId);
+        if (!notification) {
+            return res.status(404).json({ message: "Notification not found." });
+        }
+        notification.Readed = true;
+        await user.save();
+        return res.status(200).json({ message: "Notification readed." });
+    } catch (error) {
+        return res.status(500).json({ message: error });
+    }
+}
+const deleteNotification = async (req, res) => {
+    const { id } = req.params;
+    const { notificationId } = req.body;
+
+    try {
+        if (!id || !notificationId) {
+            return res
+                .status(400)
+                .json({
+                    message: "Missing userId or Notification ID",
+                });
+        }
+
+        const user = await Users.findById(id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        // Find the notification in the user's Notifications array by its ID
+        const notification = user.Notifications.find(
+            (notification) => notification._id.toString() === notificationId
+        );
+        if (!notification) {
+            return res.status(404).json({ message: "Notification not found." });
+        }
+
+        notification.remove();
+        await user.save();
+        return res.status(200).json({ message: "Notification deleted." });
+    } catch (error) {
+        console.error("Error deleting notification:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+};
 
 module.exports = {
     EditProfile,
     getProfile,
     DeleteProfile,
+    ReadedNotification,
+    deleteNotification,
 };
