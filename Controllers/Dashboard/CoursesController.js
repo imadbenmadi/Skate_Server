@@ -2,7 +2,6 @@ const { Courses, request_Course, Users } = require("../../models/Database");
 const path = require("path");
 const fs = require("fs");
 const Verify_Admin = require("../../Middleware/Verify_Admin");
-const { log } = require("console");
 const Delete_image = (generatedFilename) => {
     const imagePath = path.join(
         __dirname,

@@ -7,8 +7,10 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const allowedOrigins = [
-    "https://backend.skate-consult.com",
-    "https://skate-consult.com",
+    "https://skate.dz",
+    "https://www.backend.skate-consult.dz",
+    "https://www.backend.skate-consult.com",
+    "https://www.skate-consult.com",
     "http://localhost:5173",
     "http://localhost:3500",
 ];
@@ -44,6 +46,9 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/", express.static(path.join(__dirname, "/Public")));
 app.use("/", express.static(path.join(__dirname, "/Public/Blogs")));
+app.use("/", express.static(path.join(__dirname, "/Public/Services")));
+app.use("/", express.static(path.join(__dirname, "/Public/Events")));
+app.use("/", express.static(path.join(__dirname, "/Public/Courses")));
 
 mongoose.set("strictQuery", false);
 const mongoDB = process.env.MONGO_URI;
