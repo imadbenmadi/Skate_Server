@@ -135,32 +135,43 @@ const ReadedNotification = async (req, res) => {
     }
 }
 const deleteNotification = async (req, res) => {
-    const { id } = req.params;
-    const { notificationId } = req.body;
+    const { id, notificationId } = req.params;
+    // const {  } = req.body;
 
     try {
         if (!id || !notificationId) {
             return res
-                .status(400)
+                .status(409)
                 .json({
                     message: "Missing userId or Notification ID",
                 });
         }
-
+        const isAuth = await Verify_user(req, res);
+        if (isAuth.status == false)
+            return res
+                .status(401)
+                .json({ message: "Unauthorized: Invalid token" });
+        if (isAuth.status == true && isAuth.Refresh == true) {
+            res.cookie("accessToken", isAuth.newAccessToken, {
+                httpOnly: true,
+                sameSite: "None",
+                secure: true,
+                maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+            });
+        }
         const user = await Users.findById(id);
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
-
-        // Find the notification in the user's Notifications array by its ID
-        const notification = user.Notifications.find(
-            (notification) => notification._id.toString() === notificationId
+        const notificationIndex = user.Notifications.findIndex(
+            (notification) => notification._id.toString() == notificationId
         );
-        if (!notification) {
+        if (notificationIndex === -1) {
             return res.status(404).json({ message: "Notification not found." });
         }
 
-        notification.remove();
+        // Remove notification from the array
+        user.Notifications.splice(notificationIndex, 1);
         await user.save();
         return res.status(200).json({ message: "Notification deleted." });
     } catch (error) {

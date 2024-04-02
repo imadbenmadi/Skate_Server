@@ -22,6 +22,7 @@ const Users = mongoose.model(
         IsEmailVerified: { type: Boolean, default: false },
         Notifications: [
             {
+                id: { type: mongoose.Types.ObjectId },
                 Type: {
                     type: String,
                     enum: [
