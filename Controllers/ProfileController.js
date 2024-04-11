@@ -94,6 +94,17 @@ const DeleteProfile = async (req, res) => {
     const {userId} = req.params;
 
     if (!userId) return res.status(409).json({ message: "Messing Data" });
+    const isAuth = await Verify_user(req, res);
+    if (isAuth.status == false)
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+    }
     try {
         const verified = await Verify_user(req, res);
         if (!verified) {
@@ -114,22 +125,36 @@ const DeleteProfile = async (req, res) => {
     }
 };
 const ReadedNotification = async (req, res) => {
-    const { id } = req.params;
+    const { id, NotificationId } = req.params;
     if (!id) {
         return res.status(409).json({ message: "Messing Data" });
+    }
+    const isAuth = await Verify_user(req, res);
+    if (isAuth.status == false)
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
     }
     try {
         const user = await Users.findById(id);
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
-        const notification = user.Notifications.id(req.body.notificationId);
+        const notification = user.Notifications.id(req.body.NotificationId);
         if (!notification) {
             return res.status(404).json({ message: "Notification not found." });
         }
+        if (notification.Readed == true) {
+            return res.status(200).json({ message: "Notification already readed." });
+        }
         notification.Readed = true;
         await user.save();
-        return res.status(200).json({ message: "Notification readed." });
+        return res.status(200).json({ message: "Notification Changed to Readed Successfully" });
     } catch (error) {
         return res.status(500).json({ message: error });
     }
@@ -137,7 +162,17 @@ const ReadedNotification = async (req, res) => {
 const deleteNotification = async (req, res) => {
     const { id, notificationId } = req.params;
     // const {  } = req.body;
-
+    const isAuth = await Verify_user(req, res);
+    if (isAuth.status == false)
+        return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    if (isAuth.status == true && isAuth.Refresh == true) {
+        res.cookie("accessToken", isAuth.newAccessToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 60 * 60 * 1000, // 10 minutes in milliseconds
+        });
+    }
     try {
         if (!id || !notificationId) {
             return res

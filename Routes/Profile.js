@@ -8,5 +8,5 @@ router.delete(
     "/:id/Notifications/:notificationId",
     ProfileController.deleteNotification
 );
-// router.post("/:id/Notifications/Readed", ProfileController.ReadedNotification);
+router.post("/:id/Notifications/Readed", ProfileController.ReadedNotification);
 module.exports = router;
