@@ -11,7 +11,6 @@ const Delete_image = (generatedFilename) => {
     );
     try {
         fs.unlinkSync(imagePath);
-        console.log("Image deleted successfully");
     } catch (err) {
         console.error("Error deleting image:", err);
     }
@@ -115,9 +114,7 @@ const handle_delete_Event = async (req, res) => {
             fs.unlink(imagePath, (err) => {
                 if (err) {
                     console.error("Error deleting image:", err);
-                } else {
-                    console.log("Image deleted successfully");
-                }
+                } 
             });
         }
 
@@ -171,7 +168,6 @@ const handle_update_Event = async (req, res) => {
                     evente.Image
                 );
                 fs.unlinkSync(imagePath);
-                console.log("Previous image deleted successfully");
             }
             // Set the new image filename to the eventes
             evente.Image = req.generatedFilename;

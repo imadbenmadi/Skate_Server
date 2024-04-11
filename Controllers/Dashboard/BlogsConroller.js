@@ -11,7 +11,6 @@ const Delete_image = (generatedFilename) => {
     );
     try {
         fs.unlinkSync(imagePath);
-        console.log("Image deleted successfully");
     } catch (err) {
         console.error("Error deleting image:", err);
     }
@@ -100,9 +99,7 @@ const handle_delete_Blog = async (req, res) => {
             fs.unlink(imagePath, (err) => {
                 if (err) {
                     console.error("Error deleting image:", err);
-                } else {
-                    console.log("Image deleted successfully");
-                }
+                } 
             });
         }
 
@@ -158,7 +155,6 @@ const handle_update_Blog = async (req, res) => {
                     blog.Image
                 );
                 fs.unlinkSync(imagePath);
-                console.log("Previous image deleted successfully");
             }
             // Set the new image filename to the blogs
             blog.Image = req.generatedFilename;

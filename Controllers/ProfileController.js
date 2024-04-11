@@ -130,8 +130,9 @@ const ReadedNotification = async (req, res) => {
         return res.status(409).json({ message: "Messing Data" });
     }
     const isAuth = await Verify_user(req, res);
-    if (isAuth.status == false)
+    if (isAuth.status == false) {
         return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    }
     if (isAuth.status == true && isAuth.Refresh == true) {
         res.cookie("accessToken", isAuth.newAccessToken, {
             httpOnly: true,
@@ -145,7 +146,10 @@ const ReadedNotification = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
-        const notification = user.Notifications.id(req.body.NotificationId);
+        // const notification = user.Notifications.id(NotificationId);
+        const notification = user.Notifications.find(
+            (notification) => notification._id.toString() == NotificationId
+        );
         if (!notification) {
             return res.status(404).json({ message: "Notification not found." });
         }
@@ -210,7 +214,6 @@ const deleteNotification = async (req, res) => {
         await user.save();
         return res.status(200).json({ message: "Notification deleted." });
     } catch (error) {
-        console.error("Error deleting notification:", error);
         return res.status(500).json({ message: "Internal Server Error" });
     }
 };

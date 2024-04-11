@@ -10,7 +10,6 @@ const Delete_image = (generatedFilename) => {
     );
     try {
         fs.unlinkSync(imagePath);
-        console.log("Image deleted successfully");
     } catch (err) {
         console.error("Error deleting image:", err);
     }
@@ -106,9 +105,7 @@ const handle_delete_Courses = async (req, res) => {
             fs.unlink(imagePath, (err) => {
                 if (err) {
                     console.error("Error deleting image:", err);
-                } else {
-                    console.log("Image deleted successfully");
-                }
+                } 
             });
         }
 
@@ -167,7 +164,6 @@ const handle_update_Courses = async (req, res) => {
                     course.Image
                 );
                 fs.unlinkSync(imagePath);
-                console.log("Previous image deleted successfully");
             }
             // Set the new image filename to the course
             course.Image = req.body.generatedFilename;
