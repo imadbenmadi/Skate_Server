@@ -36,6 +36,7 @@ const limiter = rateLimit({
     windowMs: 60 * 1000, // 15 minutes
     max: 200, // limit each IP to 100 requests per windowMs
     message: "Too many requests ,try again later.",
+    headers: true,
 });
 app.use(limiter);
 app.use(cookieParser());
@@ -62,7 +63,7 @@ async function connect_to_db() {
 
 connect_to_db().catch((err) => console.log(err));
 
-app.get("/", (req,res) => {
+app.get("/", (req, res) => {
     res.send("Hello World");
 });
 app.use("/check_Auth", require("./Routes/Auth/check_Auth"));
@@ -87,7 +88,7 @@ app.use("/Courses", require("./Routes/Courses"));
 app.use("/Services", require("./Routes/Services"));
 app.use("/Blogs", require("./Routes/Blogs"));
 app.use("/Events", require("./Routes/Events"));
-
+app.use("/Categories", require("./Routes/Categories"));
 app.use("/Dashboard/Login", require("./Routes/Dashboard/Admin_Login"));
 app.use(
     "/Dashboard/check_Auth",

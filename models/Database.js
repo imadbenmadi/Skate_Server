@@ -145,6 +145,18 @@ const Events = mongoose.model(
         Image: { type: String },
     })
 );
+const Services_Categories = mongoose.model(
+    "Services_Categories",
+    new mongoose.Schema({
+        Category: { type: String },
+    })
+);
+const Courses_Categories = mongoose.model(
+    "Courses_Categories",
+    new mongoose.Schema({
+        Category: { type: String },
+    })
+);
 module.exports = {
     Users,
     Refresh_tokens,
@@ -157,4 +169,6 @@ module.exports = {
     Events,
     Admin_data,
     email_verification_tokens,
+    Services_Categories,
+    Courses_Categories,
 };
