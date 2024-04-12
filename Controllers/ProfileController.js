@@ -74,18 +74,23 @@ const getProfile = async (req, res) => {
         });
     }
     try {
-        const user_in_db = await Users.findById(userId);
+        const user_in_db = await Users.findById(userId)
+            .populate("Courses")
+            .populate("Services");
         if (!user_in_db) {
             return res.status(401).json({ message: "user not found." });
         }
-        const Courses_requests = await request_Course.find({ user: userId });
-        const Services_requests = await request_Service.find({ user: userId });
+        const Courses_requests = await request_Course.find({ User: userId }).populate("Course");
+        const Services_requests = await request_Service
+            .find({ User: userId })
+            .populate("Service");
         const userData = {
             user: user_in_db,
             Courses_requests,
             Services_requests,
         };
-        return res.status(200).json({ userData});
+        console.log(userData.Services_requests);
+        return res.status(200).json({ userData });
     } catch (error) {
         return res.status(500).json({ message: error });
     }
