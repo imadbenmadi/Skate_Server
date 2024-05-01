@@ -1,5 +1,4 @@
 const express = require("express");
-const rateLimit = require("express-rate-limit");
 const app = express();
 const multer = require("multer");
 const mongoose = require("mongoose");
@@ -12,7 +11,10 @@ const allowedOrigins = [
     "https://www.backend.skate-consult.com",
     "https://www.skate-consult.com",
     "http://localhost:5173",
+    "http://localhost:5174",
     "http://localhost:3500",
+    "http://127.0.0.1:5501",
+    "http://127.0.0.1:5500",
 ];
 const corsOptions = {
     origin: (origin, callback) => {
@@ -32,13 +34,7 @@ const credentials = (req, res, next) => {
     next();
 };
 require("dotenv").config();
-const limiter = rateLimit({
-    windowMs: 60 * 1000, // 15 minutes
-    max: 200, // limit each IP to 100 requests per windowMs
-    message: "Too many requests ,try again later.",
-    headers: true,
-});
-app.use(limiter);
+
 app.use(cookieParser());
 app.use(credentials);
 app.use(cors(corsOptions));

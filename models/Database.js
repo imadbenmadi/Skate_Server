@@ -79,7 +79,11 @@ const request_Course = mongoose.model(
     "request_Course",
     new mongoose.Schema({
         User: { type: mongoose.Types.ObjectId, ref: "Users" },
-        Course: { type: mongoose.Types.ObjectId, ref: "Courses" },
+        Course: {
+            type: mongoose.Types.ObjectId,
+            ref: "Courses",
+            required: true,
+        },
         Date: { type: Date, default: Date.now },
     })
 );
@@ -87,7 +91,11 @@ const request_Service = mongoose.model(
     "request_Service",
     new mongoose.Schema({
         User: { type: mongoose.Types.ObjectId, ref: "Users" },
-        Service: { type: mongoose.Types.ObjectId, ref: "Services" },
+        Service: {
+            type: mongoose.Types.ObjectId,
+            ref: "Services",
+            required: true,
+        },
         Date: { type: Date, default: Date.now },
     })
 );
