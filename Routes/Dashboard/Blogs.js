@@ -29,7 +29,7 @@ const upload = multer({
 router.post(
     "/",
     upload.single("image"),
-    (req, res, next) => {
+    (req, res, next) => {        
         req.body.generatedFilename = req.generatedFilename;
         next();
     },

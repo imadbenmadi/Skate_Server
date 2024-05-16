@@ -64,19 +64,20 @@ router.get("/", async (req, res) => {
                                     return res.status(401).json({
                                         message: "Unauthorized",
                                     });
-                                } else if (
-                                    found_in_DB.userId != decoded.userId
-                                ) {
-                                    if (req.cookies.accessToken) {
-                                        res.clearCookie("accessToken");
-                                    }
-                                    if (req.cookies.refreshToken) {
-                                        res.clearCookie("refreshToken");
-                                    }
-                                    return res.status(401).json({
-                                        message: "Unauthorized",
-                                    });
                                 }
+                                // else if (
+                                //     found_in_DB.userId != decoded.userId
+                                // ) {
+                                //     if (req.cookies.accessToken) {
+                                //         res.clearCookie("accessToken");
+                                //     }
+                                //     if (req.cookies.refreshToken) {
+                                //         res.clearCookie("refreshToken");
+                                //     }
+                                //     return res.status(401).json({
+                                //         message: "Unauthorized",
+                                //     });
+                                // }
 
                                 // Generate new access token
                                 const newAccessToken = jwt.sign(
@@ -93,6 +94,18 @@ router.get("/", async (req, res) => {
                                 const user = await Users.findOne({
                                     _id: decoded.userId,
                                 });
+                                if (!user) {
+                                    if (req.cookies.accessToken) {
+                                        res.clearCookie("accessToken");
+                                    }
+                                    if (req.cookies.refreshToken) {
+                                        res.clearCookie("refreshToken");
+                                    }
+                                    return res.status(404).json({
+                                        message:
+                                            "Unauthorized : User not found",
+                                    });
+                                }
                                 const UserData_To_Send = {
                                     _id: user._id,
                                     Email: user.Email,
@@ -103,7 +116,6 @@ router.get("/", async (req, res) => {
                                     Services: user.Services,
                                     Gender: user.Gender,
                                     IsEmailVerified: user.IsEmailVerified,
-                                    
                                 };
                                 return res.status(200).json({
                                     message:
@@ -134,6 +146,17 @@ router.get("/", async (req, res) => {
                 }
             } else {
                 const user = await Users.findOne({ _id: decoded.userId });
+                if (!user) {
+                    if (req.cookies.accessToken) {
+                        res.clearCookie("accessToken");
+                    }
+                    if (req.cookies.refreshToken) {
+                        res.clearCookie("refreshToken");
+                    }
+                    return res.status(404).json({
+                        message: "Unauthorized : User not found",
+                    });
+                }
                 const UserData_To_Send = {
                     _id: user ? (user._id ? user._id : null) : null,
                     Email: user ? (user.Email ? user.Email : null) : null,
